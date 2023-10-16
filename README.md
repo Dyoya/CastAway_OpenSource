@@ -3,7 +3,7 @@
 <img src="https://img.shields.io/badge/Unity-000000?style=flat&logo=Unity&logoColor=white"/> <img src="https://img.shields.io/badge/C%20Sharp-512BD4?style=flat&logo=C%20Sharp&logoColor=white"/>
 <br/>
 23-2 오픈소스프로젝트 협업 repository
-<br/>
+<br/><br/>
 
 ### 참고자료
 1. PlayerPref 사용 방법
