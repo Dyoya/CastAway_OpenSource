@@ -1,5 +1,5 @@
 ![header](https://capsule-render.vercel.app/api?type=wave&color=auto&height=300&section=header&text=CastAway_OpenSource&fontSize=60)
-23-2 오픈소스프로젝트 협업 repository
+- 23-2 오픈소스프로젝트 협업 repository
 
 ### 참고자료
 1. PlayerPref 사용 방법
