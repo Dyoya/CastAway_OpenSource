@@ -2,7 +2,8 @@
 
 <br/>
 
-![Static Badge](https://img.shields.io/badge/:badgeContent?logo=unity)
+![Static Badge](https://img.shields.io/badge/:badgeContent?style=flat&logo=Unity&label=Unity)
+
 
 <br/><br/><br/>
 
