@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=cylinder&color=auto&height=300&section=header&text=CastAway_OpenSource&fontSize=60&animation=blinking)
+![header](https://capsule-render.vercel.app/api?type=cylinder&color=auto&height=300&section=header&text=CastAway_OpenSource&fontSize=60&animation=twinkling)
 - 23-2 오픈소스프로젝트 협업 repository
 
 ### 참고자료
