@@ -2,8 +2,8 @@
 
 <br/>
 
-<img src="https://img.shields.io/badge/Unity-000000?style=flat&logo=Unity&logoColor=white"/>
-<img src="https://img.shields.io/badge/C%20Sharp-512BD4?style=flat&logo=C%20Sharp&logoColor=white"/>
+<img src="https://img.shields.io/badge/Unity-000000?style=flat&logo=Unity&logoColor=white"/> <img src="https://img.shields.io/badge/C%20Sharp-512BD4?style=flat&logo=C%20Sharp&logoColor=white"/>
+
 
 <br/><br/><br/>
 
