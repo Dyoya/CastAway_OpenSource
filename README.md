@@ -2,7 +2,7 @@
 
 <br/>
 
-![Static Badge](https://img.shields.io/badge/:badgeContent?style=flat&logo=Unity&label=Unity)
+<img src="https://img.shields.io/badge/TypeScript-000000?style=flat&logo=Unity&logoColor=white"/>
 
 
 <br/><br/><br/>
