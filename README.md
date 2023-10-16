@@ -2,7 +2,7 @@
 
 <br/>
 
-<img src="https://simpleicons.org/icons/unity.svg"/>
+<img src="https://simpleicons.org/icons/unity.svg?style=flat&logo=Unity&logoColor=white"/>
 
 <br/><br/><br/>
 
