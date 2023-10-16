@@ -2,7 +2,7 @@
 
 <br/>
 
-<img src="https://simpleicons.org/icons/unity.svg?style=flat&logo=Unity&logoColor=white"/>
+<img src="https://img.shields.io/badge/:badgeContent?logo=unity"/>
 
 <br/><br/><br/>
 
