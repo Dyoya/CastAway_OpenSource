@@ -3,6 +3,7 @@
 <img src="https://img.shields.io/badge/Unity-000000?style=flat&logo=Unity&logoColor=white"/> <img src="https://img.shields.io/badge/C%20Sharp-512BD4?style=flat&logo=C%20Sharp&logoColor=white"/>
 <br/>
 **23-2 오픈소스프로젝트 협업 repository**
+- 유니티 버전 `2021.3.31f1`
 <br/><br/>
 
 ### 참고자료
@@ -10,3 +11,7 @@
 - https://devparklibrary.tistory.com/22
 2. DontDestroyOnLoad 사용 방법
 - https://wergia.tistory.com/191
+3. 깃허브로 유니티 프로젝트 관리
+- https://wergia.tistory.com/238
+4. 메타파일 주의점
+- https://blog.naver.com/raruz/222852771902
