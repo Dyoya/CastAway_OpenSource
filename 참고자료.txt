@@ -1,0 +1,2 @@
+1. 플레이어와 벽 사이 오브젝트 투명화하기
+https://daekyoulibrary.tistory.com/entry/Charon-8-플레이어와-카메라-사이의-오브젝트-투명화하기
