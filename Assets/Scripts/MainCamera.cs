@@ -8,9 +8,9 @@ public class MainCamera : MonoBehaviour
 
     public float followSpeed = 5f;
 
-    public float offsetX = 0f;
+    public float offsetX = -10f;
     public float offsetY = 5f;
-    public float offsetZ = -10f;
+    public float offsetZ = 0f;
 
     Vector3 _cameraPosition;
 
