@@ -5,14 +5,16 @@ using UnityEngine;
 public class TransparentObject : MonoBehaviour
 {
     public GameObject player;
-    public float targetAlpha = 0.3f;
+    public float targetAlpha = 0.15f;
     public float changeAlphaTime = 0.5f;
 
     private GameObject lastHitObject;
 
     private void LateUpdate()
     {
-        Vector3 direction = (player.transform.position - transform.position).normalized;
+        Vector3 playerPosition = player.transform.position;
+
+        Vector3 direction = (playerPosition - transform.position).normalized;
         int layerMask = 1 << LayerMask.NameToLayer("Environment");
 
         // 레이캐스트를 여러 번 사용해서 모든 오브젝트에 대한 정보를 개별적으로 얻어오기
