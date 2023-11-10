@@ -1,6 +1,10 @@
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
+using UnityEngine.Playables;
+using UnityEngine.Timeline;
+using System.Collections;
+using System.Collections.Generic;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -122,6 +126,13 @@ namespace StarterAssets
             }
         }
 
+        private PlayableDirector pd;
+        [SerializeField] TimelineAsset[] ta;
+        [SerializeField] GameObject Bird1;
+        [SerializeField] GameObject Bird2;
+        [SerializeField] GameObject Bird3;
+        [SerializeField] GameObject Plane;
+        [SerializeField] GameObject Helicopter;
 
         private void Awake()
         {
@@ -150,6 +161,8 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            pd = GetComponent<PlayableDirector>();
         }
 
         private void Update()
@@ -387,6 +400,30 @@ namespace StarterAssets
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
+        }
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.tag == "CutScene")
+            {
+                other.gameObject.SetActive(false);
+                pd.Play(ta[0]);
+                StartCoroutine(FirstActive());
+            }
+
+            if (other.tag == "Helicopter")
+            {
+                Helicopter.SetActive(true);
+                other.gameObject.SetActive(false);
+                pd.Play(ta[1]);
+            }
+        }
+        IEnumerator FirstActive()
+        {
+            yield return new WaitForSeconds(0.5f);
+            Bird1.SetActive(true);
+            Bird2.SetActive(true);
+            Bird3.SetActive(true);
+            Plane.SetActive(true);
         }
     }
 }
