@@ -747,12 +747,12 @@ PrefabInstance:
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.953717
+      value: 0.9396927
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.30070576
+      value: 0.3420201
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
@@ -767,7 +767,7 @@ PrefabInstance:
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 35
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
@@ -1022,7 +1022,7 @@ MonoBehaviour:
   player: {fileID: 1430402485}
   followSpeed: 5
   offsetX: 0
-  offsetY: 8
+  offsetY: 10
   offsetZ: -12
 --- !u!114 &2038179880
 MonoBehaviour:

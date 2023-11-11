@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be59a46c003868e48955bf6c37a0a7be, type: 3}
   m_Name: TestItem
   m_EditorClassIdentifier: 
-  itenName: 
+  itenName: TestItem
   itemImage: {fileID: 0}
+  maximumNumber: 5
