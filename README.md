@@ -53,6 +53,22 @@
     - Item.cs 스크립트를 통해 수정 가능
     - 인벤토리 및 아이템 상호작용 등에 사용 예정
 
+### 2023-11-12
+`[0.2.0]`
+- **EnemyFSM.cs** 스크립트 추가
+    - 적대 몬스터 스크립트
+    - 사용하진 않을 듯 함.
+    - 대신 **EnemyBT.cs** 사용
+- Scripts 폴더 내 **\Enemy** 폴더 생성
+    - **INode.cs** : INode 인터페이스 스크립트
+    - **ActionNode.cs** : 노드 스크립트1
+    - **SelectorNode.cs** : 노드 스크립트2
+    - **SequenceNode.cs** : 노드 스크립트3
+    - **BehaviorTreeRunner.cs** : BT 실행 스크립트
+    - **EnemyBT.cs** : 적대 몬스터 스크립트
+
+
+
 <br/><br/>
 
 ## 참고자료
