@@ -35,6 +35,9 @@ public class EnemyBT : MonoBehaviour
 
     BehaviorTreeRunner _BTRunner = null;
 
+    const string _IDLE_ANIM_STATE_NAME = "Idle";
+    const string _IDLE_ANIM_TRIGGER_NAME = "idle";
+
     const string _ATTACK_ANIM_STATE_NAME = "Attack";
     const string _ATTACK_ANIM_TRIGGER_NAME = "attack";
 
@@ -44,8 +47,13 @@ public class EnemyBT : MonoBehaviour
     const string _DIE_ANIM_STATE_NAME = "Die";
     const string _DIE_ANIM_TRIGGER_NAME = "die";
 
+    const string _MOVE_ANIM_STATE_NAME = "Move";
+    const string _MOVE_ANIM_TRIGGER_NAME = "move";
+
     // 데미지 임시 변수
     int _temporaryDamage = 0;
+
+    bool isMove = false;
 
     private void Awake()
     {
@@ -107,7 +115,13 @@ public class EnemyBT : MonoBehaviour
                         new ActionNode(Chase),
                     }
                 ),
-                new ActionNode(Return)
+                new ActionNode(Return),
+                new SequenceNode(
+                    new List<INode>()
+                    {
+                        new ActionNode(Idle),
+                    }
+                ),
             }
         );
     }
@@ -196,6 +210,7 @@ public class EnemyBT : MonoBehaviour
         // overlapColliders가 1개 이상 -> 플레이어가 감지 됨
         if (overlapColliders != null && overlapColliders.Length > 0) 
         {
+            isMove = true;
             _playerTransform = overlapColliders[0].transform;
 
             //Debug.Log("CheckFind : Success");
@@ -210,7 +225,9 @@ public class EnemyBT : MonoBehaviour
     INode.ENodeState Chase()
     {
         if (_playerTransform != null)
-        {   
+        {
+            _anim.SetTrigger(_MOVE_ANIM_TRIGGER_NAME);
+
             // 공격 범위 사거리까지 이동 완료한 경우
             if (Vector3.SqrMagnitude(_playerTransform.position - transform.position) < attackDistance * attackDistance)
             {
@@ -237,22 +254,30 @@ public class EnemyBT : MonoBehaviour
     #region Move Origin Pos Node
     INode.ENodeState Return()
     {
-        if (Vector3.SqrMagnitude(_originPos - transform.position) < 0.5f)
+        if (isMove)
         {
-            _agent.enabled = false;
-            transform.position = _originPos;
-            transform.rotation = _originRot;
-            //Debug.Log("Return : Success");
-            return INode.ENodeState.ENS_Success;
+            if (Vector3.SqrMagnitude(_originPos - transform.position) < 0.5f)
+            {
+                isMove = false;
+                _agent.enabled = false;
+                transform.position = _originPos;
+                transform.rotation = _originRot;
+                //Debug.Log("Return : Success");
+                return INode.ENodeState.ENS_Success;
+            }
+            else
+            {
+                _anim.SetTrigger(_MOVE_ANIM_TRIGGER_NAME);
+
+                //transform.position = Vector3.MoveTowards(transform.position, _originPos, Time.deltaTime * moveSpeed);
+                _agent.enabled = true;
+                _agent.SetDestination(_originPos);
+                //Debug.Log("Return : Running");
+                return INode.ENodeState.ENS_Running;
+            }
         }
-        else
-        {
-            //transform.position = Vector3.MoveTowards(transform.position, _originPos, Time.deltaTime * moveSpeed);
-            _agent.enabled = true;
-            _agent.SetDestination(_originPos);
-            //Debug.Log("Return : Running");
-            return INode.ENodeState.ENS_Running;
-        }
+
+        return INode.ENodeState.ENS_Failure;
     }
     #endregion
 
@@ -277,7 +302,7 @@ public class EnemyBT : MonoBehaviour
 
             PlayDamagedSound();
 
-            //_anim.SetTrigger(_DAMAGED_ANIM_TRIGGER_NAME);
+            _anim.SetTrigger(_DAMAGED_ANIM_TRIGGER_NAME);
 
             _temporaryDamage = 0;
 
@@ -312,7 +337,7 @@ public class EnemyBT : MonoBehaviour
     }
     INode.ENodeState Die()
     {
-        _anim.SetTrigger(_DIE_ANIM_TRIGGER_NAME);
+        //_anim.SetTrigger(_DIE_ANIM_TRIGGER_NAME);
 
         return INode.ENodeState.ENS_Success;
     }
@@ -328,6 +353,16 @@ public class EnemyBT : MonoBehaviour
     INode.ENodeState DestroyObject()
     {
         Destroy(gameObject);
+
+        return INode.ENodeState.ENS_Success;
+    }
+    #endregion
+
+    #region Idle Node
+    INode.ENodeState Idle()
+    {
+        Debug.Log("Idle");
+        _anim.SetTrigger(_IDLE_ANIM_TRIGGER_NAME);
 
         return INode.ENodeState.ENS_Success;
     }
