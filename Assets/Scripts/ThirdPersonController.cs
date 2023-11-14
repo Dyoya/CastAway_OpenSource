@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Events;
+using System;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -126,6 +128,17 @@ namespace StarterAssets
             }
         }
 
+        //동현이가 새로 추가한 변수(스테미너 관련 변수)
+        public UnityEvent onRun;
+        public UnityEvent onIdle;
+        public UnityEvent onLife;
+        public HungryBar hungrybar;
+        public HealthBar healthBar;
+        //[SerializeField]
+        //private slot Leftslot;
+        //[SerializeField]
+        //private slot Rightslot;
+
         private PlayableDirector pd;
         [SerializeField] TimelineAsset[] ta;
         [SerializeField] GameObject Helicopter;
@@ -168,6 +181,34 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+
+            // 플레이어가 달릴 때 이벤트 호출
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                onRun.Invoke();
+            }
+            // 플레이어가 정지 상태일 때 이벤트 호출
+            onIdle.Invoke();
+
+            //// 1번 키를 누르면 왼쪽 인벤토리의 아이템 1개 소비
+            //if (Input.GetKeyDown(KeyCode.Alpha1))
+            //{
+            //    Debug.Log("1번 인벤");
+            //    Leftslot.LeftHanduseItem();
+            //}
+            //// 2번 키를 누르면 오른쪽 인벤토리의 아이템 1개 소비
+            //else if (Input.GetKeyDown(KeyCode.Alpha2))
+            //{
+            //    Debug.Log("2번 인벤");
+            //    Rightslot.RightHanduseItem();
+            //}
+
+
+            //플레이어의 배고픔이 0이 되었을 때
+            if (hungrybar.isHungryZero)
+            {
+                onLife.Invoke();
+            }
         }
 
         private void LateUpdate()
@@ -384,7 +425,7 @@ namespace StarterAssets
             {
                 if (FootstepAudioClips.Length > 0)
                 {
-                    var index = Random.Range(0, FootstepAudioClips.Length);
+                    var index = UnityEngine.Random.Range(0, FootstepAudioClips.Length);
                     AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
                 }
             }
