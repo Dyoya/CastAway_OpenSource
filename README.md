@@ -7,6 +7,7 @@
 <br/><br/>
 
 ### 바로가기
+- [Scripts 디렉터리](https://github.com/Dyoya/CastAway_OpenSource/tree/main/Assets/Scripts)
 - [수정 필요!](https://github.com/Dyoya/CastAway_OpenSource#%EC%88%98%EC%A0%95-%ED%95%84%EC%9A%94)
 - [수정 내역](https://github.com/Dyoya/CastAway_OpenSource#%EC%88%98%EC%A0%95-%EB%82%B4%EC%97%AD)
 - [참고 자료](https://github.com/Dyoya/CastAway_OpenSource#%EC%B0%B8%EA%B3%A0%EC%9E%90%EB%A3%8C)
@@ -14,11 +15,11 @@
 <br/><br/>
 
 ## 수정 필요!
-**아래에 "발견날짜, 내용" 작성**  
-**수정 완료시 ~~으로 내용 둘러싸고 [수정 버전] 표시**
-> - 230101, 버그버그
-> - ~~230102, 버그bug~~ [0.x.1]
-- 
+**아래에 "발견날짜, [버전] 내용" 작성**  
+**수정 완료시 아래에 [수정 버전] 표시**
+> - 230101, [0.x.1] 버그버그
+- 231110, 플레이어가 밟고 있는 오브젝트까지 투명화되고 있음
+    - [0.2.1] 수정 완료
 
 
 
@@ -41,7 +42,7 @@
 
 ### 2023-11-10
 `[0.1.0]`
-- **MainCamera.cs** 스크립트 추가
+- **MainCamera.cs**, **TransparentObject.cs** 스크립트 추가
     - 플레이어 따라 부드럽게 카메라 이동
     - 플레이어와 카메라 사이에 있는 오브젝트 반투명화
     - Maturial에서 Surface Type - Transparent로 설정하면 투명화가 됨
@@ -57,8 +58,7 @@
 `[0.2.0]`
 - **EnemyFSM.cs** 스크립트 추가
     - 적대 몬스터 스크립트
-    - 사용하진 않을 듯 함.
-    - 대신 **EnemyBT.cs** 사용
+    - 웬만하면 FSM 대신 **EnemyBT.cs** 사용 예정
 - Scripts 폴더 내 **\Enemy** 폴더 생성
     - **INode.cs** : INode 인터페이스 스크립트
     - **ActionNode.cs** : 노드 스크립트1
@@ -69,14 +69,17 @@
 
 ### 2023-11-14
 `[0.2.1]`
+- **TransparentObject.cs** 버그 수정
+    - 플레이어가 밟고 있는 오브젝트까지 투명화되는 현상 수정  
+
+`[0.2.2]`
+- **EnemyBT.cs** 구조 수정
+    - Die 관련 노드 세분화
 - Scene/CutScene/PlaneCrashCutScene : 비행기 추락 컷씬 추가
 - Scene/CutScene/BossCutScene : 보스 몬스터(곰) 출현 컷씬 추가
 - Test_DW : 탈출 컷씬 테스트 중 (수정 필요)
     
 
-
-
-<br/><br/>
 
 ## 참고자료
 1. [PlayerPref 사용 방법](https://devparklibrary.tistory.com/22)
