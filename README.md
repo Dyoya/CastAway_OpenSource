@@ -75,11 +75,24 @@
 `[0.2.2]`
 - **EnemyBT.cs** 구조 수정
     - Die 관련 노드 세분화
+    - 불필요 폴더 1개 정리  
+
+`[0.2.3]`
+- 사람, 토끼 에셋 추가
+- **EnemyBT.cs** 수정
+    - Return 노드 구조 수정
+    - Idle 노드 추가
+
+`[0.2.4]`
 - Scene/CutScene/PlaneCrashCutScene : 비행기 추락 컷씬 추가
 - Scene/CutScene/BossCutScene : 보스 몬스터(곰) 출현 컷씬 추가
 - Test_DW : 탈출 컷씬 테스트 중 (수정 필요)
-    
 
+`[0.2.5]`
+- TitleMenu : 시작 메뉴(기능 일부 구현 추가 구현 필요)
+- Test_DW : ESC 시 Pause 메뉴 구현 (기능 일부 구현 추가 구현 필요)
+
+<br/><br/>
 
 ## 참고자료
 1. [PlayerPref 사용 방법](https://devparklibrary.tistory.com/22)
