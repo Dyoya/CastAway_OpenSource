@@ -134,10 +134,11 @@ namespace StarterAssets
         public UnityEvent onLife;
         public HungryBar hungrybar;
         public HealthBar healthBar;
-        //[SerializeField]
-        //private slot Leftslot;
-        //[SerializeField]
-        //private slot Rightslot;
+
+        [SerializeField]
+        private slot Leftslot;
+        [SerializeField]
+        private slot Rightslot;
 
         private PlayableDirector pd;
         [SerializeField] TimelineAsset[] ta;
@@ -190,18 +191,18 @@ namespace StarterAssets
             // 플레이어가 정지 상태일 때 이벤트 호출
             onIdle.Invoke();
 
-            //// 1번 키를 누르면 왼쪽 인벤토리의 아이템 1개 소비
-            //if (Input.GetKeyDown(KeyCode.Alpha1))
-            //{
-            //    Debug.Log("1번 인벤");
-            //    Leftslot.LeftHanduseItem();
-            //}
-            //// 2번 키를 누르면 오른쪽 인벤토리의 아이템 1개 소비
-            //else if (Input.GetKeyDown(KeyCode.Alpha2))
-            //{
-            //    Debug.Log("2번 인벤");
-            //    Rightslot.RightHanduseItem();
-            //}
+            // 1번 키를 누르면 왼쪽 인벤토리의 아이템 1개 소비
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                Debug.Log("1번 인벤");
+                Leftslot.LeftHanduseItem();
+            }
+            // 2번 키를 누르면 오른쪽 인벤토리의 아이템 1개 소비
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                Debug.Log("2번 인벤");
+                Rightslot.RightHanduseItem();
+            }
 
 
             //플레이어의 배고픔이 0이 되었을 때
