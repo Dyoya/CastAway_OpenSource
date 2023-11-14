@@ -67,6 +67,13 @@
     - **BehaviorTreeRunner.cs** : BT 실행 스크립트
     - **EnemyBT.cs** : 적대 몬스터 스크립트
 
+### 2023-11-14
+`[0.2.1]`
+- Scene/CutScene/PlaneCrashCutScene : 비행기 추락 컷씬 추가
+- Scene/CutScene/BossCutScene : 보스 몬스터(곰) 출현 컷씬 추가
+- Test_DW : 탈출 컷씬 테스트 중 (수정 필요)
+    
+
 
 
 <br/><br/>

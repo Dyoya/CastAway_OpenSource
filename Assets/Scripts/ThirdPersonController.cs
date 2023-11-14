@@ -128,10 +128,6 @@ namespace StarterAssets
 
         private PlayableDirector pd;
         [SerializeField] TimelineAsset[] ta;
-        [SerializeField] GameObject Bird1;
-        [SerializeField] GameObject Bird2;
-        [SerializeField] GameObject Bird3;
-        [SerializeField] GameObject Plane;
         [SerializeField] GameObject Helicopter;
 
         private void Awake()
@@ -403,27 +399,19 @@ namespace StarterAssets
         }
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag == "CutScene")
-            {
-                other.gameObject.SetActive(false);
-                pd.Play(ta[0]);
-                StartCoroutine(FirstActive());
-            }
-
             if (other.tag == "Helicopter")
             {
                 Helicopter.SetActive(true);
                 other.gameObject.SetActive(false);
                 pd.Play(ta[1]);
             }
-        }
-        IEnumerator FirstActive()
-        {
-            yield return new WaitForSeconds(0.5f);
-            Bird1.SetActive(true);
-            Bird2.SetActive(true);
-            Bird3.SetActive(true);
-            Plane.SetActive(true);
+            if (other.tag == "Escape")
+            {
+                HelicopterController otherScript = GameObject.Find("Helicopter").GetComponent<HelicopterController>();
+                pd.Play(ta[2]);
+                otherScript.EscapeHelicopter();
+                other.gameObject.SetActive(false);
+            }
         }
     }
 }

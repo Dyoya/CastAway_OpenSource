@@ -16,6 +16,19 @@ MonoBehaviour:
   hdPluginSubTargetMaterialVersions:
     m_Keys: []
     m_Values: 
+--- !u!114 &-1155432820272208586
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -123,25 +136,12 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - Color_adc979e474cd4c52803b73073550b88e: {r: 0.0068947007, g: 0.2735849, b: 0,
-        a: 0}
-    - Color_c4b6043ac1de492fb8bbd1482b723534: {r: 0.076508, g: 0.3679245, b: 0.053800277,
-        a: 0}
+    - Color_adc979e474cd4c52803b73073550b88e: {r: 0.03433981, g: 0.16513224, b: 0.013702081,
+        a: 1}
+    - Color_c4b6043ac1de492fb8bbd1482b723534: {r: 0.028426038, g: 0.10224175, b: 0.017641952,
+        a: 1}
     - Vector2_b3499b7416b64762a92801fd1a260104: {r: 1.74, g: 0, b: 0, a: 0}
     - Vector2_d1261ba7c1e140be8ca68486b05912b4: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &4461864071750585443
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 5
