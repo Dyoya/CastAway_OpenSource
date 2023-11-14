@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: aa03d2ee344f8a04e85c93562886255b
+timeCreated: 1513336684
+licenseType: Store
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Arista 2.0 Alternate Light
+  fontNames:
+  - Arista 2.0 Alternate Light
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
