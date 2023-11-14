@@ -5,58 +5,73 @@ using UnityEngine;
 public class TransparentObject : MonoBehaviour
 {
     public GameObject player;
-    public float targetAlpha = 0.15f;
-    public float changeAlphaTime = 0.5f;
+    public float targetAlpha = 0.3f;
+    public float changeAlphaTime = 1f;
 
     private GameObject lastHitObject;
+
+    // 레이케스트를 통한 플레이어와 카메라 사이 모든 오브젝트에 대한 정보 배열
+    private RaycastHit[] hits;
+    private RaycastHit[] lastHits;
+
+    private void Start()
+    {
+        UpdateLastHits();
+    }
+    // 마지막으로 히트딘 레이캐스트 히트 배열 갱신
+    private void UpdateLastHits()
+    {
+        Vector3 playerPosition = player.transform.position;
+        Vector3 direction = (transform.position - playerPosition).normalized;
+        int layerMask = 1 << LayerMask.NameToLayer("Environment");
+
+        lastHits = Physics.RaycastAll(playerPosition, direction, Mathf.Infinity, layerMask);
+    }
 
     private void LateUpdate()
     {
         Vector3 playerPosition = player.transform.position;
-
-        Vector3 direction = (playerPosition - transform.position).normalized;
+        Vector3 direction = (transform.position - playerPosition).normalized;
         int layerMask = 1 << LayerMask.NameToLayer("Environment");
 
-        // 레이캐스트를 여러 번 사용해서 모든 오브젝트에 대한 정보를 개별적으로 얻어오기
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, direction, Mathf.Infinity, layerMask);
+        hits = Physics.RaycastAll(playerPosition, direction, Mathf.Infinity, layerMask);
 
-        // 거리에 따라 레이캐스트 히트 정보를 정렬
-        System.Array.Sort(hits, (x, y) => x.distance.CompareTo(y.distance));
-
-        // 디버그
-        Debug.DrawRay(transform.position, direction * Mathf.Infinity, Color.red);
-
-        // 모든 히트된 오브젝트에 대해 처리
-        foreach (RaycastHit hit in hits)
+        if (!AreArraysEqual(hits, lastHits))
         {
-            Debug.Log("Hit object: " + hit.collider.gameObject.name + " on layer: " + hit.collider.gameObject.layer);
-
-            // 새로 맞은 오브젝트가 있을 때만 처리
-            if (hit.collider.gameObject != lastHitObject)
+            // 히트된 오브젝트에 대해 투명화 처리
+            foreach (RaycastHit hit in hits)
             {
-                // 현재 맞은 오브젝트가 이전과 다르다면 이전 오브젝트의 투명도를 서서히 원래대로 복원
-                if (lastHitObject != null)
-                {
-                    StartCoroutine(FadeToOpaque(lastHitObject, 1f, changeAlphaTime));
-                }
-
-                // 새로 맞은 오브젝트의 투명도를 서서히 변경
                 StartCoroutine(FadeToTransparent(hit.collider.gameObject, targetAlpha, changeAlphaTime));
-                lastHitObject = hit.collider.gameObject;
-
-                // 가장 가까운 오브젝트에 대한 처리만 진행
-                break;
             }
-        }
 
-        // 레이가 어떤 오브젝트도 맞지 않았을 때 이전 오브젝트의 투명도를 서서히 복원
-        if (hits.Length == 0 && lastHitObject != null)
-        {
-            StartCoroutine(FadeToOpaque(lastHitObject, 1f, changeAlphaTime));
-            lastHitObject = null;
+            // 이전에 히트되었던 오브젝트에 대해 투명화 처리
+            foreach (RaycastHit hit in lastHits)
+            {
+                // 이미 새로운 히트에 포함된 오브젝트는 스킵
+                if (System.Array.Exists(hits, h => h.collider == hit.collider))
+                    continue;
+
+                StartCoroutine(FadeToOpaque(hit.collider.gameObject, 1f, changeAlphaTime));
+            }
+
+            // 현재 히트 정보를 이전 히트 정보로 갱신
+            UpdateLastHits();
         }
     }
+    // 두 배열의 요소가 모두 같은지 확인하는 함수
+    private bool AreArraysEqual<T>(T[] arr1, T[] arr2)
+    {
+        if (arr1.Length != arr2.Length)
+            return false;
 
+        for (int i = 0; i < arr1.Length; i++)
+        {
+            if (!arr1[i].Equals(arr2[i]))
+                return false;
+        }
+
+        return true;
+    }
     private IEnumerator FadeToTransparent(GameObject obj, float targetAlpha, float duration)
     {
         Renderer renderer = obj.GetComponent<Renderer>();
@@ -77,8 +92,6 @@ public class TransparentObject : MonoBehaviour
             renderer.material.color = renderer.material.color.WithAlpha(targetAlpha);
         }
     }
-
-
     private IEnumerator FadeToOpaque(GameObject obj, float targetAlpha, float duration)
     {
         Renderer renderer = obj.GetComponent<Renderer>();
