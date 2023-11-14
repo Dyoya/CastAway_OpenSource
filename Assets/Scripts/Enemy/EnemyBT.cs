@@ -41,6 +41,9 @@ public class EnemyBT : MonoBehaviour
     const string _DAMAGED_ANIM_STATE_NAME = "Damaged";
     const string _DAMAGED_ANIM_TRIGGER_NAME = "damaged";
 
+    const string _DIE_ANIM_STATE_NAME = "Die";
+    const string _DIE_ANIM_TRIGGER_NAME = "die";
+
     // 데미지 임시 변수
     int _temporaryDamage = 0;
 
@@ -73,6 +76,16 @@ public class EnemyBT : MonoBehaviour
                 (
                     new List<INode>()
                     {
+                        new ActionNode(CheckDieHp),
+                        new ActionNode(Die),
+                        new ActionNode(CheckDieAnim),
+                        new ActionNode(DestroyObject),
+                    }
+                ),
+                new SequenceNode
+                (
+                    new List<INode>()
+                    {
                         new ActionNode(CheckDamaged),
                         new ActionNode(Damaged),
                     }
@@ -98,20 +111,11 @@ public class EnemyBT : MonoBehaviour
             }
         );
     }
-    #region Public Func
-    public void SetDamage(int  damage)
-    {
-        if(_temporaryDamage != 0)
-        {
-            _temporaryDamage = damage;
-        }
-    }
-    #endregion
     bool IsAnimationRunning(string stateName)
     {
-        if(_anim != null)
+        if (_anim != null)
         {
-            if(_anim.GetCurrentAnimatorStateInfo(0).IsName(stateName))
+            if (_anim.GetCurrentAnimatorStateInfo(0).IsName(stateName))
             {
                 var normalizedTime = _anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
@@ -121,6 +125,15 @@ public class EnemyBT : MonoBehaviour
 
         return false;
     }
+    #region Public Func
+    public void SetDamage(int  damage)
+    {
+        if(_temporaryDamage != 0)
+        {
+            _temporaryDamage = damage;
+        }
+    }
+    #endregion
 
     #region Attack Node
     INode.ENodeState CheckAttacking()
@@ -128,11 +141,11 @@ public class EnemyBT : MonoBehaviour
         // 공격 애니메이션이 실행 중이면
         if (IsAnimationRunning(_ATTACK_ANIM_STATE_NAME))
         {
-            Debug.Log("CheckAttacking : Running");
+            //Debug.Log("CheckAttacking : Running");
             return INode.ENodeState.ENS_Running;
         }
 
-        Debug.Log("CheckAttacking : Success");
+        //Debug.Log("CheckAttacking : Success");
         return INode.ENodeState.ENS_Success;
     }
 
@@ -143,7 +156,7 @@ public class EnemyBT : MonoBehaviour
             // 플레이어가 공격 사거리 안에 들어왔으면
             if (Vector3.SqrMagnitude(_playerTransform.position - transform.position) < attackDistance * attackDistance)
             {
-                Debug.Log("CheckAttackRange : Success");
+                //Debug.Log("CheckAttackRange : Success");
                 _agent.enabled = false;
                 return INode.ENodeState.ENS_Success;
             }
@@ -177,7 +190,7 @@ public class EnemyBT : MonoBehaviour
     #region Find & Move Node
     INode.ENodeState CheckFind()
     {
-        Debug.Log("CheckFind");
+        //Debug.Log("CheckFind");
         var overlapColliders = Physics.OverlapSphere(transform.position, findDistance, LayerMask.GetMask("Player"));
 
         // overlapColliders가 1개 이상 -> 플레이어가 감지 됨
@@ -185,13 +198,13 @@ public class EnemyBT : MonoBehaviour
         {
             _playerTransform = overlapColliders[0].transform;
 
-            Debug.Log("CheckFind : Success");
+            //Debug.Log("CheckFind : Success");
             return INode.ENodeState.ENS_Success;
         }
 
         _playerTransform = null;
 
-        Debug.Log("CheckFind : Failure");
+        //Debug.Log("CheckFind : Failure");
         return INode.ENodeState.ENS_Failure;
     }
     INode.ENodeState Chase()
@@ -201,7 +214,7 @@ public class EnemyBT : MonoBehaviour
             // 공격 범위 사거리까지 이동 완료한 경우
             if (Vector3.SqrMagnitude(_playerTransform.position - transform.position) < attackDistance * attackDistance)
             {
-                Debug.Log("Chase : Success");
+                //Debug.Log("Chase : Success");
                 _agent.enabled = false;
                 return INode.ENodeState.ENS_Success;
             }
@@ -211,12 +224,12 @@ public class EnemyBT : MonoBehaviour
             _agent.enabled = true;
             _agent.SetDestination(_playerTransform.position);
 
-            Debug.Log("Chase : Running");
+            //Debug.Log("Chase : Running");
             return INode.ENodeState.ENS_Running;
         }
 
         // 플레이어를 발견 못한 경우
-        Debug.Log("Chase : Failure");
+        //Debug.Log("Chase : Failure");
         return INode.ENodeState.ENS_Failure;
     }
     #endregion
@@ -229,7 +242,7 @@ public class EnemyBT : MonoBehaviour
             _agent.enabled = false;
             transform.position = _originPos;
             transform.rotation = _originRot;
-            Debug.Log("Return : Success");
+            //Debug.Log("Return : Success");
             return INode.ENodeState.ENS_Success;
         }
         else
@@ -237,7 +250,7 @@ public class EnemyBT : MonoBehaviour
             //transform.position = Vector3.MoveTowards(transform.position, _originPos, Time.deltaTime * moveSpeed);
             _agent.enabled = true;
             _agent.SetDestination(_originPos);
-            Debug.Log("Return : Running");
+            //Debug.Log("Return : Running");
             return INode.ENodeState.ENS_Running;
         }
     }
@@ -249,11 +262,11 @@ public class EnemyBT : MonoBehaviour
         // 피격 애니메이션이 실행 중이면
         if (IsAnimationRunning(_DAMAGED_ANIM_STATE_NAME))
         {
-            Debug.Log("CheckDamaged : Running");
+            //Debug.Log("CheckDamaged : Running");
             return INode.ENodeState.ENS_Running;
         }
 
-        Debug.Log("CheckDamaged : Success");
+        //Debug.Log("CheckDamaged : Success");
         return INode.ENodeState.ENS_Success;
     }
     INode.ENodeState Damaged()
@@ -262,23 +275,18 @@ public class EnemyBT : MonoBehaviour
         {
             currentHp -= _temporaryDamage;
 
-            if (currentHp <= 0)
-            {
-                Die();
-            }
-
             PlayDamagedSound();
 
             //_anim.SetTrigger(_DAMAGED_ANIM_TRIGGER_NAME);
 
             _temporaryDamage = 0;
 
-            Debug.Log("Damaged : Success");
+            //Debug.Log("Damaged : Success");
             return INode.ENodeState.ENS_Success;
         }
         else
         {
-            Debug.Log("Damaged : Failure");
+            //Debug.Log("Damaged : Failure");
             return INode.ENodeState.ENS_Failure;
         }
         
@@ -293,14 +301,35 @@ public class EnemyBT : MonoBehaviour
     #endregion
 
     #region Die Node
-    void Die()
+    INode.ENodeState CheckDieHp()
     {
-        StartCoroutine(DestoryAfterDelay(2f));
+        if (currentHp <= 0)
+        {
+            return INode.ENodeState.ENS_Success;
+        }
+
+        return INode.ENodeState.ENS_Failure;
     }
-    IEnumerator DestoryAfterDelay(float delay)
+    INode.ENodeState Die()
     {
-        yield return new WaitForSeconds(delay);
+        _anim.SetTrigger(_DIE_ANIM_TRIGGER_NAME);
+
+        return INode.ENodeState.ENS_Success;
+    }
+    INode.ENodeState CheckDieAnim()
+    {
+        if (IsAnimationRunning(_DIE_ANIM_STATE_NAME))
+        {
+            return INode.ENodeState.ENS_Running;
+        }
+
+        return INode.ENodeState.ENS_Success;
+    }
+    INode.ENodeState DestroyObject()
+    {
         Destroy(gameObject);
+
+        return INode.ENodeState.ENS_Success;
     }
     #endregion
 }
