@@ -7,6 +7,7 @@
 <br/><br/>
 
 ### 바로가기
+- [Scripts 디렉터리](https://github.com/Dyoya/CastAway_OpenSource/tree/main/Assets/Scripts)
 - [수정 필요!](https://github.com/Dyoya/CastAway_OpenSource#%EC%88%98%EC%A0%95-%ED%95%84%EC%9A%94)
 - [수정 내역](https://github.com/Dyoya/CastAway_OpenSource#%EC%88%98%EC%A0%95-%EB%82%B4%EC%97%AD)
 - [참고 자료](https://github.com/Dyoya/CastAway_OpenSource#%EC%B0%B8%EA%B3%A0%EC%9E%90%EB%A3%8C)
