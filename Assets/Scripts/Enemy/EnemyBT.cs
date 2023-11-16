@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,6 +17,12 @@ public class EnemyBT : MonoBehaviour
     [SerializeField] float moveSpeed = 6f; // Enemy 이동 속도
     [SerializeField] float findDistance = 10f; // 플레이어 발견 범위
     [SerializeField] float attackDistance = 4f; // 플레이어 공격 범위
+
+    [Header("Patrol")]
+    [SerializeField] float idlePatrolRange = 10f; // 랜덤 순찰 최대 거리
+    [SerializeField] int idlePatrolNumber = 6; // 랜덤 순찰 지점 개수
+    [SerializeField] float patrolTime = 10f; // 순찰 지점 변경 시간
+    [SerializeField] float patrolMoveSpeed = 3f;
 
     [Header("Attack")]
     [SerializeField] bool isAttackEnemy; //true일 경우 공격형 적대 몬스터
@@ -38,6 +45,11 @@ public class EnemyBT : MonoBehaviour
 
     BehaviorTreeRunner _BTRunner = null;
 
+    // 순찰 지점 리스트
+    List<Vector3> Patrol_Position;
+    float _patrolCurrentTime = 0;
+    int patrolNum = 0;
+
     const string _IDLE_ANIM_STATE_NAME = "Idle";
     const string _IDLE_ANIM_TRIGGER_NAME = "idle";
 
@@ -57,6 +69,7 @@ public class EnemyBT : MonoBehaviour
     int _temporaryDamage = 0;
 
     bool isMove = false;
+    bool isReturn = false;
 
     private void Awake()
     {
@@ -71,11 +84,19 @@ public class EnemyBT : MonoBehaviour
     private void Start()
     {
         currentHp = maxhp;
-        _agent.speed = moveSpeed;
+        _agent.updateRotation = false;
+
+        SetPatrolPosition();
+
     }
     private void Update()
     {
+        _patrolCurrentTime += Time.deltaTime;
         _BTRunner.Operate();
+
+        // agent 회전각 구하기
+        Vector3 lookrotation = _agent.steeringTarget - transform.position;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookrotation), 5f * Time.deltaTime);
     }
     INode SettingBT()
     {
@@ -122,6 +143,7 @@ public class EnemyBT : MonoBehaviour
                 new SequenceNode(
                     new List<INode>()
                     {
+                        new ActionNode(Patrol),
                         new ActionNode(Idle),
                     }
                 ),
@@ -141,6 +163,21 @@ public class EnemyBT : MonoBehaviour
         }
 
         return false;
+    }
+    void SetPatrolPosition()
+    {
+        Patrol_Position = new List<Vector3>();
+
+        for (int i = 0; i < idlePatrolNumber; i++)
+        {
+            List<int> dir = new List<int> { -1, 1 };
+            int dir_x = Random.Range(0, dir.Count);
+            int dir_z = Random.Range(0, dir.Count);
+            float x = gameObject.transform.position.x + dir[dir_x] * Random.Range(5f, idlePatrolRange);
+            float z = gameObject.transform.position.z + dir[dir_z] * Random.Range(5f, idlePatrolRange);
+
+            Patrol_Position.Add(new Vector3(x, gameObject.transform.position.y, z));
+        }
     }
     #region Public Func
     public void SetDamage(int  damage)
@@ -251,10 +288,12 @@ public class EnemyBT : MonoBehaviour
                     _anim.SetTrigger(_MOVE_ANIM_TRIGGER_NAME);
 
                 isMove = true; // 이동 상태로 설정
+                isReturn = true; // 언제든지 복귀 가능
             }
 
             // 공격 범위 사거리까지 이동 중일 경우
             //transform.position = Vector3.MoveTowards(transform.position, _playerTransform.position, Time.deltaTime * moveSpeed);
+            _agent.speed = moveSpeed;
             _agent.isStopped = false;
             _agent.SetDestination(_playerTransform.position);
 
@@ -275,11 +314,13 @@ public class EnemyBT : MonoBehaviour
     #region Move Origin Pos Node
     INode.ENodeState Return()
     {
-        if (isMove)
+        if (isReturn)
         {
+            // 복귀를 완료 했을 경우
             if (Vector3.SqrMagnitude(_originPos - transform.position) < 0.5f)
             {
                 isMove = false;
+                isReturn = false;
                 _agent.isStopped = true;
                 _agent.velocity = Vector3.zero;
                 transform.position = _originPos;
@@ -294,6 +335,7 @@ public class EnemyBT : MonoBehaviour
 
                 //transform.position = Vector3.MoveTowards(transform.position, _originPos, Time.deltaTime * moveSpeed);
                 _agent.isStopped = false;
+                _agent.speed = moveSpeed;
                 _agent.SetDestination(_originPos);
                 //Debug.Log("Return : Running");
                 return INode.ENodeState.ENS_Running;
@@ -382,11 +424,48 @@ public class EnemyBT : MonoBehaviour
     #endregion
 
     #region Idle Node
+    INode.ENodeState Patrol()
+    {
+        if (!isMove && _patrolCurrentTime >= patrolTime) // 순찰 시작 전, 처음에만 호출
+        {
+            _agent.isStopped = false;
+            _agent.speed = patrolMoveSpeed;
+            isMove = true; // 이동 상태로 설정
+
+            // 순찰 지점 1개 뽑기
+            patrolNum = Random.Range(0, idlePatrolNumber);
+            _agent.SetDestination(Patrol_Position[patrolNum]);
+
+            _anim.SetTrigger(_MOVE_ANIM_TRIGGER_NAME);
+
+            return INode.ENodeState.ENS_Running;
+        }
+
+        // 이동이 완료되었을 때
+        if (Vector3.SqrMagnitude(Patrol_Position[patrolNum] - transform.position) <= 0.5f)
+        {
+            isMove = false;
+            _agent.isStopped = true;
+            _agent.velocity = Vector3.zero;
+
+            if (_patrolCurrentTime >= patrolTime)
+            {
+                _patrolCurrentTime = 0;
+                SetPatrolPosition();
+
+                return INode.ENodeState.ENS_Success;
+            }
+        }
+
+        return INode.ENodeState.ENS_Running;
+    }
     INode.ENodeState Idle()
     {
         //Debug.Log("Idle");
-        if(!IsAnimationRunning(_IDLE_ANIM_STATE_NAME))
+        if (!IsAnimationRunning(_IDLE_ANIM_STATE_NAME) && !isMove)
+        {
             _anim.SetTrigger(_IDLE_ANIM_TRIGGER_NAME);
+        }
 
         return INode.ENodeState.ENS_Success;
     }

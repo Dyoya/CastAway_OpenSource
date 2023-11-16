@@ -1108,6 +1108,10 @@ MonoBehaviour:
   moveSpeed: 9
   findDistance: 11.98
   attackDistance: 4
+  idlePatrolRange: 10
+  idlePatrolNumber: 6
+  patrolTime: 5
+  patrolMoveSpeed: 3
   isAttackEnemy: 1
   attackCooldown: 2
   asDamagedSound: {fileID: 0}
@@ -1242,6 +1246,10 @@ MonoBehaviour:
   moveSpeed: 5
   findDistance: 30
   attackDistance: 2
+  idlePatrolRange: 5
+  idlePatrolNumber: 6
+  patrolTime: 5
+  patrolMoveSpeed: 3
   isAttackEnemy: 1
   attackCooldown: 2
   asDamagedSound: {fileID: 0}
@@ -2268,7 +2276,7 @@ PrefabInstance:
     - target: {fileID: 7292658344771522932, guid: f5b41ba4c79702547a89de7544b80656,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.24978745
+      value: 1.7566451
       objectReference: {fileID: 0}
     - target: {fileID: 7292658344771522932, guid: f5b41ba4c79702547a89de7544b80656,
         type: 3}
@@ -2278,12 +2286,12 @@ PrefabInstance:
     - target: {fileID: 7292658344771522932, guid: f5b41ba4c79702547a89de7544b80656,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 25.109875
+      value: 34.968464
       objectReference: {fileID: 0}
     - target: {fileID: 7292658344771522932, guid: f5b41ba4c79702547a89de7544b80656,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.20552275
+      value: -0.99963427
       objectReference: {fileID: 0}
     - target: {fileID: 7292658344771522932, guid: f5b41ba4c79702547a89de7544b80656,
         type: 3}
@@ -2293,7 +2301,7 @@ PrefabInstance:
     - target: {fileID: 7292658344771522932, guid: f5b41ba4c79702547a89de7544b80656,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.97865236
+      value: 0.027043264
       objectReference: {fileID: 0}
     - target: {fileID: 7292658344771522932, guid: f5b41ba4c79702547a89de7544b80656,
         type: 3}
@@ -2308,7 +2316,7 @@ PrefabInstance:
     - target: {fileID: 7292658344771522932, guid: f5b41ba4c79702547a89de7544b80656,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -203.71999
+      value: -363.099
       objectReference: {fileID: 0}
     - target: {fileID: 7292658344771522932, guid: f5b41ba4c79702547a89de7544b80656,
         type: 3}
