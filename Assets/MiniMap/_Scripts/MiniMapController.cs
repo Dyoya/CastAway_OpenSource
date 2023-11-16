@@ -163,9 +163,9 @@ public class MiniMapController : MonoBehaviour {
 		} else {
 			mapCamera.transform.eulerAngles = rotationOfCam;
 
-			if (rotateWithTarget) {
-				mapCamera.transform.eulerAngles = target.eulerAngles + rotationOfCam;
-			}
+			//if (rotateWithTarget) {
+			//	mapCamera.transform.eulerAngles = target.eulerAngles + rotationOfCam;
+			//}
 			mapCamera.transform.position = target.position + cameraOffset;
 		}
 	}

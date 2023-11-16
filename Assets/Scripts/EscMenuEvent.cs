@@ -6,6 +6,7 @@ public class EscMenuEvent : MonoBehaviour
 {
     [SerializeField] private GameObject PauseUI;
     [SerializeField] private GameObject mapUI; // 동현이가 추가했음
+    [SerializeField] private GameObject MinimapUI; // 동현이가 추가했음
 
     void Update()
     {
@@ -21,9 +22,16 @@ public class EscMenuEvent : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.M))
         {
             if (!GameManager.isPause)
+            {
+                MiniMapClose(MinimapUI);
                 CallMenu(mapUI);
+            }
             else
+            {
                 ResumeButtonClicked(mapUI);
+                MiniMapOpen(MinimapUI);
+            }
+                
         }
     }
     private void CallMenu(GameObject obj)
@@ -48,5 +56,15 @@ public class EscMenuEvent : MonoBehaviour
     {
         Debug.Log("게임 종료");
         Application.Quit(); 
+    }
+
+    public void MiniMapClose(GameObject obj)
+    {
+        obj.SetActive(false);
+    }
+
+    public void MiniMapOpen(GameObject obj)
+    {
+        obj.SetActive(true);
     }
 }
