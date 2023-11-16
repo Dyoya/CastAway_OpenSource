@@ -129,8 +129,6 @@ namespace StarterAssets
         }
 
         //동현이가 새로 추가한 변수(스테미너 관련 변수)
-        public UnityEvent onRun;
-        public UnityEvent onIdle;
         public HungryBar hungryBar;
         public HealthBar healthBar;
         public EnergyBar energyBar;
@@ -186,13 +184,15 @@ namespace StarterAssets
             GroundedCheck();
             Move();
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (!Input.GetKey(KeyCode.LeftShift))
             {
-                onRun.Invoke(); // 플레이어가 달릴 때 이벤트 호출
+                hungryBar.DecreaseHungry(0.5f);
+                energyBar.RecoverStamina();
             }
-            else
+            else if(Input.GetKey(KeyCode.LeftShift))
             {
-                onIdle.Invoke(); // 플레이어가 정지 상태일 때 이벤트 호출
+                hungryBar.DecreaseHungry(1.5f);
+                energyBar.DecreaseStamina();
             }
 
             // 1번 키를 누르면 왼쪽 인벤토리의 아이템 1개 소비

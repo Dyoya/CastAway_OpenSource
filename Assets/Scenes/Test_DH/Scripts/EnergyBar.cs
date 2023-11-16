@@ -8,7 +8,7 @@ public class EnergyBar : MonoBehaviour
 
     private void Start()
     {
-        Pb.BarValue = 5;
+        Pb.BarValue = 100;
     }
 
     //스테미너 감소

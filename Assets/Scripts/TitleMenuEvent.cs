@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 public class TitleMenuEvent : MonoBehaviour
 {
@@ -18,7 +19,8 @@ public class TitleMenuEvent : MonoBehaviour
     // 게임 스타트 버튼 이벤트 함수입니다.
     public void StartButtonClicked()
     {
-        
+        //동현이가 잠시 추가해놓음 삭제때려도 됨
+        SceneManager.LoadScene("Test_DH");
     }
     // 불러오기 버튼 이벤트 함수입니다.
     public void LoadButtonClicked()

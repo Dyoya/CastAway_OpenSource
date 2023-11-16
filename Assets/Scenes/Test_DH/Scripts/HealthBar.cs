@@ -11,7 +11,7 @@ public class HealthBar : MonoBehaviour
 
     private void Start()
     {
-        Pb.BarValue = 10;
+        Pb.BarValue = 100;
     }
 
     //배고픔이 0이 되었을 때
