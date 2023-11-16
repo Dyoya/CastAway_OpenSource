@@ -8,14 +8,16 @@ public class EnergyBar : MonoBehaviour
 
     private void Start()
     {
-        Pb.BarValue = 100;
+        Pb.BarValue = 5;
     }
 
     //스테미너 감소
     public void DecreaseStamina()
     {
         if (Pb.BarValue != 0)
+        {
             Pb.BarValue -= Time.deltaTime * 8;
+        }
     }
     //스테미너 증가
     public void RecoverStamina()
