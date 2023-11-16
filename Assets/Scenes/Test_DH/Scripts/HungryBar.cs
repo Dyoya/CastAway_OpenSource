@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +18,9 @@ public class HungryBar : MonoBehaviour
     public void isRunningDecreaseHungry()
     {
         if (Pb.BarValue != 0)
+        {
             Pb.BarValue -= Time.deltaTime * 1.5f;
+        }
         else if (Pb.BarValue <= 0)
         {
             isHungryZero = true;
@@ -26,9 +29,9 @@ public class HungryBar : MonoBehaviour
     //¹è°íÇÄ °¨¼Ò
     public void DecreaseHungry()
     {
-        if (Pb.BarValue < 100)
+        if (Pb.BarValue <= 100)
         {
-            Pb.BarValue -= Time.deltaTime;
+            Pb.BarValue -= Time.deltaTime * 0.5f;
         }
     }
 }
