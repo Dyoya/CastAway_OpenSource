@@ -11,7 +11,7 @@ public class MiniMapEntity{
 	public Vector2 size;
 	public bool clampInBorder;
 	public float clampDist;
-	public List<GameObject> mapObjects;
+	public List<GameObject> mapObjects; // 리스트 초기화 추가
 }
 
 public class MiniMapComponent : MonoBehaviour {
@@ -39,7 +39,7 @@ public class MiniMapComponent : MonoBehaviour {
 		mme = new MiniMapEntity ();
 		mme.icon = icon;
 		mme.rotation = initialIconRotation;
-		mme.size = size;
+        mme.size = size;
 		mme.upAxis = upAxis;
 		mme.rotateWithObject = rotateWithObject;
 		mme.clampInBorder = clampIconInBorder;
