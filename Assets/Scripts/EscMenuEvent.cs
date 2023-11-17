@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EscMenuEvent : MonoBehaviour
 {
@@ -55,7 +56,7 @@ public class EscMenuEvent : MonoBehaviour
     public void ExitButtonClicked()
     {
         Debug.Log("게임 종료");
-        Application.Quit(); 
+        Application.Quit();
     }
 
     public void MiniMapClose(GameObject obj)
