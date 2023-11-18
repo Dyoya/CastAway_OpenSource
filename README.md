@@ -111,6 +111,10 @@
       - 순찰 기능 추가
       - NevMeshAgent 어색하게 회전하는 현상 수정
 
+### 2023-11-18
+`[0.3.0]`
+- EscMenuEvent, MenuEvent => UIEvent로 통합
+
 
 <br/><br/>
 
