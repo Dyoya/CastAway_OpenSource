@@ -129,11 +129,12 @@ namespace StarterAssets
         }
 
         //동현이가 새로 추가한 변수(스테미너 관련 변수)
-        public UnityEvent onRun;
-        public UnityEvent onIdle;
-        public UnityEvent onLife;
-        public HungryBar hungrybar;
+        public HungryBar hungryBar;
         public HealthBar healthBar;
+        public EnergyBar energyBar;
+
+        [SerializeField]
+        private GameObject Player;
 
         [SerializeField]
         private slot Leftslot;
@@ -183,13 +184,16 @@ namespace StarterAssets
             GroundedCheck();
             Move();
 
-            // 플레이어가 달릴 때 이벤트 호출
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (!Input.GetKey(KeyCode.LeftShift))
             {
-                onRun.Invoke();
+                hungryBar.DecreaseHungry(0.5f);
+                energyBar.RecoverStamina();
             }
-            // 플레이어가 정지 상태일 때 이벤트 호출
-            onIdle.Invoke();
+            else if(Input.GetKey(KeyCode.LeftShift))
+            {
+                hungryBar.DecreaseHungry(1.5f);
+                energyBar.DecreaseStamina();
+            }
 
             // 1번 키를 누르면 왼쪽 인벤토리의 아이템 1개 소비
             if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -206,9 +210,13 @@ namespace StarterAssets
 
 
             //플레이어의 배고픔이 0이 되었을 때
-            if (hungrybar.isHungryZero)
+            if (hungryBar.isHungryZero)
             {
-                onLife.Invoke();
+                healthBar.ZeroHungry();
+            }
+            else if(hungryBar.Pb.BarValue >= 80)
+            {
+                healthBar.IncreaseHealth();
             }
         }
 
@@ -265,7 +273,20 @@ namespace StarterAssets
         private void Move()
         {
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            float targetSpeed = MoveSpeed;
+            if (_input.sprint && energyBar.Pb.BarValue > 0)
+            {
+                targetSpeed = SprintSpeed;
+            }
+            else if (!_input.sprint && energyBar.Pb.BarValue <= 0)
+            {
+                targetSpeed = MoveSpeed;
+            }
+            else if(healthBar.Pb.BarValue <= 0)
+            {
+                Player.SetActive(false);
+            }
+
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 

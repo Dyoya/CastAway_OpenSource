@@ -7,10 +7,11 @@ public class HealthBar : MonoBehaviour
     public ProgressBar Pb;
     public HungryBar hungry;
     public bool Playernotsurvival = false;
+    public float hung = 0;
 
     private void Start()
     {
-        Pb.BarValue = 10;
+        Pb.BarValue = 100;
     }
 
     //배고픔이 0이 되었을 때
@@ -25,5 +26,10 @@ public class HealthBar : MonoBehaviour
         {
             Playernotsurvival = true;
         }
+    }
+
+    public void IncreaseHealth()
+    {
+        Pb.BarValue += Time.deltaTime;
     }
 }
