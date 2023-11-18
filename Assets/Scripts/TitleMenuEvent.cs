@@ -19,8 +19,7 @@ public class TitleMenuEvent : MonoBehaviour
     // 게임 스타트 버튼 이벤트 함수입니다.
     public void StartButtonClicked()
     {
-        //동현이가 잠시 추가해놓음 삭제때려도 됨
-        SceneManager.LoadScene("Test_DH");
+        SceneManager.LoadScene(1);
     }
     // 불러오기 버튼 이벤트 함수입니다.
     public void LoadButtonClicked()

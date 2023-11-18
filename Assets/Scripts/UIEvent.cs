@@ -5,10 +5,13 @@ using TMPro;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
-public class MenuEvent : MonoBehaviour
+public class UIEvent : MonoBehaviour
 {
     public GameObject MainUI;
     public GameObject OptionUI;
+    [SerializeField] private GameObject PauseUI;
+    [SerializeField] private GameObject mapUI; // 동현이가 추가했음
+    [SerializeField] private GameObject MinimapUI; // 동현이가 추가했음
 
     // UI를 모두 끄는 이벤트 함수 입니다.
     private void closeAllUI()
@@ -46,10 +49,10 @@ public class MenuEvent : MonoBehaviour
     }
 
     // pause 메뉴에서 계속하기 버튼 이벤트 함수입니다.
-    public void ResumeButtonClicked()
+    public void ResumeButtonClicked(GameObject obj)
     {
         GameManager.isPause = false;
-        PauseUI.SetActive(false);
+        obj.SetActive(false);
         Time.timeScale = 1f; // 1배속 (정상 속도)
     }
 
@@ -64,25 +67,47 @@ public class MenuEvent : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    [SerializeField] private GameObject PauseUI;
+
     void Update()
     {
-        // 메인 메뉴가 아닐때 esc 버튼을 눌렀을 경우 정지
-        if (SceneManager.GetActiveScene().buildIndex != 0)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (!GameManager.isPause)
+                CallMenu(PauseUI);
+            else
+                ResumeButtonClicked(PauseUI);
+        }
+
+        //동현이가 추가함 맵 UI 표시
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            if (!GameManager.isPause)
             {
-                if (!GameManager.isPause)
-                    CallMenu();
-                else
-                    ResumeButtonClicked();
+                MiniMapClose(MinimapUI);
+                CallMenu(mapUI);
             }
+            else
+            {
+                ResumeButtonClicked(mapUI);
+                MiniMapOpen(MinimapUI);
+            }
+
         }
     }
-    private void CallMenu()
+    private void CallMenu(GameObject obj)
     {
         GameManager.isPause = true;
-        PauseUI.SetActive(true);
+        obj.SetActive(true);
         Time.timeScale = 0f; // 시간의 흐름 설정. 0배속. 즉 시간을 멈춤.
-    }   
+    }
+
+    public void MiniMapClose(GameObject obj)
+    {
+        obj.SetActive(false);
+    }
+
+    public void MiniMapOpen(GameObject obj)
+    {
+        obj.SetActive(true);
+    }
 }
