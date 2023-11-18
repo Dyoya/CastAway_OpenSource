@@ -445,12 +445,12 @@ namespace StarterAssets
             {
                 Helicopter.SetActive(true);
                 other.gameObject.SetActive(false);
-                pd.Play(ta[1]);
+                pd.Play(ta[0]);
             }
             if (other.tag == "Escape")
             {
                 HelicopterController otherScript = GameObject.Find("Helicopter").GetComponent<HelicopterController>();
-                pd.Play(ta[2]);
+                pd.Play(ta[1]);
                 otherScript.EscapeHelicopter();
                 other.gameObject.SetActive(false);
             }
