@@ -7,7 +7,6 @@ public class ItemAccessible : MonoBehaviour
     Rigidbody rigid;
     SphereCollider sphereCollider;
 
-
     //public bool Use()
     //{
     //    return false;

@@ -103,6 +103,9 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        private int _animIDAttack; // 공격에 필요한 애니메이션 추가한 부분
+        private int _animIDDeath; // 동현이가 새로 추가함
+        private int _animIDGetItem; // 아이템을 줍는 애니메이션 추가한 부분
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
         private PlayerInput _playerInput;
@@ -123,7 +126,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
                 return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
-				return false;
+                return false;
 #endif
             }
         }
@@ -133,9 +136,7 @@ namespace StarterAssets
         public HealthBar healthBar;
         public EnergyBar energyBar;
 
-        [SerializeField]
-        private GameObject Player;
-
+        //아이템 사용에 필요한 변수
         [SerializeField]
         private slot Leftslot;
         [SerializeField]
@@ -144,6 +145,14 @@ namespace StarterAssets
         private PlayableDirector pd;
         [SerializeField] TimelineAsset[] ta;
         [SerializeField] GameObject Helicopter;
+
+        //공격을 할 때 사용할 변수
+        private bool isAttack = false;
+        private bool isAttackDirection = false;
+        private bool isJump = false;
+        private bool isDead = false;
+        private bool isGetItem = false;
+        private bool isGetItemDirection = false;
 
         private void Awake()
         {
@@ -164,7 +173,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
             _playerInput = GetComponent<PlayerInput>();
 #else
-			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
+            Debug.LogError("Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
             AssignAnimationIDs();
@@ -180,16 +189,27 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
+            if (isAttackDirection || isGetItemDirection)
+                return;
+
+            if (isDead)
+                return;
+
             JumpAndGravity();
             GroundedCheck();
             Move();
+            
+            Attack();
+            Death();
 
+
+            //달릴 때랑 걸을때의 스테미너 감소량 다르게 설정한 부분
             if (!Input.GetKey(KeyCode.LeftShift))
             {
                 hungryBar.DecreaseHungry(0.5f);
                 energyBar.RecoverStamina();
             }
-            else if(Input.GetKey(KeyCode.LeftShift))
+            else if (Input.GetKey(KeyCode.LeftShift))
             {
                 hungryBar.DecreaseHungry(1.5f);
                 energyBar.DecreaseStamina();
@@ -214,7 +234,7 @@ namespace StarterAssets
             {
                 healthBar.ZeroHungry();
             }
-            else if(hungryBar.Pb.BarValue >= 80)
+            else if (hungryBar.Pb.BarValue >= 80)
             {
                 healthBar.IncreaseHealth();
             }
@@ -232,6 +252,79 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            _animIDAttack = Animator.StringToHash("Attack");
+            _animIDDeath = Animator.StringToHash("Death");
+            _animIDGetItem = Animator.StringToHash("GetItem");
+        }
+
+        //공격함수 추가한 부분
+        private void Attack()
+        {
+            if (_hasAnimator && Grounded && !isJump && !isAttack && _input.attack)
+            {
+                _controller.Move(Vector3.zero);
+                _animator.SetTrigger(_animIDAttack);
+                isAttack = true;
+                isAttackDirection = true;
+            }
+        }
+
+        private void EndAttack()
+        {
+            isAttack = false;
+            _input.attack = false;
+        }
+
+        private void EndAttackDirection()
+        {
+            isAttackDirection = false;
+        }
+
+        //플레이어 죽는 애니메이션 추가한 부분    
+        private void Death()
+        {
+            if (_hasAnimator && Grounded && !isJump && !isDead && healthBar.Pb.BarValue == 0)
+            {
+                _controller.Move(Vector3.zero);
+                _animator.SetTrigger(_animIDDeath);
+                isDead = true;
+                StartDeathAnimation();
+                return;
+            }
+        }
+
+        //3초후 사라짐
+        private void StartDeathAnimation()
+        {
+            StartCoroutine(RemoveObjectAfterDelay());
+        }
+
+        private IEnumerator RemoveObjectAfterDelay()
+        {
+            yield return new WaitForSeconds(3F);
+            Destroy(gameObject);
+        }
+
+        public void GetItem()
+        {
+            if (_hasAnimator && Grounded && !isJump && !isGetItem && _input.getItem)
+            {
+                _controller.Move(Vector3.zero);
+                _animator.SetTrigger(_animIDGetItem);
+                isGetItem = true;
+                isGetItemDirection = true;
+            }
+        }
+
+        private void EndGetItem()
+        {
+            isGetItem = false;
+            _input.getItem = false;
+        }
+
+        private void EndGetItemDirection()
+        {
+            isGetItemDirection = false;
         }
 
         private void GroundedCheck()
@@ -272,7 +365,7 @@ namespace StarterAssets
 
         private void Move()
         {
-            // set target speed based on move speed, sprint speed and if sprint is pressed
+            //플레이어의 에너지바가 0일 경우 못 뛰도록 추가한 부분 
             float targetSpeed = MoveSpeed;
             if (_input.sprint && energyBar.Pb.BarValue > 0)
             {
@@ -281,10 +374,6 @@ namespace StarterAssets
             else if (!_input.sprint && energyBar.Pb.BarValue <= 0)
             {
                 targetSpeed = MoveSpeed;
-            }
-            else if(healthBar.Pb.BarValue <= 0)
-            {
-                Player.SetActive(false);
             }
 
 
@@ -339,6 +428,16 @@ namespace StarterAssets
 
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
+            //공격을 할 때는 함수 탈출 추가한 부분
+            if (isAttack)
+                return;
+
+            if (isDead)
+                return;
+
+            if (isGetItem)
+                return;
+
             // move the player
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
                              new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
@@ -363,6 +462,7 @@ namespace StarterAssets
                 {
                     _animator.SetBool(_animIDJump, false);
                     _animator.SetBool(_animIDFreeFall, false);
+                    isJump = false;
                 }
 
                 // stop our velocity dropping infinitely when grounded
@@ -381,6 +481,7 @@ namespace StarterAssets
                     if (_hasAnimator)
                     {
                         _animator.SetBool(_animIDJump, true);
+                        isJump = true;
                     }
                 }
 

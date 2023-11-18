@@ -14,6 +14,9 @@ public class ActionController : MonoBehaviour
     [SerializeField]
     private InventoryUI inventory;
 
+    [SerializeField]
+    private StarterAssets.ThirdPersonController player;
+
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Item")
@@ -34,16 +37,17 @@ public class ActionController : MonoBehaviour
                 int isAcquired = inventory.AcquireItem(other.gameObject.GetComponent<ItemPickup>().item);
                 if (isAcquired == 0)
                 {
+                    player.GetItem();
                     Destroy(other.gameObject);
                     ItemInfoDisappear();
                     pickupActivated = true;
                 }
-                else if (isAcquired == 1)
+                if (isAcquired == 1)
                 {
                     disappear();
                     ItemInfoAppear(other.gameObject.name + "can't pick it up");
                 }
-                else if (isAcquired == 2)
+                if (isAcquired == 2)
                 {
                     disappear();
                     ItemInfoAppear("Inventory is full");
