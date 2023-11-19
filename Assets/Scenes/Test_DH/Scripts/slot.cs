@@ -81,24 +81,4 @@ public class slot : MonoBehaviour
         text_Count.text = "0";
         go_CountImage.SetActive(false);
     }
-
-    //public void OnPointerClick(PointerEventData eventData)
-    //{
-    //    if(eventData.button == PointerEventData.InputButton.Right)
-    //    {
-    //        Debug.Log("이벤트 발생");
-    //        if (item != null)
-    //        {
-    //            if(item.itemType == Item.ItemType.Used)
-    //            {
-    //                Debug.Log(item.itemName + "소비 아이템 사용");
-    //                SetSlotCount(-1);
-    //            }
-    //            else
-    //            {
-    //                //장착이 있다면 작성
-    //            }
-    //        }
-    //    }
-    //}
 }
