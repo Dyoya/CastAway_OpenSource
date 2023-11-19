@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System;
+using TMPro;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -307,7 +308,7 @@ namespace StarterAssets
 
         public void GetItem()
         {
-            if (_hasAnimator && Grounded && !isJump && !isGetItem && _input.getItem)
+            if (_hasAnimator && Grounded && !isJump && !isGetItem)
             {
                 _controller.Move(Vector3.zero);
                 _animator.SetTrigger(_animIDGetItem);
@@ -561,6 +562,15 @@ namespace StarterAssets
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
         }
+
+        private bool pickupActivated = true;
+
+        [SerializeField]
+        private TextMeshProUGUI actionText; // 필요 컴포넌트
+
+        [SerializeField]
+        private InventoryUI inventory;
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.tag == "Helicopter")
@@ -576,6 +586,84 @@ namespace StarterAssets
                 otherScript.EscapeHelicopter();
                 other.gameObject.SetActive(false);
             }
+            if (other.gameObject.tag == "Item")
+            {
+                string itemName = other.gameObject.name;
+                if (pickupActivated)
+                    ItemInfoAppear(itemName + " Pick up (E)");
+            }
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (other.gameObject.tag == "Item" && _input.getItem)
+            {
+                GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
+
+                if (items.Length > 0)
+                {
+                    GameObject closestItem = null;
+                    float closestDistance = Mathf.Infinity;
+
+                    foreach (GameObject item in items)
+                    {
+                        float distance = (item.transform.position - transform.position).sqrMagnitude;
+                        if (distance < closestDistance)
+                        {
+                            closestDistance = distance;
+                            closestItem = item;
+                        }
+                    }
+
+                    if (closestItem != null && closestItem == other.gameObject)
+                    {
+                        int isAcquired = inventory.AcquireItem(other.gameObject.GetComponent<ItemPickup>().item);
+                        if (isAcquired == 0)
+                        {
+                            GetItem();
+                            Destroy(other.gameObject);
+                            ItemInfoDisappear();
+                            pickupActivated = true;
+                        }
+                        if (isAcquired == 1)
+                        {
+                            disappear();
+                            ItemInfoAppear(other.gameObject.name + "can't pick it up");
+                        }
+                        if (isAcquired == 2)
+                        {
+                            disappear();
+                            ItemInfoAppear("Inventory is full");
+                        }
+                    }
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject.tag == "Item")
+            {
+                ItemInfoDisappear();
+                pickupActivated = true;
+            }
+        }
+
+        void disappear()
+        {
+            ItemInfoDisappear();
+            pickupActivated = false;
+        }
+
+        private void ItemInfoAppear(string ItemName)
+        {
+            actionText.gameObject.SetActive(true);
+            actionText.text = ItemName;
+        }
+
+        private void ItemInfoDisappear()
+        {
+            actionText.gameObject.SetActive(false);
         }
     }
 }
