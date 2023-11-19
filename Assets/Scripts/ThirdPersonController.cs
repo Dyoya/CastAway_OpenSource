@@ -308,7 +308,7 @@ namespace StarterAssets
 
         public void GetItem()
         {
-            if (_hasAnimator && Grounded && !isJump && !isGetItem)
+            if (_hasAnimator && Grounded && !isJump && !isGetItem && _input.getItem)
             {
                 _controller.Move(Vector3.zero);
                 _animator.SetTrigger(_animIDGetItem);
@@ -591,6 +591,7 @@ namespace StarterAssets
                 string itemName = other.gameObject.name;
                 if (pickupActivated)
                     ItemInfoAppear(itemName + " Pick up (E)");
+                _input.getItem = false;
             }
         }
 
