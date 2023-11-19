@@ -23,7 +23,7 @@ public class UIEvent : MonoBehaviour
     // 게임 스타트 버튼 이벤트 함수입니다.
     public void StartButtonClicked()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
     // 불러오기 버튼 이벤트 함수입니다.
     public void LoadButtonClicked()

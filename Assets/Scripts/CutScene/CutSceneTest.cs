@@ -37,12 +37,6 @@ public class CutSceneTest : MonoBehaviour
             effectPrefab2.SetActive(true);
         }
 
-        //transform.DORotate(new Vector3(10, 0, 0), 0.2f);
-        //yield return new WaitForSeconds(0.2f);
-        //transform.DOShakeRotation(10, vec, vibrato, 10, true);
-        //yield return new WaitForSeconds(10f);
-        //Destroy(gameObject);
-
         transform.DOMove(vec, 20.0f);
         Vector3 direction = (vec - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);

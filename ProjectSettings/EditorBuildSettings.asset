@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Test_DH.unity
     guid: 81bcfea685b3f974aa4718e046b6a109
+  - enabled: 1
+    path: Assets/Scenes/CutScene/PlaneCrashCutScene.unity
+    guid: 929ae0ecc3f696144bb7fe1eaa6c51ff
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7,
       type: 2}

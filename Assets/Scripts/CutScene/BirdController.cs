@@ -23,7 +23,7 @@ public class BirdController : MonoBehaviour
     IEnumerator BirdDestroy()
     {
         yield return new WaitForSeconds(2.5f);
-        transform.DOMove(new Vector3(-681, 310, -300), 15f);
+        transform.DOMove(new Vector3(-681, 310, -300), 20f);
         yield return new WaitForSeconds(5f); // 2√  ¥Î±‚
         Destroy(gameObject);
     }
