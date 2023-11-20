@@ -199,7 +199,8 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
-            
+
+            CheckItemdistance();
             Attack();
             Death();
 
@@ -571,6 +572,8 @@ namespace StarterAssets
         [SerializeField]
         private InventoryUI inventory;
 
+        private List<GameObject> triggerItems = new List<GameObject>();
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.tag == "Helicopter")
@@ -588,6 +591,7 @@ namespace StarterAssets
             }
             if (other.gameObject.tag == "Item")
             {
+                triggerItems.Add(other.gameObject);
                 string itemName = other.gameObject.name;
                 if (pickupActivated)
                     ItemInfoAppear(itemName + " Pick up (E)");
@@ -595,18 +599,16 @@ namespace StarterAssets
             }
         }
 
-        private void OnTriggerStay(Collider other)
+        private void CheckItemdistance()
         {
-            if (other.gameObject.tag == "Item" && _input.getItem)
+            if (_input.getItem)
             {
-                GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
-
-                if (items.Length > 0)
+                if (triggerItems.Count > 0)
                 {
                     GameObject closestItem = null;
                     float closestDistance = Mathf.Infinity;
 
-                    foreach (GameObject item in items)
+                    foreach (GameObject item in triggerItems)
                     {
                         float distance = (item.transform.position - transform.position).sqrMagnitude;
                         if (distance < closestDistance)
@@ -616,6 +618,8 @@ namespace StarterAssets
                         }
                     }
 
+                    Collider other = closestItem.GetComponent<Collider>();
+
                     if (closestItem != null && closestItem == other.gameObject)
                     {
                         int isAcquired = inventory.AcquireItem(other.gameObject.GetComponent<ItemPickup>().item);
@@ -623,6 +627,7 @@ namespace StarterAssets
                         {
                             GetItem();
                             Destroy(other.gameObject);
+                            triggerItems.Remove(other.gameObject);
                             ItemInfoDisappear();
                             pickupActivated = true;
                         }
@@ -636,6 +641,7 @@ namespace StarterAssets
                             disappear();
                             ItemInfoAppear("Inventory is full");
                         }
+                        _input.getItem = false;
                     }
                 }
             }
@@ -645,8 +651,10 @@ namespace StarterAssets
         {
             if (other.gameObject.tag == "Item")
             {
+                triggerItems.Remove(other.gameObject);
                 ItemInfoDisappear();
                 pickupActivated = true;
+                _input.getItem = false;
             }
         }
 
