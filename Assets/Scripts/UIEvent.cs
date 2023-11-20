@@ -12,6 +12,7 @@ public class UIEvent : MonoBehaviour
     [SerializeField] private GameObject PauseUI;
     [SerializeField] private GameObject mapUI; // 동현이가 추가했음
     [SerializeField] private GameObject MinimapUI; // 동현이가 추가했음
+    [SerializeField] private SaveAndLoad theSaveAndLoad;
 
     // UI를 모두 끄는 이벤트 함수 입니다.
     private void closeAllUI()
@@ -29,6 +30,7 @@ public class UIEvent : MonoBehaviour
     public void LoadButtonClicked()
     {
         Debug.Log("불러오기");
+        theSaveAndLoad.LoadData();
     }
     // 게임 메인화면으로 가는 버튼 이벤트 함수입니다.
     public void returnToMainButtonClicked()
@@ -60,6 +62,7 @@ public class UIEvent : MonoBehaviour
     public void SaveButtonClicked()
     {
         Debug.Log("저장하기");
+        theSaveAndLoad.SaveData();
     }
     //pause 메뉴에서 메뉴로 돌아가기 버튼 이벤트 함수입니다.
     public void ExitButtonClicked()
