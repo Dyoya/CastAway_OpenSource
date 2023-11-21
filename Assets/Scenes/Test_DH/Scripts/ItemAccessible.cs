@@ -7,11 +7,6 @@ public class ItemAccessible : MonoBehaviour
     Rigidbody rigid;
     SphereCollider sphereCollider;
 
-    //public bool Use()
-    //{
-    //    return false;
-    //}
-
     // Start is called before the first frame update
     void Awake()
     {

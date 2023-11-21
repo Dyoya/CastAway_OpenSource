@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,21 @@ public class InventoryUI : MonoBehaviour
     private HungryBar hungryBar;
 
     private slot[] slots; // 인벤토리 슬롯들
+
+    public slot[] getSlots() { return slots; }
+
+    [SerializeField] private Item[] items;
+
+    public void LoadToInven(int _arrayNum, string _itemName, int _itemNum) 
+    {
+        for(int i = 0; i < items.Length; i++)
+        {
+            if (items[i].itemName == _itemName)
+            {
+                slots[_arrayNum].AddItem(items[i], _itemNum);
+            }
+        }
+    }
 
     void Start()
     {

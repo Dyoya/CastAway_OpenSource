@@ -1,10 +1,36 @@
 ![header](https://capsule-render.vercel.app/api?type=rect&color=auto&height=300&section=header&text=필%20독&fontSize=60&animation=twinkling&desc=CastAway%20OpenSource%20Project)
 <br/>
-<img src="https://img.shields.io/badge/Unity-000000?style=flat&logo=Unity&logoColor=white"/> <img src="https://img.shields.io/badge/C%20Sharp-512BD4?style=flat&logo=C%20Sharp&logoColor=white"/>
+<img src="https://img.shields.io/badge/Unity-000000?style=flat&logo=Unity&logoColor=white"/> <img src="https://img.shields.io/badge/C%20Sharp-512BD4?style=flat&logo=C%20Sharp&logoColor=white"/> 
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 <br/>
+
 **23-2 오픈소스프로젝트 협업 repository**
 - 유니티 버전 : `2021.3.31f1`
-<br/><br/>
+
+<br/>
+
+### Contributors
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Dyoya/"><img src="https://avatars.githubusercontent.com/u/118094189?v=4" width="100px;" alt="Dyoya"/><br /><sub><b>Dyoya (HyeongMin Kim)</b></sub></a><br /> <a href="https://github.com/Dyoya/CastAway_OpenSource/commits?author=Dyoya" title="Commit">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/CHTuna/"><img src="https://avatars.githubusercontent.com/u/45841115?v=4" width="100px;" alt="CHTuna"/><br /><sub><b>CHTuna (DongWon Kang)</b></sub></a><br /> <a href="https://github.com/Dyoya/CastAway_OpenSource/commits?author=CHTuna" title="Commit">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/KDHen/"><img src="https://avatars.githubusercontent.com/u/97778379?v=4" width="100px;" alt="KDHen"/><br /><sub><b>KDHen (DongHyeon Kang)</b></sub></a><br /> <a href="https://github.com/Dyoya/CastAway_OpenSource/commits?author=KDHen" title="Commit">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Hyung-Junn/"><img src="https://avatars.githubusercontent.com/u/102523742?v=4" width="100px;" alt="Hyung-Junn"/><br /><sub><b>Hyung-Junn (HyeongJun Kim)</b></sub></a><br /> <a href="https://github.com/Dyoya/CastAway_OpenSource/commits?author=Hyung-Junn" title="Commit">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ### 바로가기
 - [Scripts 디렉터리](https://github.com/Dyoya/CastAway_OpenSource/tree/main/Assets/Scripts)
@@ -119,6 +145,14 @@
 `[0.3.1]`
 - Player : 아이템 줍기, 죽었을 때, 마우스 왼쪽 클릭(공격) 애니메이션 추가(아이템 주울 때 아이템 위로 올라가게 되면 플레이어 난동 애니메이션 오류있음 난중에 수정 예정)
 
+`[0.3.2]`
+- Player : 아이템 광클해도 안먹어지는 현상 수정함
+- PlaneCrash 컷씬에서 처음에 간략하게 스토리 내용을 추가 할 수 있게 수정
+
+`[0.3.3]`
+- Player : 아이템 간혹 2개 동시에 먹어지는 현상 수정함 이제 isTrigger에 있는 아이템 중에 제일 가까운 것만 먹음
+- save and load : 플레이어 위치 저장과 로드 스크립트 작성 -> 플레이어가 들고 있는 아이템까지 저장해야됨
+
 <br/><br/>
 
 ## 참고자료
@@ -127,3 +161,5 @@
 3. [깃허브로 유니티 프로젝트 관리](https://wergia.tistory.com/238)
 4. [메타파일 주의점](https://blog.naver.com/raruz/222852771902)
 5. [플레이어와 카메라 사이의 오브젝트 투명화하기](https://daekyoulibrary.tistory.com/entry/Charon-8-플레이어와-카메라-사이의-오브젝트-투명화하기)
+6. [NavMesh Component1](https://algorfati.tistory.com/25)
+7. [NavMesh Component2](https://twosouls.tistory.com/7)

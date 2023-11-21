@@ -1,0 +1,1 @@
+{"playerPos":{"x":10.516993522644043,"y":-0.010000169277191162,"z":-5.3940510749816898},"playerRot":{"x":0.0,"y":145.99746704101563,"z":0.0},"inventoryArrayNum":[0],"inventoryItemName":["Fish"],"inventoryItemNum":[1]}
