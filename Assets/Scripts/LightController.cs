@@ -28,24 +28,18 @@ public class LightController : MonoBehaviour
             // 주간 시간
             float t = Mathf.Clamp01(timeElapsed / dayDuration);  // 0에서 1로 정규화
             sunLight.color = Color.Lerp(dayColor, eveningColor, t);
-            RenderSettings.skybox.Lerp(skyboxes[0], skyboxes[1], t);
-            RenderSettings.skybox.SetFloat("_Exposure", Mathf.Lerp(skyboxes[0].GetFloat("_Exposure"), skyboxes[1].GetFloat("_Exposure"), t));
         }
         else if (timeElapsed < dayDuration + eveningDuration)
         {
             // 저녁 시간
             float t = (timeElapsed - dayDuration) / eveningDuration;
             sunLight.color = Color.Lerp(eveningColor, nightColor, t);
-            RenderSettings.skybox.Lerp(skyboxes[1], skyboxes[2], t);
-            RenderSettings.skybox.SetFloat("_Exposure", Mathf.Lerp(skyboxes[1].GetFloat("_Exposure"), skyboxes[2].GetFloat("_Exposure"), t));
         }
         else
         {
             // 야간 시간
             float t = (timeElapsed - dayDuration - eveningDuration) / nightDuration;
             sunLight.color = Color.Lerp(nightColor, dayColor, t);
-            RenderSettings.skybox.Lerp(skyboxes[2], skyboxes[0], t);
-            RenderSettings.skybox.SetFloat("_Exposure", Mathf.Lerp(skyboxes[2].GetFloat("_Exposure"), skyboxes[0].GetFloat("_Exposure"), t));
 
             // 전환 시간이 지나면 초기화
             if (timeElapsed >= dayDuration + eveningDuration + nightDuration)
