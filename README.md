@@ -161,3 +161,5 @@
 3. [깃허브로 유니티 프로젝트 관리](https://wergia.tistory.com/238)
 4. [메타파일 주의점](https://blog.naver.com/raruz/222852771902)
 5. [플레이어와 카메라 사이의 오브젝트 투명화하기](https://daekyoulibrary.tistory.com/entry/Charon-8-플레이어와-카메라-사이의-오브젝트-투명화하기)
+6. [NavMesh Component1](https://algorfati.tistory.com/25)
+7. [NavMesh Component2](https://twosouls.tistory.com/7)
