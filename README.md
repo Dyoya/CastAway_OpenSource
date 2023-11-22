@@ -133,9 +133,9 @@
 
 ### 2023-11-17
 `[0.2.9]`
-- EnemyBT.cs 수정
-      - 순찰 기능 추가
-      - NevMeshAgent 어색하게 회전하는 현상 수정
+- EnemyBT.cs 수정  
+      - 순찰 기능 추가  
+      - NevMeshAgent 어색하게 회전하는 현상 수정  
 
 ### 2023-11-18
 `[0.3.0]`
@@ -163,3 +163,6 @@
 5. [플레이어와 카메라 사이의 오브젝트 투명화하기](https://daekyoulibrary.tistory.com/entry/Charon-8-플레이어와-카메라-사이의-오브젝트-투명화하기)
 6. [NavMesh Component1](https://algorfati.tistory.com/25)
 7. [NavMesh Component2](https://twosouls.tistory.com/7)
+8. [모닥불](https://ansohxxn.github.io/unity%20lesson%203/ch8-1/)
+9. [건축 기능](https://ansohxxn.github.io/unity%20lesson%203/ch9-1/)
+10. [세이브&로드](https://ansohxxn.github.io/unity%20lesson%203/ch12-8/)
