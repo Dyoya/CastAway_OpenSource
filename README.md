@@ -159,7 +159,11 @@
     - Return 삭제  
     - Navmesh Component 오픈소스 사용  
 - EscapeEnemyBT.cs 스크립트 추가  
-    - 토끼와 같은 도망가는 동물을 위한 스크립트  
+    - 토끼와 같은 도망가는 동물을 위한 스크립트
+
+`[0.3.5]`
+- Player : FishingZone, 각 아이템을 획득하고나서의 UI, 각 아이템들을 먹을 때 UI 변경
+- Item : 낚시대, 낚시줄, 완전한 낚시대 생성
 
 <br/><br/>
 
