@@ -112,7 +112,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 3
   m_Center: {x: 0.0001058504, y: 0.9978598, z: 0.32488593}
 --- !u!114 &8535383591136120174
 MonoBehaviour:

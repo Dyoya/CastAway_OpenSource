@@ -589,7 +589,7 @@ namespace StarterAssets
 
         private Queue<string> dialogueQueue = new Queue<string>();
 
-        private bool isDialogueRunning;
+        public bool hasCompleteFishingRod = false;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -613,6 +613,18 @@ namespace StarterAssets
                 if (pickupActivated)
                     ItemInfoAppear(itemName + " 아이템 줍기 (E)");
                 _input.getItem = false;
+            }
+            if (other.gameObject.tag == "FishingZone")
+            {
+                if(!hasCompleteFishingRod)
+                {
+                    conversationAppear("완전한 낚시대가 없어... 섬을 돌면서 바다에 휩쓸려온 재료들을 찾아서 완전한 낚시대를 만들어 보자!!");
+                }
+                else
+                {
+                    conversationAppear("여기서 낚시 할 수 있겠는데? 여기서 낚시를 하자");
+                }
+                
             }
         }
 
@@ -656,6 +668,7 @@ namespace StarterAssets
                             }
                             if (itemName == "완전한 낚시대")
                             {
+                                hasCompleteFishingRod = true;
                                 dialogueQueue.Enqueue("낚시대가 있으니까 물고기를 잡을 수 있겠다 강이나 해변으로 가보자!! ");
                                 StartCoroutine(DialogueUIAppear());
                             }
@@ -678,14 +691,13 @@ namespace StarterAssets
 
         private void CheckInventoryForItems()
         {
-            if (isDialogueRunning) return;
-
             Item fishingRod = inventory.FindItemByName("낚시대");
             Item fishingLine = inventory.FindItemByName("낚시줄");
 
             if (fishingRod != null && fishingLine != null)
             {
-                StartCoroutine(WaitAndCreateCompleteFishingRod(fishingRod, fishingLine));
+                StartCoroutine(WaitAndCreateCompleteFishingRod("낚시대와 낚시줄이 있으니까 완전한 낚시대를 만들 수 있겠는 걸?", fishingRod, fishingLine));
+                StartCoroutine(UIDisAppear());
             }
         }
 
@@ -704,6 +716,10 @@ namespace StarterAssets
                 ItemInfoDisappear();
                 pickupActivated = true;
                 _input.getItem = false;
+            }
+            if (other.gameObject.tag == "FishingZone")
+            {
+                ItemInfoDisappear();
             }
         }
 
@@ -725,6 +741,12 @@ namespace StarterAssets
             conversationImage.gameObject.SetActive(false);
         }
 
+        private void conversationAppear(string conversation)
+        {
+            conversationImage.gameObject.SetActive(true);
+            conversationText.text = conversation;
+        }
+
         private IEnumerator DialogueUIAppear()
         {
             while (dialogueQueue.Count > 0)
@@ -740,9 +762,19 @@ namespace StarterAssets
             }
         }
 
-        private IEnumerator WaitAndCreateCompleteFishingRod(Item fishingRod, Item fishingLine)
+        private IEnumerator UIDisAppear()
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(6);
+
+            ItemInfoDisappear();
+        }
+
+        private IEnumerator WaitAndCreateCompleteFishingRod(string ItemName, Item fishingRod, Item fishingLine)
+        {
+            yield return new WaitForSeconds(4);
+            
+            conversationImage.gameObject.SetActive(true);
+            conversationText.text = ItemName;
 
             int fishingRodSlotIndex = inventory.FindItemSlotIndex(fishingRod);
             int fishingLineSlotIndex = inventory.FindItemSlotIndex(fishingLine);

@@ -12,6 +12,7 @@ TagManager:
   - Item
   - FxTemporaire
   - Escape
+  - FishingZone
   layers:
   - Default
   - TransparentFX
