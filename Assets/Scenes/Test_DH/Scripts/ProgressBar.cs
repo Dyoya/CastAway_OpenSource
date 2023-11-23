@@ -68,8 +68,6 @@ public class ProgressBar : MonoBehaviour
         barBackground.sprite = BarBackGroundSprite;
 
         UpdateValue(barValue);
-
-
     }
 
     void UpdateValue(float val)

@@ -27,6 +27,7 @@ public class PauseUI : MonoBehaviour
     //pause 메뉴에서 메뉴로 돌아가기 버튼 이벤트 함수입니다.
     public void ExitButtonClicked()
     {
+        Time.timeScale = 1f; // 1배속 (정상 속도)
         SceneManager.LoadScene(0);
     }
 

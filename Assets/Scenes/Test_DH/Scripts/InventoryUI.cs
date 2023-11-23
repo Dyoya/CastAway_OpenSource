@@ -65,7 +65,6 @@ public class InventoryUI : MonoBehaviour
                 return 0;
             }
         }
-
         return 2;
     }
 
@@ -75,11 +74,42 @@ public class InventoryUI : MonoBehaviour
         {
             hungryBar.Pb.BarValue += _item.itemValue;
 
-            // 아이템을 슬롯에서 제거합니다.
             slots[i].SetSlotCount(-1);
             if (slots[i].itemCount <= 0)
                 slots[i].ClearSlot();
             return;
         }
+    }
+
+    public Item FindItemByName(string itemName)
+    {
+        Debug.Log(itemName);
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].item != null)
+            {
+                Debug.Log(slots[i].item.name);
+                if (slots[i].item.name == itemName)
+                {
+                    return slots[i].item;
+                }
+            }
+        }
+        return null;
+    }
+
+    public int FindItemSlotIndex(Item item)
+    {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].item != null)
+            {
+                if (slots[i].item == item)
+                {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 }

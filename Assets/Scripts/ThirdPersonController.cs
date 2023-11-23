@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 using TMPro;
+using UnityEngine.UI;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -570,9 +571,25 @@ namespace StarterAssets
         private TextMeshProUGUI actionText; // 필요 컴포넌트
 
         [SerializeField]
+        private TextMeshProUGUI conversationText; // 필요 컴포넌트
+
+        [SerializeField]
         private InventoryUI inventory;
 
+        [SerializeField]
+        private Image textImage;
+
+        [SerializeField]
+        private Image conversationImage;
+
+        [SerializeField]
+        private GameObject completeFishingRodPrefab;
+
         private List<GameObject> triggerItems = new List<GameObject>();
+
+        private Queue<string> dialogueQueue = new Queue<string>();
+
+        private bool isDialogueRunning;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -594,7 +611,7 @@ namespace StarterAssets
                 triggerItems.Add(other.gameObject);
                 string itemName = other.gameObject.name;
                 if (pickupActivated)
-                    ItemInfoAppear(itemName + " Pick up (E)");
+                    ItemInfoAppear(itemName + " 아이템 줍기 (E)");
                 _input.getItem = false;
             }
         }
@@ -628,23 +645,55 @@ namespace StarterAssets
                             GetItem();
                             Destroy(other.gameObject);
                             triggerItems.Remove(other.gameObject);
-                            ItemInfoDisappear();
                             pickupActivated = true;
+                            ItemInfoDisappear();
+                            CheckInventoryForItems();
+                            string itemName = other.gameObject.name;
+                            if (itemName == "낚시대" || itemName == "낚시줄")
+                            {
+                                dialogueQueue.Enqueue("여기에 왠 " + itemName + "가 있지...? 바다에서 떠밀려 왔나... 잘찾아보면 다른 것도 있을거 같애!! 찾아보자!");
+                                StartCoroutine(DialogueUIAppear());
+                            }
+                            if (itemName == "완전한 낚시대")
+                            {
+                                dialogueQueue.Enqueue("낚시대가 있으니까 물고기를 잡을 수 있겠다 강이나 해변으로 가보자!! ");
+                                StartCoroutine(DialogueUIAppear());
+                            }
                         }
                         if (isAcquired == 1)
                         {
                             disappear();
-                            ItemInfoAppear(other.gameObject.name + "can't pick it up");
+                            ItemInfoAppear(other.gameObject.name + "손이 가득 차서 더 이상 주울 수 없어!");
                         }
                         if (isAcquired == 2)
                         {
                             disappear();
-                            ItemInfoAppear("Inventory is full");
+                            ItemInfoAppear("양손에 이미 들고 있는게 있어!");
                         }
                         _input.getItem = false;
                     }
                 }
             }
+        }
+
+        private void CheckInventoryForItems()
+        {
+            if (isDialogueRunning) return;
+
+            Item fishingRod = inventory.FindItemByName("낚시대");
+            Item fishingLine = inventory.FindItemByName("낚시줄");
+
+            if (fishingRod != null && fishingLine != null)
+            {
+                StartCoroutine(WaitAndCreateCompleteFishingRod(fishingRod, fishingLine));
+            }
+        }
+
+        private void createprefabs()
+        {
+            Vector3 spawnPosition = transform.position + transform.forward;
+            completeFishingRodPrefab = (GameObject) Instantiate(completeFishingRodPrefab, spawnPosition, Quaternion.identity);
+            completeFishingRodPrefab.name = "완전한 낚시대";
         }
 
         private void OnTriggerExit(Collider other)
@@ -666,13 +715,41 @@ namespace StarterAssets
 
         private void ItemInfoAppear(string ItemName)
         {
-            actionText.gameObject.SetActive(true);
+            textImage.gameObject.SetActive(true);
             actionText.text = ItemName;
         }
 
         private void ItemInfoDisappear()
         {
-            actionText.gameObject.SetActive(false);
+            textImage.gameObject.SetActive(false);
+            conversationImage.gameObject.SetActive(false);
+        }
+
+        private IEnumerator DialogueUIAppear()
+        {
+            while (dialogueQueue.Count > 0)
+            {
+                string dialogue = dialogueQueue.Dequeue();
+
+                conversationImage.gameObject.SetActive(true);
+                conversationText.text = dialogue;
+
+                yield return new WaitForSeconds(3);
+
+                ItemInfoDisappear();
+            }
+        }
+
+        private IEnumerator WaitAndCreateCompleteFishingRod(Item fishingRod, Item fishingLine)
+        {
+            yield return new WaitForSeconds(5);
+
+            int fishingRodSlotIndex = inventory.FindItemSlotIndex(fishingRod);
+            int fishingLineSlotIndex = inventory.FindItemSlotIndex(fishingLine);
+            inventory.UsedItem(fishingRod, fishingRodSlotIndex);
+            inventory.UsedItem(fishingLine, fishingLineSlotIndex);
+
+            createprefabs();
         }
     }
 }
