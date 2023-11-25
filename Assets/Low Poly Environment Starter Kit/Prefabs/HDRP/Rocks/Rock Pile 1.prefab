@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6345375326479054072}
   - component: {fileID: 2511227447346266176}
+  - component: {fileID: 5110102540195814278}
   m_Layer: 0
   m_Name: Rock Pile 1
   m_TagString: Untagged
@@ -47,6 +48,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!65 &5110102540195814278
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2600488934439525406}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.7, y: 3, z: 3.7}
+  m_Center: {x: 0, y: 1.4, z: 0}
 --- !u!1001 &6148904087119790275
 PrefabInstance:
   m_ObjectHideFlags: 0
