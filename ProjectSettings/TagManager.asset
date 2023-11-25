@@ -13,6 +13,8 @@ TagManager:
   - FxTemporaire
   - Escape
   - FishingZone
+  - Note
+  - Bonfire
   layers:
   - Default
   - TransparentFX
