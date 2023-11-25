@@ -124,7 +124,7 @@
 
 ### 2023-11-16
 `[0.2.7]`
-- EnemyBT.cs 수정
+- **EnemyBT.cs** 수정
     - 공격 쿨타임 추가
     - 애니메이션 부자연스러움 수정
 
@@ -133,7 +133,7 @@
 
 ### 2023-11-17
 `[0.2.9]`
-- EnemyBT.cs 수정  
+- **EnemyBT.cs** 수정  
       - 순찰 기능 추가  
       - NevMeshAgent 어색하게 회전하는 현상 수정  
 
@@ -155,15 +155,24 @@
 
 ### 2023-11-23
 `[0.3.4]`
-- EnemyBT.cs 수정  
+- **EnemyBT.cs** 수정  
     - Return 삭제  
     - Navmesh Component 오픈소스 사용  
-- EscapeEnemyBT.cs 스크립트 추가  
+- **EscapeEnemyBT.cs** 스크립트 추가  
     - 토끼와 같은 도망가는 동물을 위한 스크립트
 
 `[0.3.5]`
 - Player : FishingZone, 각 아이템을 획득하고나서의 UI, 각 아이템들을 먹을 때 UI 변경
 - Item : 낚시대, 낚시줄, 완전한 낚시대 생성
+
+### 2023-11-25
+`[0.3.6]`
+- **BearBossBT.cs** 스크립트 추가  
+    - 보스 Behavior Tree  
+    - 전체적인 틀 제작  
+    - 세부 패턴 코드 필요  
+- **BearBossSkill.cs** 스크립트 추가  
+    - 보스 스킬 클래스  
 
 <br/><br/>
 

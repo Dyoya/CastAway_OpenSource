@@ -144,7 +144,7 @@ public class EnemyBT : MonoBehaviour
             }
         );
     }
-    bool IsAnimationRunning(string stateName)
+    protected bool IsAnimationRunning(string stateName)
     {
         if (_anim != null)
         {
@@ -169,7 +169,7 @@ public class EnemyBT : MonoBehaviour
     #endregion
 
     #region Attack Node
-    INode.ENodeState CheckAttacking()
+    protected INode.ENodeState CheckAttacking()
     {
         // 이전 공격 후 일정 시간이 지나면 공격 가능으로 설정
         if (!canAttack && Time.time - lastAttackTime >= attackCooldown)
@@ -185,7 +185,7 @@ public class EnemyBT : MonoBehaviour
         return INode.ENodeState.ENS_Success;
     }
 
-    INode.ENodeState CheckAttackRange()
+    protected INode.ENodeState CheckAttackRange()
     {
         if (_playerTransform != null) 
         {
@@ -203,7 +203,7 @@ public class EnemyBT : MonoBehaviour
         return INode.ENodeState.ENS_Failure;
     }
 
-    INode.ENodeState DoAttack()
+    protected INode.ENodeState DoAttack()
     {
         if (_playerTransform != null && canAttack)
         {
@@ -227,7 +227,7 @@ public class EnemyBT : MonoBehaviour
     #endregion
 
     #region Find & Move Node
-    INode.ENodeState CheckFind()
+    protected INode.ENodeState CheckFind()
     {
         //Debug.Log("CheckFind");
         var overlapColliders = Physics.OverlapSphere(transform.position, findDistance, LayerMask.GetMask("Player"));
@@ -247,7 +247,7 @@ public class EnemyBT : MonoBehaviour
         //Debug.Log("CheckFind : Failure");
         return INode.ENodeState.ENS_Failure;
     }
-    INode.ENodeState Chase()
+    protected INode.ENodeState Chase()
     {
         if (_playerTransform != null)
         {
@@ -291,7 +291,7 @@ public class EnemyBT : MonoBehaviour
     #endregion
 
     #region Move Origin Pos Node
-    INode.ENodeState Return()
+    protected INode.ENodeState Return()
     {
         if (isReturn)
         {
@@ -326,7 +326,7 @@ public class EnemyBT : MonoBehaviour
     #endregion
 
     #region Damaged Node
-    INode.ENodeState CheckDamaged()
+    protected INode.ENodeState CheckDamaged()
     {
         // 피격 애니메이션이 실행 중이면
         if (IsAnimationRunning(_DAMAGED_ANIM_STATE_NAME))
@@ -338,7 +338,7 @@ public class EnemyBT : MonoBehaviour
         //Debug.Log("CheckDamaged : Success");
         return INode.ENodeState.ENS_Success;
     }
-    INode.ENodeState Damaged()
+    protected INode.ENodeState Damaged()
     {
         if (_temporaryDamage > 0)
         {
@@ -360,7 +360,7 @@ public class EnemyBT : MonoBehaviour
         }
         
     }
-    void PlayDamagedSound()
+    protected void PlayDamagedSound()
     {
         if(asDamagedSound != null)
         {
@@ -370,7 +370,7 @@ public class EnemyBT : MonoBehaviour
     #endregion
 
     #region Die Node
-    INode.ENodeState CheckDieHp()
+    protected INode.ENodeState CheckDieHp()
     {
         if (currentHp <= 0)
         {
@@ -379,13 +379,13 @@ public class EnemyBT : MonoBehaviour
 
         return INode.ENodeState.ENS_Failure;
     }
-    INode.ENodeState Die()
+    protected INode.ENodeState Die()
     {
         _anim.SetTrigger(_DIE_ANIM_TRIGGER_NAME);
 
         return INode.ENodeState.ENS_Success;
     }
-    INode.ENodeState CheckDieAnim()
+    protected INode.ENodeState CheckDieAnim()
     {
         if (IsAnimationRunning(_DIE_ANIM_STATE_NAME))
         {
@@ -394,7 +394,7 @@ public class EnemyBT : MonoBehaviour
 
         return INode.ENodeState.ENS_Success;
     }
-    INode.ENodeState DestroyObject()
+    protected INode.ENodeState DestroyObject()
     {
         Destroy(gameObject);
 
@@ -403,7 +403,7 @@ public class EnemyBT : MonoBehaviour
     #endregion
 
     #region Idle Node
-    INode.ENodeState Patrol()
+    protected INode.ENodeState Patrol()
     {   
         if (!isMove && _patrolCurrentTime >= patrolTime) // 순찰 시작 전, 처음에만 호출
         {
@@ -440,7 +440,7 @@ public class EnemyBT : MonoBehaviour
 
         return INode.ENodeState.ENS_Running;
     }
-    INode.ENodeState Idle()
+    protected INode.ENodeState Idle()
     {
         //Debug.Log("Idle");
         if (!IsAnimationRunning(_IDLE_ANIM_STATE_NAME) && !isMove)
