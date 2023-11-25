@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
+using UnityEngine.XR;
 
 //[RequireComponent(typeof(Animator))]
 public class BearBossBT : MonoBehaviour
 {
     Transform _playerTransform;
+    public GameObject Player;
 
     [Header("HP")]
     [SerializeField] int currentHp;
@@ -34,6 +37,9 @@ public class BearBossBT : MonoBehaviour
 
     [Header("Sound")]
     [SerializeField] AudioSource asDamagedSound; // 피격 사운드
+
+    [Header("SkillRangeObject")]
+    [SerializeField] GameObject rushTriggerCollision;
 
     NavMeshAgent _agent; //네비게이션
 
@@ -64,11 +70,35 @@ public class BearBossBT : MonoBehaviour
     const string _MOVE_ANIM_STATE_NAME = "Move";
     const string _MOVE_ANIM_TRIGGER_NAME = "move";
 
+    const string _BACKSTEP_ANIM_STATE_NAME = "Backstep";
+    const string _BACKSTEP_ANIM_TRIGGER_NAME = "backstep";
+
+    const string _RUSH_ANIM_STATE_NAME = "Rush";
+    const string _RUSH_ANIM_TRIGGER_NAME = "rush";
+
+    const string _JUMP_ANIM_STATE_NAME = "Jump";
+    const string _JUMP_ANIM_TRIGGER_NAME = "jump";
+
+    const string _LANDING_ANIM_STATE_NAME = "Landing";
+    const string _LANDING_ANIM_TRIGGER_NAME = "landing";
+
+    const string _STAMP_ANIM_STATE_NAME = "Stamp";
+    const string _STAMP_ANIM_TRIGGER_NAME = "stamp";
+
     // 데미지 임시 변수
     int _temporaryDamage = 0;
 
     bool isMove = false;
     bool isReturn = false;
+
+    // 스킬 패턴 관련 변수
+    bool isCharging = false;
+    float elapsedTime = 0f;
+    float waitDuration = 3f; // 백스텝 이동에 걸리는 시간
+    float skillTime = 0f;
+    Vector3 directionToGoal;
+    GameObject scan;
+    Vector3 goal;
 
     private void Awake()
     {
@@ -87,9 +117,9 @@ public class BearBossBT : MonoBehaviour
 
         skill = new List<BearBossSkill>
         {
-            new BearBossSkill("돌진", 13f, 3),
-            new BearBossSkill("점프", 23f, 2),
-            new BearBossSkill("찍기", 37f, 1),
+            new BearBossSkill("돌진", 10f),
+            new BearBossSkill("점프", 19f),
+            new BearBossSkill("찍기", 29f),
         };
     }
     private void Update()
@@ -105,6 +135,8 @@ public class BearBossBT : MonoBehaviour
         {
             s.UpdateCooldown(Time.deltaTime);
         }
+
+        RayCast();
     }
     INode SettingBT()
     {
@@ -146,10 +178,11 @@ public class BearBossBT : MonoBehaviour
                                 (
                                     new List<INode>()
                                     {
-                                        new ActionNode(BackStep),
+                                        new ActionNode(Charge),
                                         new ActionNode(Rush),
                                     }
-                                )
+                                ),
+                                new ActionNode(initSkill),
                             }
                         )
                     }
@@ -504,34 +537,99 @@ public class BearBossBT : MonoBehaviour
     #endregion
 
     #region Skill Node
-    void UseSkill()
+    void UseSkill() // 스킬 사이에 내부 쿨타임 추가
     {
         foreach(BearBossSkill s in skill)
         {
             s.currentCooldown += 5f;
         }
     }
-    INode.ENodeState BackStep()
+    void RayCast()
+    {
+        Debug.DrawRay(transform.position, gameObject.transform.forward * 15f, new Color(0, 1, 0));
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, gameObject.transform.forward, out hit, 15f))
+        {
+            scan = hit.collider.gameObject;
+        }
+        else
+        {
+            scan = null;
+        }
+
+    }
+    // 돌진 패턴
+    INode.ENodeState Charge()
     {
         if (!skill[0].IsReady())
             return INode.ENodeState.ENS_Failure;
 
         // 백스탭
-        Debug.Log("백스탭");
+        Debug.Log("차지");
 
-        return INode.ENodeState.ENS_Success;
+        if (!isCharging)
+        {
+            _anim.SetTrigger(_BACKSTEP_ANIM_TRIGGER_NAME);
+
+            _agent.isStopped = true;
+
+            isCharging = true;
+        }
+
+        elapsedTime += Time.deltaTime;
+
+        if (elapsedTime < waitDuration)
+        {
+            Debug.Log("차지 중");
+            // 플레이어 방향으로 회전
+            Vector3 direction = (Player.transform.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, 200f * Time.deltaTime);
+
+            goal = (Player.transform.position - transform.position).normalized * 15f;
+
+            return INode.ENodeState.ENS_Running;
+        }
+        else
+        {
+            return INode.ENodeState.ENS_Success;
+        }
     }
+
     INode.ENodeState Rush()
     {
         // 돌진
         Debug.Log("돌진");
 
-        UseSkill();
-        skill[0].SetCooldown();
+        _anim.SetTrigger(_RUSH_ANIM_TRIGGER_NAME);
 
-        return INode.ENodeState.ENS_Success;
+        rushTriggerCollision.SetActive(true);
+
+        _agent.enabled = false;
+        transform.Translate(goal * Time.deltaTime, Space.World);
+
+        transform.forward = goal * 10f;
+
+        skillTime += Time.deltaTime;
+
+        if (skillTime >= 1f)
+        {
+            _agent.enabled = true;
+            _agent.speed = moveSpeed;
+
+            UseSkill();
+            skill[0].SetCooldown();
+            isCharging = false;
+            elapsedTime = 0f;
+            skillTime = 0f;
+            rushTriggerCollision.SetActive(false);
+
+            return INode.ENodeState.ENS_Success;
+        }
+        
+        return INode.ENodeState.ENS_Running;
     }
-
+    // 점프 패턴 - 크게 점프 후, 일정 시간 뒤에 플레이어 위치로 착지
     INode.ENodeState Jump()
     {
         if (!skill[1].IsReady())
@@ -552,7 +650,7 @@ public class BearBossBT : MonoBehaviour
 
         return INode.ENodeState.ENS_Success;
     }
-
+    // 내려찍기 패턴 - 플레이어 방향으로 찍어서 충격파 발사
     INode.ENodeState Stamp()
     {
         if (!skill[2].IsReady())
@@ -565,6 +663,16 @@ public class BearBossBT : MonoBehaviour
         skill[2].SetCooldown();
 
         return INode.ENodeState.ENS_Success;
+    }
+    // 스킬 취소됐을 때, 스킬 진행 상황 초기화
+    INode.ENodeState initSkill()
+    {
+        elapsedTime = 0f;
+        isCharging = false;
+        skillTime = 0f;
+        _agent.enabled = true;
+
+        return INode.ENodeState.ENS_Failure;
     }
     #endregion
 }

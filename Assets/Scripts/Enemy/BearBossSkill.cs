@@ -7,13 +7,11 @@ public class BearBossSkill
     public string name;
     public float cooldown;
     public float currentCooldown;
-    public int priority;
 
-    public BearBossSkill(string name, float cooldown, int priority)
+    public BearBossSkill(string name, float cooldown)
     {
         this.name = name;
         this.cooldown = cooldown;
-        this.priority = priority;
         this.currentCooldown = 0;
     }
 
