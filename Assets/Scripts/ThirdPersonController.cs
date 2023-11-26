@@ -4,6 +4,9 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using System.Linq;
+using System.ComponentModel;
+using static Item;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -221,20 +224,41 @@ namespace StarterAssets
                 energyBar.DecreaseStamina();
             }
 
-            // 1번 키를 누르면 왼쪽 인벤토리의 아이템 1개 소비
+            //손위치 1, 2번키로 설정
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Debug.Log("1번 인벤");
                 HandPosition = 0;
                 HandInfoAppear("왼손");
-                Leftslot.LeftHanduseItem(HandPosition);
             }
-            // 2번 키를 누르면 오른쪽 인벤토리의 아이템 1개 소비
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
                 Debug.Log("2번 인벤");
                 HandPosition = 1;
                 HandInfoAppear("오른손");
+            }
+
+            //손위치를 보고 버리기
+            if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 0)
+            {
+                Debug.Log("1번 인벤");
+                string leftItemName = Leftslot.GetItemName();
+                Leftslot.LeftHandThrowItem(HandPosition, leftItemName);
+            }
+            else if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 1)
+            {
+                Debug.Log("2번 인벤");
+                string rightItemName = Leftslot.GetItemName();
+                Rightslot.RightHandThrowItem(HandPosition, rightItemName);
+            }
+
+            //손위치를 보고 아이템 먹기
+            if (Input.GetKeyDown(KeyCode.G) && HandPosition == 0)
+            {
+                Leftslot.LeftHanduseItem(HandPosition);
+            }
+            else if (Input.GetKeyDown(KeyCode.G) && HandPosition == 0)
+            {
                 Rightslot.RightHanduseItem(HandPosition);
             }
 
@@ -713,11 +737,11 @@ namespace StarterAssets
             }
         }
 
-        private void createprefabs()
+        public void createprefabs(GameObject itemPrefabs, string name)
         {
-            Vector3 spawnPosition = transform.position + transform.forward;
-            completeFishingRodPrefab = (GameObject) Instantiate(completeFishingRodPrefab, spawnPosition, Quaternion.identity);
-            completeFishingRodPrefab.name = "완전한 낚시대";
+            Vector3 spawnPosition = transform.position + transform.forward + new Vector3(0, 1, 0);
+            completeFishingRodPrefab = (GameObject) Instantiate(itemPrefabs, spawnPosition, Quaternion.identity);
+            completeFishingRodPrefab.name = name;
         }
 
         private void OnTriggerExit(Collider other)
@@ -802,7 +826,7 @@ namespace StarterAssets
             inventory.UsedItem(fishingRod, fishingRodSlotIndex);
             inventory.UsedItem(fishingLine, fishingLineSlotIndex);
 
-            createprefabs();
+            //createprefabs();
         }
     }
 }

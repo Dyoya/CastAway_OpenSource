@@ -22,6 +22,13 @@ public class slot : MonoBehaviour
     [SerializeField]
     private InventoryUI inventoryUI;
 
+    public string GetItemName()
+    {
+        if (item != null)
+            return item.itemName;
+        return null;
+    }
+
     //이미지의 투명도 조절
     private void SetColor(float _alpha)
     {
@@ -59,6 +66,16 @@ public class slot : MonoBehaviour
     public void RightHanduseItem(int hand)
     {
         inventoryUI.UsedItem(item, hand);
+    }
+
+    public void LeftHandThrowItem(int hand, string name)
+    {
+        inventoryUI.ThrowItem(item, hand, name);
+    }
+
+    public void RightHandThrowItem(int hand, string name)
+    {
+        inventoryUI.ThrowItem(item, hand, name);
     }
 
     //아이템 슬롯 카운트 조정

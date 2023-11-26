@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;  // Image 클래스를 사용하기 위해 추가
+using static UnityEditor.Progress;
+
 
 public class InventoryUI : MonoBehaviour
 {
@@ -19,6 +21,10 @@ public class InventoryUI : MonoBehaviour
     public slot[] getSlots() { return slots; }
 
     [SerializeField] private Item[] items;
+
+    public GameObject Items;
+
+    [SerializeField] private StarterAssets.ThirdPersonController thePlayer;
 
     public void LoadToInven(int _arrayNum, string _itemName, int _itemNum) 
     {
@@ -70,13 +76,26 @@ public class InventoryUI : MonoBehaviour
 
     public void UsedItem(Item _item, int i)
     {
-        if (slots[i].item != null)
+        if (slots[i].item != null && Item.ItemType.Used == _item.itemType)
         {
             hungryBar.Pb.BarValue += _item.itemValue;
 
             slots[i].SetSlotCount(-1);
             if (slots[i].itemCount <= 0)
                 slots[i].ClearSlot();
+            return;
+        }
+    }
+
+    public void ThrowItem(Item _item, int i, string name)
+    {
+        if (slots[i].item != null)
+        {
+            slots[i].SetSlotCount(-1);
+            if (slots[i].itemCount <= 0)
+                slots[i].ClearSlot();
+
+            thePlayer.createprefabs(_item.itemPrefab, name);
             return;
         }
     }
