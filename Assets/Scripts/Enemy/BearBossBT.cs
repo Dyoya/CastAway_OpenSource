@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UIElements;
 using UnityEngine.XR;
+using static UnityEditor.PlayerSettings;
 
 //[RequireComponent(typeof(Animator))]
 public class BearBossBT : MonoBehaviour
@@ -40,6 +43,9 @@ public class BearBossBT : MonoBehaviour
 
     [Header("SkillRangeObject")]
     [SerializeField] GameObject rushTriggerCollision;
+    [SerializeField] GameObject RushRange;
+    [SerializeField] GameObject[] StampRange;
+    [SerializeField] GameObject EarthPrefab;
 
     NavMeshAgent _agent; //네비게이션
 
@@ -91,14 +97,17 @@ public class BearBossBT : MonoBehaviour
     bool isMove = false;
     bool isReturn = false;
 
+    // 플레이어 인식 상태
+    bool findPlayer = false;
+
     // 스킬 패턴 관련 변수
     bool isCharging = false;
     float elapsedTime = 0f;
-    float waitDuration = 3f; // 백스텝 이동에 걸리는 시간
+    float waitDuration = 3f; // 차지 시간
     float skillTime = 0f;
-    Vector3 directionToGoal;
-    GameObject scan;
     Vector3 goal;
+    bool isSkill = false;
+    bool isStamp = false;
 
     private void Awake()
     {
@@ -118,9 +127,15 @@ public class BearBossBT : MonoBehaviour
         skill = new List<BearBossSkill>
         {
             new BearBossSkill("돌진", 10f),
-            new BearBossSkill("점프", 19f),
-            new BearBossSkill("찍기", 29f),
+            new BearBossSkill("점프", 16f),
+            new BearBossSkill("찍기", 12f),
         };
+
+        RushRange.SetActive(false);
+        foreach (GameObject stamp in StampRange)
+        {
+            stamp.SetActive(false);
+        }
     }
     private void Update()
     {
@@ -128,15 +143,20 @@ public class BearBossBT : MonoBehaviour
         _BTRunner.Operate();
 
         // agent 회전각 구하기
-        Vector3 lookrotation = _agent.steeringTarget - transform.position;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookrotation), 5f * Time.deltaTime);
-
-        foreach (BearBossSkill s in skill)
+        if(!isSkill) 
         {
-            s.UpdateCooldown(Time.deltaTime);
+            Vector3 lookrotation = _agent.steeringTarget - transform.position;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookrotation), 5f * Time.deltaTime);
         }
 
-        RayCast();
+        // 플레이어 발견 상태에서 스킬 쿨타임 업데이트
+        if(findPlayer)
+        {
+            foreach (BearBossSkill s in skill)
+            {
+                s.UpdateCooldown(Time.deltaTime * 1f);
+            }
+        }
     }
     INode SettingBT()
     {
@@ -165,21 +185,31 @@ public class BearBossBT : MonoBehaviour
                         (
                             new List<INode>()
                             {
-                                new ActionNode(Stamp),
-                                new SequenceNode
-                                (
-                                    new List<INode>()
-                                    {
-                                        new ActionNode(Jump),
-                                        new ActionNode(Landing),
-                                    }
-                                ),
+                                // 돌진
                                 new SequenceNode
                                 (
                                     new List<INode>()
                                     {
                                         new ActionNode(Charge),
                                         new ActionNode(Rush),
+                                    }
+                                ),
+                                // 내려찍기
+                                new SequenceNode
+                                (
+                                    new List<INode>()
+                                    {
+                                        new ActionNode(Stamp),
+                                        new ActionNode(StampWait)
+                                    }
+                                ),
+                                // 점프
+                                new SequenceNode
+                                (
+                                    new List<INode>()
+                                    {
+                                        new ActionNode(Jump),
+                                        new ActionNode(Landing),
                                     }
                                 ),
                                 new ActionNode(initSkill),
@@ -308,6 +338,10 @@ public class BearBossBT : MonoBehaviour
 
         return INode.ENodeState.ENS_Failure;
     }
+    protected void TakeDamage()
+    {
+        // 플레이어한테 데미지 가함
+    }
     #endregion
 
     #region Find & Move Node
@@ -321,6 +355,8 @@ public class BearBossBT : MonoBehaviour
         {
             //isMove = true;
             _playerTransform = overlapColliders[0].transform;
+
+            findPlayer = true;
 
             //Debug.Log("CheckFind : Success");
             return INode.ENodeState.ENS_Success;
@@ -489,6 +525,8 @@ public class BearBossBT : MonoBehaviour
     #region Idle Node
     protected INode.ENodeState Patrol()
     {
+        findPlayer = false;
+
         if (!isMove && _patrolCurrentTime >= patrolTime) // 순찰 시작 전, 처음에만 호출
         {
             _agent.isStopped = false;
@@ -541,37 +579,34 @@ public class BearBossBT : MonoBehaviour
     {
         foreach(BearBossSkill s in skill)
         {
-            s.currentCooldown += 5f;
+            s.currentCooldown += Random.Range(3f, 6f);
         }
     }
-    void RayCast()
+    void Rotate()
     {
-        Debug.DrawRay(transform.position, gameObject.transform.forward * 15f, new Color(0, 1, 0));
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, gameObject.transform.forward, out hit, 15f))
-        {
-            scan = hit.collider.gameObject;
-        }
-        else
-        {
-            scan = null;
-        }
-
+        // 플레이어 방향으로 회전
+        Vector3 direction = (Player.transform.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, 400f * Time.deltaTime);
     }
     // 돌진 패턴
     INode.ENodeState Charge()
     {
-        if (!skill[0].IsReady())
+        if (!skill[0].IsReady() || isStamp)
             return INode.ENodeState.ENS_Failure;
 
-        // 백스탭
-        Debug.Log("차지");
-
+        // 차지
         if (!isCharging)
         {
+            //Debug.Log("차지");
+
             _anim.SetTrigger(_BACKSTEP_ANIM_TRIGGER_NAME);
 
+            isSkill = true;
+            isMove = false;
             _agent.isStopped = true;
+
+            RushRange.SetActive(true);
 
             isCharging = true;
         }
@@ -580,13 +615,10 @@ public class BearBossBT : MonoBehaviour
 
         if (elapsedTime < waitDuration)
         {
-            Debug.Log("차지 중");
-            // 플레이어 방향으로 회전
-            Vector3 direction = (Player.transform.position - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, 200f * Time.deltaTime);
+            //Debug.Log("차지 중");
 
-            goal = (Player.transform.position - transform.position).normalized * 15f;
+            Rotate();
+            goal = (Player.transform.position - transform.position).normalized * 20f;
 
             return INode.ENodeState.ENS_Running;
         }
@@ -599,9 +631,11 @@ public class BearBossBT : MonoBehaviour
     INode.ENodeState Rush()
     {
         // 돌진
-        Debug.Log("돌진");
+        //Debug.Log("돌진");
 
         _anim.SetTrigger(_RUSH_ANIM_TRIGGER_NAME);
+
+        RushRange.SetActive(false);
 
         rushTriggerCollision.SetActive(true);
 
@@ -614,8 +648,11 @@ public class BearBossBT : MonoBehaviour
 
         if (skillTime >= 1f)
         {
+            Debug.Log("돌진 종료");
+
             _agent.enabled = true;
             _agent.speed = moveSpeed;
+            isSkill = false;
 
             UseSkill();
             skill[0].SetCooldown();
@@ -657,20 +694,112 @@ public class BearBossBT : MonoBehaviour
             return INode.ENodeState.ENS_Failure;
 
         // 내려찍기
-        Debug.Log("내려찍기");
+        //Debug.Log("내려찍기");
+        isStamp = true;
+
+        if (!isCharging)
+        {
+            _anim.SetTrigger(_STAMP_ANIM_TRIGGER_NAME);
+
+            isSkill = true;
+            isMove = false;
+            _agent.isStopped = true;
+
+            isCharging = true;
+
+            for(int i=0; i<StampRange.Length; i++)
+            {
+                StartCoroutine(SetRange(StampRange[i], i * 0.2f));
+            }
+        }
+
+        elapsedTime += Time.deltaTime;
+
+        if (elapsedTime < 1.4f)
+        {
+            //Debug.Log("스탬프 동작");
+
+            Rotate();
+
+            return INode.ENodeState.ENS_Running;
+        }
+        else
+        {
+            return INode.ENodeState.ENS_Success;
+        }
+
+    }
+    IEnumerator SetRange(GameObject go, float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        go.SetActive(true);
+    }
+    INode.ENodeState StampWait()
+    {
+        if (elapsedTime < 5f)
+            return INode.ENodeState.ENS_Running;
+
+        //Debug.Log("스탬프 종료");
 
         UseSkill();
         skill[2].SetCooldown();
+        isSkill = false;
+        elapsedTime = 0f;
+        skillTime = 0f;
+        _agent.enabled = true;
+
+        isStamp = false;
+        
+        foreach (GameObject go in StampRange)
+        {
+            go.SetActive(false);
+        }
 
         return INode.ENodeState.ENS_Success;
+    }
+    void StampAttack()
+    {
+        //Debug.Log("스탬프 공격!");
+
+        for (int i = 0; i < StampRange.Length; i++)
+        {
+            Transform pos = StampRange[i].transform;
+
+            StartCoroutine(SetEarth(StampRange[i], pos, i * 0.2f));
+        }
+        
+    }
+    IEnumerator SetEarth(GameObject go, Transform tf, float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        //Debug.Log("생성!");
+
+        go = Instantiate(EarthPrefab, tf);
+
+        StartCoroutine(DestoryEarth(go));
+    }
+    IEnumerator DestoryEarth(GameObject go)
+    {
+        yield return new WaitForSeconds(2f);
+
+        //Debug.Log("파괴!");
+
+        Destroy(go);
     }
     // 스킬 취소됐을 때, 스킬 진행 상황 초기화
     INode.ENodeState initSkill()
     {
+        // 공통
         elapsedTime = 0f;
         isCharging = false;
         skillTime = 0f;
         _agent.enabled = true;
+        isSkill = false;
+
+        // 내려찍기 초기화
+        isStamp = false;
 
         return INode.ENodeState.ENS_Failure;
     }

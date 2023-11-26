@@ -224,6 +224,10 @@ public class EnemyBT : MonoBehaviour
 
         return INode.ENodeState.ENS_Failure;
     }
+    protected void TakeDamage()
+    {
+        // 플레이어한테 데미지 가함
+    }
     #endregion
 
     #region Find & Move Node

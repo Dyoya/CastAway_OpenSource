@@ -12,7 +12,7 @@ public class BearBossSkill
     {
         this.name = name;
         this.cooldown = cooldown;
-        this.currentCooldown = 0;
+        this.currentCooldown = cooldown;
     }
 
     public void UpdateCooldown(float deltaTime)
