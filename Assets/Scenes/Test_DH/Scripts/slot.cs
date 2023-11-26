@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.XR;
 
 //, IPointerClickHandler
 
@@ -50,14 +51,14 @@ public class slot : MonoBehaviour
     }
 
     //아이템 소비
-    public void LeftHanduseItem()
+    public void LeftHanduseItem(int hand)
     {
-        inventoryUI.UsedItem(item, 0);
+        inventoryUI.UsedItem(item, hand);
     }
 
-    public void RightHanduseItem()
+    public void RightHanduseItem(int hand)
     {
-        inventoryUI.UsedItem(item, 1);
+        inventoryUI.UsedItem(item, hand);
     }
 
     //아이템 슬롯 카운트 조정

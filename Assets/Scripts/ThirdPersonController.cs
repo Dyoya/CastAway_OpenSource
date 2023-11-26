@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using System;
 using TMPro;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -148,6 +149,8 @@ namespace StarterAssets
         [SerializeField] TimelineAsset[] ta;
         [SerializeField] GameObject Helicopter;
 
+        private int HandPosition;
+
         //공격을 할 때 사용할 변수
         private bool isAttack = false;
         private bool isAttackDirection = false;
@@ -222,13 +225,17 @@ namespace StarterAssets
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Debug.Log("1번 인벤");
-                Leftslot.LeftHanduseItem();
+                HandPosition = 0;
+                HandInfoAppear("왼손");
+                Leftslot.LeftHanduseItem(HandPosition);
             }
             // 2번 키를 누르면 오른쪽 인벤토리의 아이템 1개 소비
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
                 Debug.Log("2번 인벤");
-                Rightslot.RightHanduseItem();
+                HandPosition = 1;
+                HandInfoAppear("오른손");
+                Rightslot.RightHanduseItem(HandPosition);
             }
 
 
@@ -624,7 +631,11 @@ namespace StarterAssets
                 {
                     conversationAppear("여기서 낚시 할 수 있겠는데? 여기서 낚시를 하자");
                 }
-                
+            }
+            if (other.gameObject.tag == "Bonfire")
+            {
+                dialogueQueue.Enqueue("여기서 요리를 하면 될거 같은데?");
+                StartCoroutine(DialogueUIAppear());
             }
         }
 
@@ -689,6 +700,7 @@ namespace StarterAssets
             }
         }
 
+        // 플레이어 아이템을 확인하고 아이템을 생성하는 함수
         private void CheckInventoryForItems()
         {
             Item fishingRod = inventory.FindItemByName("낚시대");
@@ -723,10 +735,19 @@ namespace StarterAssets
             }
         }
 
+        //플레이어 UI 관련 부분
         void disappear()
         {
             ItemInfoDisappear();
             pickupActivated = false;
+        }
+
+        private async void HandInfoAppear(string Hand)
+        {
+            textImage.gameObject.SetActive(true);
+            actionText.text = Hand;
+            await Task.Delay(3000); // 3초 대기
+            textImage.gameObject.SetActive(false);
         }
 
         private void ItemInfoAppear(string ItemName)

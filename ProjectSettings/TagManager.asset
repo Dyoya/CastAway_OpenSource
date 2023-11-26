@@ -15,6 +15,7 @@ TagManager:
   - FishingZone
   - Note
   - Bonfire
+  - Rock
   layers:
   - Default
   - TransparentFX
