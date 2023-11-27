@@ -239,13 +239,13 @@ namespace StarterAssets
             }
 
             //손위치를 보고 버리기
-            if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 0)
+            if (Input.GetKeyDown(KeyCode.G) && HandPosition == 0)
             {
                 Debug.Log("1번 인벤");
                 string leftItemName = Leftslot.GetItemName();
                 Leftslot.LeftHandThrowItem(HandPosition, leftItemName);
             }
-            else if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 1)
+            else if (Input.GetKeyDown(KeyCode.G) && HandPosition == 1)
             {
                 Debug.Log("2번 인벤");
                 string rightItemName = Leftslot.GetItemName();
@@ -253,11 +253,11 @@ namespace StarterAssets
             }
 
             //손위치를 보고 아이템 먹기
-            if (Input.GetKeyDown(KeyCode.G) && HandPosition == 0)
+            if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 0)
             {
                 Leftslot.LeftHanduseItem(HandPosition);
             }
-            else if (Input.GetKeyDown(KeyCode.G) && HandPosition == 0)
+            else if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 0)
             {
                 Rightslot.RightHanduseItem(HandPosition);
             }
