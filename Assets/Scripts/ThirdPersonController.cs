@@ -656,11 +656,6 @@ namespace StarterAssets
                     conversationAppear("여기서 낚시 할 수 있겠는데? 여기서 낚시를 하자");
                 }
             }
-            if (other.gameObject.tag == "Bonfire")
-            {
-                dialogueQueue.Enqueue("여기서 요리를 하면 될거 같은데?");
-                StartCoroutine(DialogueUIAppear());
-            }
         }
 
         private void CheckItemdistance()
