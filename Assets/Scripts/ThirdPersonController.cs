@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.ComponentModel;
 using static Item;
+using Unity.VisualScripting;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -112,6 +113,7 @@ namespace StarterAssets
         private int _animIDAttack; // 공격에 필요한 애니메이션 추가한 부분
         private int _animIDDeath; // 동현이가 새로 추가함
         private int _animIDGetItem; // 아이템을 줍는 애니메이션 추가한 부분
+        private int _animIDAxe; // 도끼 애니메이션 추가한 부분
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
         private PlayerInput _playerInput;
@@ -161,6 +163,8 @@ namespace StarterAssets
         private bool isDead = false;
         private bool isGetItem = false;
         private bool isGetItemDirection = false;
+        public bool isAxe = false;
+        private bool isAxeDirection = false;
 
         private void Awake()
         {
@@ -197,7 +201,7 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
-            if (isAttackDirection || isGetItemDirection)
+            if (isAttackDirection || isGetItemDirection || isAxeDirection)
                 return;
 
             if (isDead)
@@ -208,10 +212,25 @@ namespace StarterAssets
             Move();
 
             CheckItemdistance();
-            Attack();
             Death();
+            StaminaControll();
+            InvenControll();
+            PlayHealthControll();
+            // 만약 왼손, 오른손에 도끼가 있는 경우 Axe 함수 실행
+            if (CheckItem() == 1)
+            {
+                Axe();
+            }
+            else
+            {
+                Attack();
+            }
 
 
+        }
+
+        private void StaminaControll()
+        {
             //달릴 때랑 걸을때의 스테미너 감소량 다르게 설정한 부분
             if (!Input.GetKey(KeyCode.LeftShift))
             {
@@ -223,7 +242,10 @@ namespace StarterAssets
                 hungryBar.DecreaseHungry(1.5f);
                 energyBar.DecreaseStamina();
             }
+        }
 
+        private void InvenControll()
+        {
             //손위치 1, 2번키로 설정
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -261,8 +283,10 @@ namespace StarterAssets
             {
                 Rightslot.RightHanduseItem(HandPosition);
             }
+        }
 
-
+        private void PlayHealthControll()
+        {
             //플레이어의 배고픔이 0이 되었을 때
             if (hungryBar.isHungryZero)
             {
@@ -289,6 +313,51 @@ namespace StarterAssets
             _animIDAttack = Animator.StringToHash("Attack");
             _animIDDeath = Animator.StringToHash("Death");
             _animIDGetItem = Animator.StringToHash("GetItem");
+            _animIDAxe = Animator.StringToHash("Axe");
+        }
+
+        //아이템 확인
+        private int CheckItem()
+        {
+            if (inventory.CurrentItem != null)
+            {
+                for(int i = 0; i < inventory.CurrentItem.Count; i++)
+                {
+                    if(inventory.CurrentItem[i].itemName == "도끼")
+                    {
+                        Debug.Log(inventory.CurrentItem[i].itemName);
+                        return 1;
+                    }
+                    else if(inventory.CurrentItem[i].itemName == "곡괭이")
+                    {
+                        return 2;
+                    }
+                }
+            }
+            return 0;
+        }
+
+        //도끼 애니메이션 동작
+        private void Axe()
+        {
+            if (_hasAnimator && Grounded && !isJump && !isAxe && _input.attack)
+            {
+                _controller.Move(Vector3.zero);
+                _animator.SetTrigger(_animIDAxe);
+                isAxe = true;
+                isAxeDirection = true;
+            }
+        }
+
+        private void EndAxe()
+        {
+            isAxe = false;
+            _input.attack = false;
+        }
+
+        private void EndAxeDirection()
+        {
+            isAxeDirection = false;
         }
 
         //공격함수 추가한 부분
@@ -463,13 +532,7 @@ namespace StarterAssets
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
             //공격을 할 때는 함수 탈출 추가한 부분
-            if (isAttack)
-                return;
-
-            if (isDead)
-                return;
-
-            if (isGetItem)
+            if (isAttack || isDead || isGetItem || isAxe)
                 return;
 
             // move the player

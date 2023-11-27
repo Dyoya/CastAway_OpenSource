@@ -26,6 +26,8 @@ public class InventoryUI : MonoBehaviour
 
     [SerializeField] private StarterAssets.ThirdPersonController thePlayer;
 
+    public List<Item> CurrentItem { get; set; }
+
     public void LoadToInven(int _arrayNum, string _itemName, int _itemNum) 
     {
         for(int i = 0; i < items.Length; i++)
@@ -71,6 +73,9 @@ public class InventoryUI : MonoBehaviour
                 return 0;
             }
         }
+        if (CurrentItem == null)
+            CurrentItem = new List<Item>();
+        CurrentItem.Add(_item);
         return 2;
     }
 
@@ -94,8 +99,9 @@ public class InventoryUI : MonoBehaviour
             slots[i].SetSlotCount(-1);
             if (slots[i].itemCount <= 0)
                 slots[i].ClearSlot();
-
+            
             thePlayer.createprefabs(_item.itemPrefab, name);
+            CurrentItem.Remove(_item);
             return;
         }
     }
