@@ -4,6 +4,10 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using System.Linq;
+using System.ComponentModel;
+using static Item;
+using Unity.VisualScripting;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -109,6 +113,7 @@ namespace StarterAssets
         private int _animIDAttack; // 공격에 필요한 애니메이션 추가한 부분
         private int _animIDDeath; // 동현이가 새로 추가함
         private int _animIDGetItem; // 아이템을 줍는 애니메이션 추가한 부분
+        private int _animIDAxe; // 도끼 애니메이션 추가한 부분
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
         private PlayerInput _playerInput;
@@ -158,6 +163,11 @@ namespace StarterAssets
         private bool isDead = false;
         private bool isGetItem = false;
         private bool isGetItemDirection = false;
+        private bool isAxe = false;
+        private bool isAxeDirection = false;
+
+        //게임 오브젝트 활성화 여부
+        public GameObject[] objectToActivate;
 
         private void Awake()
         {
@@ -194,7 +204,7 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
-            if (isAttackDirection || isGetItemDirection)
+            if (isAttackDirection || isGetItemDirection || isAxeDirection)
                 return;
 
             if (isDead)
@@ -205,10 +215,48 @@ namespace StarterAssets
             Move();
 
             CheckItemdistance();
-            Attack();
             Death();
+            StaminaControll();
+            InvenControll();
+            PlayHealthControll();
+            ItemActive();
+        }
 
+        private void ItemActive()
+        {
+            Item Axe_Item = inventory.FindItemByName("도끼");
+            Item PickAxe_item = inventory.FindItemByName("곡괭이");
+            if (Axe_Item != null && Axe_Item.itemName == "도끼")
+            {
+                for(int i = 0; i < objectToActivate.Length; i++)
+                {
+                    Debug.Log(objectToActivate[i].name);
+                    if(objectToActivate[i].name == Axe_Item.itemName)
+                        objectToActivate[i].SetActive(true);
+                }
+                Axe();
+            }
+            else if (PickAxe_item != null && PickAxe_item.itemName == "곡괭이")
+            {
+                for (int i = 0; i < objectToActivate.Length; i++)
+                {
+                    if (objectToActivate[i].name == PickAxe_item.itemName)
+                        objectToActivate[i].SetActive(true);
+                }
+                Attack();
+            }
+            else
+            {
+                for (int i = 0; i < objectToActivate.Length; i++)
+                {
+                       objectToActivate[i].SetActive(false);
+                }
+                Attack();
+            }
+        }
 
+        private void StaminaControll()
+        {
             //달릴 때랑 걸을때의 스테미너 감소량 다르게 설정한 부분
             if (!Input.GetKey(KeyCode.LeftShift))
             {
@@ -220,25 +268,51 @@ namespace StarterAssets
                 hungryBar.DecreaseHungry(1.5f);
                 energyBar.DecreaseStamina();
             }
+        }
 
-            // 1번 키를 누르면 왼쪽 인벤토리의 아이템 1개 소비
+        private void InvenControll()
+        {
+            //손위치 1, 2번키로 설정
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Debug.Log("1번 인벤");
                 HandPosition = 0;
                 HandInfoAppear("왼손");
-                Leftslot.LeftHanduseItem(HandPosition);
             }
-            // 2번 키를 누르면 오른쪽 인벤토리의 아이템 1개 소비
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
                 Debug.Log("2번 인벤");
                 HandPosition = 1;
                 HandInfoAppear("오른손");
+            }
+
+            //손위치를 보고 아이템 먹기
+            if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 0)
+            {
+                Leftslot.LeftHanduseItem(HandPosition);
+            }
+            else if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 1)
+            {
                 Rightslot.RightHanduseItem(HandPosition);
             }
 
+            //손위치를 보고 버리기
+            if (Input.GetKeyDown(KeyCode.G) && HandPosition == 0)
+            {
+                Debug.Log("1번 인벤");
+                string leftItemName = Leftslot.GetItemName();
+                Leftslot.LeftHandThrowItem(HandPosition, leftItemName);
+            }
+            else if (Input.GetKeyDown(KeyCode.G) && HandPosition == 1)
+            {
+                Debug.Log("2번 인벤");
+                string rightItemName = Leftslot.GetItemName();
+                Rightslot.RightHandThrowItem(HandPosition, rightItemName);
+            }
+        }
 
+        private void PlayHealthControll()
+        {
             //플레이어의 배고픔이 0이 되었을 때
             if (hungryBar.isHungryZero)
             {
@@ -265,6 +339,32 @@ namespace StarterAssets
             _animIDAttack = Animator.StringToHash("Attack");
             _animIDDeath = Animator.StringToHash("Death");
             _animIDGetItem = Animator.StringToHash("GetItem");
+            _animIDAxe = Animator.StringToHash("Axe");
+        }
+
+        //도끼 애니메이션 동작
+        private void Axe()
+        {
+            if (_hasAnimator && Grounded && !isJump && !isAxe && _input.attack)
+            {
+                _controller.Move(Vector3.zero);
+                _animator.SetTrigger(_animIDAxe);
+                isAxe = true;
+                isAxeDirection = true;
+            }
+        }
+
+        private void EndAxe()
+        {
+            Debug.Log("도끼 끝");
+            isAxe = false;
+            _input.attack = false;
+        }
+
+        private void EndAxeDirection()
+        {
+            Debug.Log("방향전환 가능");
+            isAxeDirection = false;
         }
 
         //공격함수 추가한 부분
@@ -275,6 +375,7 @@ namespace StarterAssets
                 _controller.Move(Vector3.zero);
                 _animator.SetTrigger(_animIDAttack);
                 isAttack = true;
+
                 isAttackDirection = true;
             }
         }
@@ -375,6 +476,10 @@ namespace StarterAssets
 
         private void Move()
         {
+            //공격을 할 때는 함수 탈출 추가한 부분
+            if (isAttack || isDead || isGetItem || isAxe)
+                return;
+
             //플레이어의 에너지바가 0일 경우 못 뛰도록 추가한 부분 
             float targetSpeed = MoveSpeed;
             if (_input.sprint && energyBar.Pb.BarValue > 0)
@@ -385,7 +490,6 @@ namespace StarterAssets
             {
                 targetSpeed = MoveSpeed;
             }
-
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -435,18 +539,7 @@ namespace StarterAssets
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
             }
 
-
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
-
-            //공격을 할 때는 함수 탈출 추가한 부분
-            if (isAttack)
-                return;
-
-            if (isDead)
-                return;
-
-            if (isGetItem)
-                return;
 
             // move the player
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
@@ -632,11 +725,6 @@ namespace StarterAssets
                     conversationAppear("여기서 낚시 할 수 있겠는데? 여기서 낚시를 하자");
                 }
             }
-            if (other.gameObject.tag == "Bonfire")
-            {
-                dialogueQueue.Enqueue("여기서 요리를 하면 될거 같은데?");
-                StartCoroutine(DialogueUIAppear());
-            }
         }
 
         private void CheckItemdistance()
@@ -713,11 +801,11 @@ namespace StarterAssets
             }
         }
 
-        private void createprefabs()
+        public void createprefabs(GameObject itemPrefabs, string name)
         {
-            Vector3 spawnPosition = transform.position + transform.forward;
-            completeFishingRodPrefab = (GameObject) Instantiate(completeFishingRodPrefab, spawnPosition, Quaternion.identity);
-            completeFishingRodPrefab.name = "완전한 낚시대";
+            Vector3 spawnPosition = transform.position + transform.forward + new Vector3(0, 1, 0);
+            completeFishingRodPrefab = (GameObject) Instantiate(itemPrefabs, spawnPosition, Quaternion.identity);
+            completeFishingRodPrefab.name = name;
         }
 
         private void OnTriggerExit(Collider other)
@@ -802,7 +890,7 @@ namespace StarterAssets
             inventory.UsedItem(fishingRod, fishingRodSlotIndex);
             inventory.UsedItem(fishingLine, fishingLineSlotIndex);
 
-            createprefabs();
+            //createprefabs();
         }
     }
 }

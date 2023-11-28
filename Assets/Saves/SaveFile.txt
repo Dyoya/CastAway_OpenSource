@@ -1,1 +1,1 @@
-{"playerPos":{"x":8.541341781616211,"y":-0.010000050067901612,"z":-2.9630544185638429},"playerRot":{"x":0.0,"y":134.6033935546875,"z":0.0},"inventoryArrayNum":[0],"inventoryItemName":["Fish"],"inventoryItemNum":[1]}
+{"playerPos":{"x":3.4320497512817385,"y":-0.010000050067901612,"z":-0.1947563886642456},"playerRot":{"x":0.0,"y":141.2915802001953,"z":0.0},"inventoryArrayNum":[],"inventoryItemName":[],"inventoryItemNum":[]}
