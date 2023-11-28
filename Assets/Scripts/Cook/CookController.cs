@@ -1,3 +1,4 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine.SocialPlatforms.GameCenter;
 
 public class CookController : MonoBehaviour
 {
+    [SerializeField] private GameObject CookUI;
+    public GameObject Player;
     public GameObject boxNote = null;
     [SerializeField] Transform Center = null;
     [SerializeField] RectTransform[] timingRect = null;
@@ -30,10 +33,16 @@ public class CookController : MonoBehaviour
             if (timingBoxs[i].x <= notePosX && notePosX <= timingBoxs[i].y)
             {
                 Debug.Log("Hit" + i);   // i = 0 일때 퍼펙트 i = 1 일때 Good
+                CookUI.SetActive(false);
+                GameManager.isPause = false;
+                Player.GetComponent<ThirdPersonController>().enabled = true;
                 return;
             }
         }
 
         Debug.Log("Miss");
+        CookUI.SetActive(false);
+        GameManager.isPause = false;
+        Player.GetComponent<ThirdPersonController>().enabled = true;
     }
 }
