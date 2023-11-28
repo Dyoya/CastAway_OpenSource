@@ -163,8 +163,11 @@ namespace StarterAssets
         private bool isDead = false;
         private bool isGetItem = false;
         private bool isGetItemDirection = false;
-        public bool isAxe = false;
+        private bool isAxe = false;
         private bool isAxeDirection = false;
+
+        //게임 오브젝트 활성화 여부
+        public GameObject[] objectToActivate;
 
         private void Awake()
         {
@@ -216,17 +219,40 @@ namespace StarterAssets
             StaminaControll();
             InvenControll();
             PlayHealthControll();
-            // 만약 왼손, 오른손에 도끼가 있는 경우 Axe 함수 실행
-            if (CheckItem() == 1)
+            ItemActive();
+        }
+
+        private void ItemActive()
+        {
+            Item Axe_Item = inventory.FindItemByName("도끼");
+            Item PickAxe_item = inventory.FindItemByName("곡괭이");
+            if (Axe_Item != null && Axe_Item.itemName == "도끼")
             {
+                for(int i = 0; i < objectToActivate.Length; i++)
+                {
+                    Debug.Log(objectToActivate[i].name);
+                    if(objectToActivate[i].name == Axe_Item.itemName)
+                        objectToActivate[i].SetActive(true);
+                }
                 Axe();
+            }
+            else if (PickAxe_item != null && PickAxe_item.itemName == "곡괭이")
+            {
+                for (int i = 0; i < objectToActivate.Length; i++)
+                {
+                    if (objectToActivate[i].name == PickAxe_item.itemName)
+                        objectToActivate[i].SetActive(true);
+                }
+                Attack();
             }
             else
             {
+                for (int i = 0; i < objectToActivate.Length; i++)
+                {
+                       objectToActivate[i].SetActive(false);
+                }
                 Attack();
             }
-
-
         }
 
         private void StaminaControll()
@@ -260,6 +286,16 @@ namespace StarterAssets
                 HandInfoAppear("오른손");
             }
 
+            //손위치를 보고 아이템 먹기
+            if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 0)
+            {
+                Leftslot.LeftHanduseItem(HandPosition);
+            }
+            else if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 1)
+            {
+                Rightslot.RightHanduseItem(HandPosition);
+            }
+
             //손위치를 보고 버리기
             if (Input.GetKeyDown(KeyCode.G) && HandPosition == 0)
             {
@@ -272,16 +308,6 @@ namespace StarterAssets
                 Debug.Log("2번 인벤");
                 string rightItemName = Leftslot.GetItemName();
                 Rightslot.RightHandThrowItem(HandPosition, rightItemName);
-            }
-
-            //손위치를 보고 아이템 먹기
-            if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 0)
-            {
-                Leftslot.LeftHanduseItem(HandPosition);
-            }
-            else if (Input.GetKeyDown(KeyCode.Q) && HandPosition == 0)
-            {
-                Rightslot.RightHanduseItem(HandPosition);
             }
         }
 
@@ -316,27 +342,6 @@ namespace StarterAssets
             _animIDAxe = Animator.StringToHash("Axe");
         }
 
-        //아이템 확인
-        private int CheckItem()
-        {
-            if (inventory.CurrentItem != null)
-            {
-                for(int i = 0; i < inventory.CurrentItem.Count; i++)
-                {
-                    if(inventory.CurrentItem[i].itemName == "도끼")
-                    {
-                        Debug.Log(inventory.CurrentItem[i].itemName);
-                        return 1;
-                    }
-                    else if(inventory.CurrentItem[i].itemName == "곡괭이")
-                    {
-                        return 2;
-                    }
-                }
-            }
-            return 0;
-        }
-
         //도끼 애니메이션 동작
         private void Axe()
         {
@@ -351,12 +356,14 @@ namespace StarterAssets
 
         private void EndAxe()
         {
+            Debug.Log("도끼 끝");
             isAxe = false;
             _input.attack = false;
         }
 
         private void EndAxeDirection()
         {
+            Debug.Log("방향전환 가능");
             isAxeDirection = false;
         }
 
@@ -368,6 +375,7 @@ namespace StarterAssets
                 _controller.Move(Vector3.zero);
                 _animator.SetTrigger(_animIDAttack);
                 isAttack = true;
+
                 isAttackDirection = true;
             }
         }
@@ -468,6 +476,10 @@ namespace StarterAssets
 
         private void Move()
         {
+            //공격을 할 때는 함수 탈출 추가한 부분
+            if (isAttack || isDead || isGetItem || isAxe)
+                return;
+
             //플레이어의 에너지바가 0일 경우 못 뛰도록 추가한 부분 
             float targetSpeed = MoveSpeed;
             if (_input.sprint && energyBar.Pb.BarValue > 0)
@@ -478,7 +490,6 @@ namespace StarterAssets
             {
                 targetSpeed = MoveSpeed;
             }
-
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -528,12 +539,7 @@ namespace StarterAssets
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
             }
 
-
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
-
-            //공격을 할 때는 함수 탈출 추가한 부분
-            if (isAttack || isDead || isGetItem || isAxe)
-                return;
 
             // move the player
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +

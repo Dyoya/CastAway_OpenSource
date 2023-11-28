@@ -26,7 +26,6 @@ public class InventoryUI : MonoBehaviour
 
     [SerializeField] private StarterAssets.ThirdPersonController thePlayer;
 
-    public List<Item> CurrentItem { get; set; }
 
     public void LoadToInven(int _arrayNum, string _itemName, int _itemNum) 
     {
@@ -73,9 +72,6 @@ public class InventoryUI : MonoBehaviour
                 return 0;
             }
         }
-        if (CurrentItem == null)
-            CurrentItem = new List<Item>();
-        CurrentItem.Add(_item);
         return 2;
     }
 
@@ -84,7 +80,6 @@ public class InventoryUI : MonoBehaviour
         if (slots[i].item != null && Item.ItemType.Used == _item.itemType)
         {
             hungryBar.Pb.BarValue += _item.itemValue;
-
             slots[i].SetSlotCount(-1);
             if (slots[i].itemCount <= 0)
                 slots[i].ClearSlot();
@@ -101,19 +96,16 @@ public class InventoryUI : MonoBehaviour
                 slots[i].ClearSlot();
             
             thePlayer.createprefabs(_item.itemPrefab, name);
-            CurrentItem.Remove(_item);
             return;
         }
     }
 
     public Item FindItemByName(string itemName)
     {
-        Debug.Log(itemName);
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i].item != null)
             {
-                Debug.Log(slots[i].item.name);
                 if (slots[i].item.name == itemName)
                 {
                     return slots[i].item;
