@@ -16,6 +16,7 @@ TagManager:
   - Note
   - Bonfire
   - Rock
+  - Tree
   layers:
   - Default
   - TransparentFX

@@ -8,6 +8,7 @@ using System.Linq;
 using System.ComponentModel;
 using static Item;
 using Unity.VisualScripting;
+using System.Reflection;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -169,6 +170,12 @@ namespace StarterAssets
         //게임 오브젝트 활성화 여부
         public GameObject[] objectToActivate;
 
+        //아이템 소유 여부
+        private bool hasAxe = false;
+        private bool hasPickAxe = false;
+        private bool hasString = false;
+        private bool hasFishing = false;
+
         private void Awake()
         {
             // get a reference to our main camera
@@ -219,28 +226,25 @@ namespace StarterAssets
             StaminaControll();
             InvenControll();
             PlayHealthControll();
-            ItemActive();
+            ItemActiveAnimation();
         }
 
-        private void ItemActive()
+        private void ItemActiveAnimation()
         {
-            Item Axe_Item = inventory.FindItemByName("도끼");
-            Item PickAxe_item = inventory.FindItemByName("곡괭이");
-            if (Axe_Item != null && Axe_Item.itemName == "도끼")
+            if (hasAxe)
             {
                 for(int i = 0; i < objectToActivate.Length; i++)
                 {
-                    Debug.Log(objectToActivate[i].name);
-                    if(objectToActivate[i].name == Axe_Item.itemName)
+                    if(objectToActivate[i].name == "도끼")
                         objectToActivate[i].SetActive(true);
                 }
                 Axe();
             }
-            else if (PickAxe_item != null && PickAxe_item.itemName == "곡괭이")
+            else if (hasPickAxe)
             {
                 for (int i = 0; i < objectToActivate.Length; i++)
                 {
-                    if (objectToActivate[i].name == PickAxe_item.itemName)
+                    if (objectToActivate[i].name == "곡괭이")
                         objectToActivate[i].SetActive(true);
                 }
                 Attack();
@@ -252,6 +256,50 @@ namespace StarterAssets
                        objectToActivate[i].SetActive(false);
                 }
                 Attack();
+            }
+        }
+        private bool isSwing = false;
+        RaycastHit hitInfo;
+
+        private bool CheckObject()
+        {
+            Ray ray = new Ray(transform.position, transform.forward);
+            
+            if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity))
+            {
+                Debug.Log(hitInfo.transform.tag);
+                if (hitInfo.transform.tag == "Rock" && hasPickAxe)
+                {
+                    return true;
+                }
+                if (hitInfo.transform.tag == "Tree" && hasAxe)
+                {
+                    Debug.Log(hitInfo.transform.tag);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        protected IEnumerator HitCoroutine()
+        {
+            while (isSwing)
+            {
+                if(CheckObject())
+                {
+                    if(hitInfo.transform.tag == "Rock")
+                    {
+                        hitInfo.transform.GetComponent<Rock>().Mining();
+                    }
+                    if (hitInfo.transform.tag == "Tree")
+                    {
+                        Debug.Log(hitInfo.transform.tag);
+                        hitInfo.transform.GetComponent<Tree>().Mining();
+                    }
+                    isSwing = false;
+                }
+                yield return null;
             }
         }
 
@@ -301,13 +349,35 @@ namespace StarterAssets
             {
                 Debug.Log("1번 인벤");
                 string leftItemName = Leftslot.GetItemName();
+                ItemBool(leftItemName);
                 Leftslot.LeftHandThrowItem(HandPosition, leftItemName);
             }
             else if (Input.GetKeyDown(KeyCode.G) && HandPosition == 1)
             {
                 Debug.Log("2번 인벤");
                 string rightItemName = Leftslot.GetItemName();
+                ItemBool(rightItemName);
                 Rightslot.RightHandThrowItem(HandPosition, rightItemName);
+            }
+        }
+
+        private void ItemBool(string itemName)
+        {
+            if (itemName == "곡괭이")
+            {
+                hasPickAxe = false;
+            }
+            else if (itemName == "도끼")
+            {
+                hasAxe = false;
+            }
+            else if (itemName == "낚시줄")
+            {
+                hasString = false;
+            }
+            else if (itemName == "낚시대")
+            {
+                hasFishing = false;
             }
         }
 
@@ -350,6 +420,7 @@ namespace StarterAssets
                 _controller.Move(Vector3.zero);
                 _animator.SetTrigger(_animIDAxe);
                 isAxe = true;
+                isSwing = true;
                 isAxeDirection = true;
             }
         }
@@ -375,7 +446,7 @@ namespace StarterAssets
                 _controller.Move(Vector3.zero);
                 _animator.SetTrigger(_animIDAttack);
                 isAttack = true;
-
+                isSwing = true;
                 isAttackDirection = true;
             }
         }
@@ -725,6 +796,20 @@ namespace StarterAssets
                     conversationAppear("여기서 낚시 할 수 있겠는데? 여기서 낚시를 하자");
                 }
             }
+            if(other.gameObject.tag == "Rock")
+            {
+                ApplyDamageToRock(other.gameObject);
+            }
+        }
+
+        private void ApplyDamageToRock(GameObject rock)
+        {
+            Rock rockHealth = rock.GetComponent<Rock>();
+
+            if (rockHealth != null)
+            {
+                rockHealth.Mining();
+            }
         }
 
         private void CheckItemdistance()
@@ -750,37 +835,47 @@ namespace StarterAssets
 
                     if (closestItem != null && closestItem == other.gameObject)
                     {
-                        int isAcquired = inventory.AcquireItem(other.gameObject.GetComponent<ItemPickup>().item);
-                        if (isAcquired == 0)
-                        {
-                            GetItem();
-                            Destroy(other.gameObject);
-                            triggerItems.Remove(other.gameObject);
-                            pickupActivated = true;
-                            ItemInfoDisappear();
-                            CheckInventoryForItems();
-                            string itemName = other.gameObject.name;
-                            if (itemName == "낚시대" || itemName == "낚시줄")
-                            {
-                                dialogueQueue.Enqueue("여기에 왠 " + itemName + "가 있지...? 바다에서 떠밀려 왔나... 잘찾아보면 다른 것도 있을거 같애!! 찾아보자!");
-                                StartCoroutine(DialogueUIAppear());
-                            }
-                            if (itemName == "완전한 낚시대")
-                            {
-                                hasCompleteFishingRod = true;
-                                dialogueQueue.Enqueue("낚시대가 있으니까 물고기를 잡을 수 있겠다 강이나 해변으로 가보자!! ");
-                                StartCoroutine(DialogueUIAppear());
-                            }
-                        }
-                        if (isAcquired == 1)
+                        string itemName = other.gameObject.name;
+                        bool hasAxeOrPickAxe = (itemName == "도끼" && hasPickAxe) || (itemName == "곡괭이" && hasAxe);
+                        
+                        if(hasAxeOrPickAxe)
                         {
                             disappear();
-                            ItemInfoAppear(other.gameObject.name + "손이 가득 차서 더 이상 주울 수 없어!");
+                            ItemInfoAppear("이 도구를 가지고 있는 동안 다른 도구를 주울 수 없어!");
                         }
-                        if (isAcquired == 2)
+                        else
                         {
-                            disappear();
-                            ItemInfoAppear("양손에 이미 들고 있는게 있어!");
+                            int isAcquired = inventory.AcquireItem(other.gameObject.GetComponent<ItemPickup>().item);
+                            CheckInventoryForItems(other.gameObject);
+                            if (isAcquired == 0)
+                            {
+                                GetItem();
+                                Destroy(other.gameObject);
+                                triggerItems.Remove(other.gameObject);
+                                pickupActivated = true;
+                                ItemInfoDisappear();
+                                if (hasString || hasFishing)
+                                {
+                                    dialogueQueue.Enqueue("여기에 왠 " + itemName + "가 있지...? 바다에서 떠밀려 왔나... 잘찾아보면 다른 것도 있을거 같애!! 찾아보자!");
+                                    StartCoroutine(DialogueUIAppear());
+                                }
+                                if (hasString && hasFishing)
+                                {
+                                    hasCompleteFishingRod = true;
+                                    dialogueQueue.Enqueue("낚시대가 있으니까 물고기를 잡을 수 있겠다 강이나 해변으로 가보자!! ");
+                                    StartCoroutine(DialogueUIAppear());
+                                }
+                            }
+                            if (isAcquired == 1)
+                            {
+                                disappear();
+                                ItemInfoAppear(other.gameObject.name + "손이 가득 차서 더 이상 주울 수 없어!");
+                            }
+                            if (isAcquired == 2)
+                            {
+                                disappear();
+                                ItemInfoAppear("양손에 이미 들고 있는게 있어!");
+                            }
                         }
                         _input.getItem = false;
                     }
@@ -789,15 +884,29 @@ namespace StarterAssets
         }
 
         // 플레이어 아이템을 확인하고 아이템을 생성하는 함수
-        private void CheckInventoryForItems()
+        private void CheckInventoryForItems(GameObject item)
         {
-            Item fishingRod = inventory.FindItemByName("낚시대");
-            Item fishingLine = inventory.FindItemByName("낚시줄");
-
-            if (fishingRod != null && fishingLine != null)
+            if (hasString && hasString)
             {
-                StartCoroutine(WaitAndCreateCompleteFishingRod("낚시대와 낚시줄이 있으니까 완전한 낚시대를 만들 수 있겠는 걸?", fishingRod, fishingLine));
+                StartCoroutine(WaitAndCreateCompleteFishingRod("낚시대와 낚시줄이 있으니까 완전한 낚시대를 만들 수 있겠는 걸?"));
                 StartCoroutine(UIDisAppear());
+            }
+
+            if (item.name == "도끼")
+            {
+                hasAxe = true;
+            }
+            else if (item.name == "곡괭이")
+            {
+                hasPickAxe = true;
+            }
+            else if (item.name == "낚시줄")
+            {
+                hasString = true;
+            }
+            else if (item.name == "낚시대")
+            {
+                hasFishing = true;
             }
         }
 
@@ -878,17 +987,17 @@ namespace StarterAssets
             ItemInfoDisappear();
         }
 
-        private IEnumerator WaitAndCreateCompleteFishingRod(string ItemName, Item fishingRod, Item fishingLine)
+        private IEnumerator WaitAndCreateCompleteFishingRod(string ItemName)
         {
             yield return new WaitForSeconds(4);
             
             conversationImage.gameObject.SetActive(true);
             conversationText.text = ItemName;
 
-            int fishingRodSlotIndex = inventory.FindItemSlotIndex(fishingRod);
-            int fishingLineSlotIndex = inventory.FindItemSlotIndex(fishingLine);
-            inventory.UsedItem(fishingRod, fishingRodSlotIndex);
-            inventory.UsedItem(fishingLine, fishingLineSlotIndex);
+            //int fishingRodSlotIndex = inventory.FindItemSlotIndex(fishingRod);
+            //int fishingLineSlotIndex = inventory.FindItemSlotIndex(fishingLine);
+            //inventory.UsedItem(fishingRod, fishingRodSlotIndex);
+            //inventory.UsedItem(fishingLine, fishingLineSlotIndex);
 
             //createprefabs();
         }
