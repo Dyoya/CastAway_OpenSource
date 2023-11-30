@@ -42,8 +42,6 @@ public class CraftManual : MonoBehaviour
         isActivated = false;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-
-
     }
     void Start()
     {
@@ -62,6 +60,11 @@ public class CraftManual : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
             Cancel();
+        Cursor.visible = isActivated;
+        if(Cursor.visible)
+            Cursor.lockState = CursorLockMode.None;
+        else
+            Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void PreviewPositionUpdate()
@@ -112,17 +115,12 @@ public class CraftManual : MonoBehaviour
     {
         isActivated = true;
         go_BaseUI.SetActive(true);
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
     }
 
-  
     private void CloseWindow()
     {
         isActivated = false;
         go_BaseUI.SetActive(false);
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
     //ESC누르면 실행
     private void Cancel()
