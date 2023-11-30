@@ -64,6 +64,7 @@ public class BearBossBT : MonoBehaviour
 
     float _patrolCurrentTime = 0;
 
+    #region Anim Name
     const string _IDLE_ANIM_STATE_NAME = "Idle";
     const string _IDLE_ANIM_TRIGGER_NAME = "idle";
 
@@ -93,6 +94,10 @@ public class BearBossBT : MonoBehaviour
 
     const string _LANDING_ANIM_STATE_NAME = "Landing";
     const string _LANDING_ANIM_TRIGGER_NAME = "landing";
+
+    const string _HOWLING_ANIM_STATE_NAME = "Howling";
+    const string _HOWLING_ANIM_TRIGGER_NAME = "howling";
+    #endregion
 
     // 데미지 임시 변수
     int _temporaryDamage = 0;
@@ -214,6 +219,7 @@ public class BearBossBT : MonoBehaviour
                                 (
                                     new List<INode>()
                                     {
+                                        new ActionNode(Howling),
                                         new ActionNode(Jump),
                                         new ActionNode(Landing),
                                     }
@@ -771,45 +777,58 @@ public class BearBossBT : MonoBehaviour
         Destroy(go);
     }
     // 점프 패턴 - 크게 점프 후, 일정 시간 뒤에 플레이어 위치로 착지
-    INode.ENodeState Jump()
+    // 0~3초 : 하울링 / 3~4초 : 점프 / 4~8초 : 추적 / 8~9초 : 착지 / 9~11초 : 하울링
+    INode.ENodeState Howling()
     {
         if (!skill[1].IsReady())
             return INode.ENodeState.ENS_Failure;
 
         isJump = true;
 
-        // 점프
         if (!isCharging)
         {
-            Debug.Log("점프");
-            _anim.SetTrigger(_JUMP_ANIM_TRIGGER_NAME);
+            Debug.Log("점프 준비");
+
+            _anim.SetTrigger(_HOWLING_ANIM_TRIGGER_NAME);
 
             isSkill = true;
             isMove = false;
             _agent.enabled = false;
 
             isCharging = true;
-
-            jumpVector = transform.position + new Vector3(0, 20, 0);
         }
 
         elapsedTime += Time.deltaTime;
 
-        // 착지 위치 찾기
-        if (elapsedTime < 4f)
+        if (elapsedTime > 3f)
         {
-            goal = Player.transform.position;
+            return INode.ENodeState.ENS_Success;
         }
 
-        if (elapsedTime < 1f)
+        return INode.ENodeState.ENS_Running;
+    }
+    INode.ENodeState Jump()
+    {
+        // 점프 애니메이션 실행
+        if (elapsedTime < 4f && !IsAnimationRunning(_JUMP_ANIM_STATE_NAME))
+        {
+            _anim.SetTrigger(_JUMP_ANIM_TRIGGER_NAME);
+        }
+
+        // 착지 1초 전 까지 플레이어 위치 추적
+        if(elapsedTime < 7f)
+            goal = Player.transform.position;
+
+        if (elapsedTime < 4f)
         {
             Debug.Log("점프 중");
 
-            transform.Translate(new Vector3(0, 20, 0) * Time.deltaTime, Space.World);
+            // 점프
+            transform.Translate(new Vector3(0, 10, 0) * Time.deltaTime, Space.World);
 
             return INode.ENodeState.ENS_Running;
         }
-        else if (elapsedTime < 5f)
+        else if (elapsedTime < 8f)
         {
             Debug.Log("착지 준비 중");
             body.SetActive(false);
@@ -817,7 +836,7 @@ public class BearBossBT : MonoBehaviour
 
             LandRange.transform.position = new Vector3(goal.x, goal.y + 0.002f, goal.z);
 
-            transform.position = new Vector3(goal.x, jumpVector.y, goal.z);
+            transform.position = new Vector3(goal.x, goal.y + 10f, goal.z);
 
             return INode.ENodeState.ENS_Running;
         }
@@ -835,21 +854,31 @@ public class BearBossBT : MonoBehaviour
         LandRange.SetActive(false);
         LandTrigger.SetActive(true);
 
-        // 한 번만 애니메이션 실행
-        if (!doLandAnim)
+        if (elapsedTime < 9f)
         {
-            _anim.SetTrigger(_LANDING_ANIM_TRIGGER_NAME);
+            transform.Translate(new Vector3(0, -10, 0) * Time.deltaTime, Space.World);
 
-            doLandAnim = true;
+            // 한 번만 애니메이션 실행
+            if (!doLandAnim)
+            {
+                _anim.SetTrigger(_LANDING_ANIM_TRIGGER_NAME);
+
+                doLandAnim = true;
+            }
+
+            return INode.ENodeState.ENS_Running;
+        }
+        else if (elapsedTime < 11.5f)
+        {
+            if (!IsAnimationRunning(_HOWLING_ANIM_STATE_NAME))
+            {
+                _anim.SetTrigger(_HOWLING_ANIM_TRIGGER_NAME);
+            }
+
+            return INode.ENodeState.ENS_Running;
         }
 
-        if (elapsedTime < 8f)
-            transform.Translate(new Vector3(0, goal.y - transform.position.y, 0) * Time.deltaTime, Space.World);
-
-        // 스킬 종료
-        if (elapsedTime < 8f)
-            return INode.ENodeState.ENS_Running;
-
+        // 종료
         transform.position = goal;
 
         LandTrigger.SetActive(false);
