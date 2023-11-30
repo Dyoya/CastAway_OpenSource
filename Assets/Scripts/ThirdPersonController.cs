@@ -116,6 +116,7 @@ namespace StarterAssets
         private int _animIDGetItem; // 아이템을 줍는 애니메이션 추가한 부분
         private int _animIDAxe; // 도끼 애니메이션 추가한 부분
         private int _animIDAttack; // 공격에 필요한 애니메이션
+        private int _animIDFishing; // 낚시에 필요한 애니메이션
 
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -170,6 +171,8 @@ namespace StarterAssets
         private bool isAxeDirection = false;
         private bool isAttack = false;
         private bool isAttackDirection = false;
+        private bool isFishing = false;
+
 
         //게임 오브젝트 활성화 여부
         public GameObject[] objectToActivate;
@@ -179,6 +182,11 @@ namespace StarterAssets
         private bool hasPickAxe = false;
         private bool hasString = false;
         private bool hasFishing = false;
+        private bool hasPerfactFishing = false;
+
+        //Zone 위치에 있는지 없는지
+        private bool FishingZone = false;
+
 
         private void Awake()
         {
@@ -235,6 +243,8 @@ namespace StarterAssets
 
         private void ItemActiveAnimation()
         {
+            Debug.Log(FishingZone);
+            Debug.Log(hasPerfactFishing);
             if (hasAxe)
             {
                 for(int i = 0; i < objectToActivate.Length; i++)
@@ -253,15 +263,27 @@ namespace StarterAssets
                 }
                 PickAxe();
             }
+            else if(hasPerfactFishing && FishingZone)
+            {
+                Debug.Log(hasPerfactFishing);
+                for (int i = 0; i < objectToActivate.Length; i++)
+                {
+                    if (objectToActivate[i].name == "완전한 낚시대")
+                        objectToActivate[i].SetActive(true);
+                }
+                Fishing();
+            }
             else
             {
                 for (int i = 0; i < objectToActivate.Length; i++)
                 {
                        objectToActivate[i].SetActive(false);
                 }
+                EndFishing();
                 Attack();
             }
         }
+
         private bool isSwing = false;
         private RaycastHit hitInfo;
         private float maxDistance = 1f;
@@ -295,7 +317,6 @@ namespace StarterAssets
                     }
                 }
             }
-
             return false;
         }
 
@@ -396,6 +417,10 @@ namespace StarterAssets
             {
                 hasFishing = false;
             }
+            else if (itemName == "완전한 낚시대")
+            {
+                hasPerfactFishing = false;
+            }
         }
 
         private void PlayHealthControll()
@@ -428,6 +453,23 @@ namespace StarterAssets
             _animIDGetItem = Animator.StringToHash("GetItem");
             _animIDAxe = Animator.StringToHash("Axe");
             _animIDAttack = Animator.StringToHash("Attack");
+            _animIDFishing = Animator.StringToHash("Fishing");
+        }
+
+        private void Fishing()
+        {
+            if (_hasAnimator && Grounded && !isJump && !isFishing && FishingZone)
+            {
+                _controller.Move(Vector3.zero);
+                _animator.SetTrigger(_animIDFishing);
+                isFishing = true;
+                return;
+            }
+        }
+
+        private void EndFishing()
+        {
+            isFishing = false;
         }
 
         private void Attack()
@@ -594,7 +636,7 @@ namespace StarterAssets
         private void Move()
         {
             //공격을 할 때는 함수 탈출 추가한 부분
-            if (isPickAxe || isDead || isGetItem || isAxe || isAttack)
+            if (isPickAxe || isDead || isGetItem || isAxe || isAttack || isFishing)
                 return;
 
             //플레이어의 에너지바가 0일 경우 못 뛰도록 추가한 부분 
@@ -806,8 +848,6 @@ namespace StarterAssets
 
         private Queue<string> dialogueQueue = new Queue<string>();
 
-        public bool hasCompleteFishingRod = false;
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.tag == "Helicopter")
@@ -833,28 +873,15 @@ namespace StarterAssets
             }
             if (other.gameObject.tag == "FishingZone")
             {
-                if(!hasCompleteFishingRod)
+                if(!hasPerfactFishing)
                 {
                     conversationAppear("완전한 낚시대가 없어... 섬을 돌면서 바다에 휩쓸려온 재료들을 찾아서 완전한 낚시대를 만들어 보자!!");
                 }
                 else
                 {
+                    FishingZone = true;
                     conversationAppear("여기서 낚시 할 수 있겠는데? 여기서 낚시를 하자");
                 }
-            }
-            if(other.gameObject.tag == "Rock")
-            {
-                ApplyDamageToRock(other.gameObject);
-            }
-        }
-
-        private void ApplyDamageToRock(GameObject rock)
-        {
-            Rock rockHealth = rock.GetComponent<Rock>();
-
-            if (rockHealth != null)
-            {
-                rockHealth.Mining();
             }
         }
 
@@ -907,7 +934,6 @@ namespace StarterAssets
                                 }
                                 if (hasString && hasFishing)
                                 {
-                                    hasCompleteFishingRod = true;
                                     dialogueQueue.Enqueue("낚시대가 있으니까 물고기를 잡을 수 있겠다 강이나 해변으로 가보자!! ");
                                     StartCoroutine(DialogueUIAppear());
                                 }
@@ -954,6 +980,10 @@ namespace StarterAssets
             {
                 hasFishing = true;
             }
+            else if (item.name == "완전한 낚시대")
+            {
+                hasPerfactFishing = true;
+            }
         }
 
         public void createprefabs(GameObject itemPrefabs, string name)
@@ -974,6 +1004,7 @@ namespace StarterAssets
             }
             if (other.gameObject.tag == "FishingZone")
             {
+                FishingZone = false;
                 ItemInfoDisappear();
             }
         }
