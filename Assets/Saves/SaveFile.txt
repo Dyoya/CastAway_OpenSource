@@ -1,1 +1,1 @@
-{"playerPos":{"x":1.3799799680709839,"y":-0.010000109672546387,"z":1.387986421585083},"playerRot":{"x":0.0,"y":280.9527282714844,"z":0.0},"inventoryArrayNum":[0],"inventoryItemName":["곡괭이"],"inventoryItemNum":[1]}
+{"playerPos":{"x":-1033.5999755859375,"y":30.033166885375978,"z":1183.5999755859375},"playerRot":{"x":0.0,"y":0.0,"z":0.0},"inventoryArrayNum":[],"inventoryItemName":[],"inventoryItemNum":[]}

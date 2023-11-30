@@ -42,8 +42,6 @@ public class CraftManual : MonoBehaviour
         isActivated = false;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-
-
     }
     void Start()
     {
@@ -62,6 +60,11 @@ public class CraftManual : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
             Cancel();
+        Cursor.visible = isActivated;
+        if(Cursor.visible)
+            Cursor.lockState = CursorLockMode.None;
+        else
+            Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void PreviewPositionUpdate()
@@ -72,17 +75,21 @@ public class CraftManual : MonoBehaviour
             {
                 Vector3 _location = hitInfo.point;
                 go_Preview.transform.position = _location;
+                go_Preview.SetActive(true);
 
                 Debug.Log(_location);
                 Debug.Log(go_Preview.transform.position);
             }
             else
             {
-
+                go_Preview.SetActive(false);
             }
         }
+        else
+            go_Preview.SetActive(false);
     }
 
+    //버튼 클릭되면 실행
     private void Build()
     {
         if (isPreviewActivated && go_Preview.GetComponent<PreviewObject>().isBuildable())
@@ -95,32 +102,27 @@ public class CraftManual : MonoBehaviour
             go_Prefab = null;
         }
     }
-
+    //Tab키 누르면 실행
     private void Window()
-    {
-        if (!isActivated)
+    {   
+        if (!isActivated) //창 닫혀있으면 창을 킴
             OpenWindow();
         else
-            CloseWindow();
+            CloseWindow(); // 창 열려있으면 창을 닫음
     }
 
     private void OpenWindow()
     {
         isActivated = true;
         go_BaseUI.SetActive(true);
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
     }
 
-  
     private void CloseWindow()
     {
         isActivated = false;
         go_BaseUI.SetActive(false);
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
-
+    //ESC누르면 실행
     private void Cancel()
     {
         if (isPreviewActivated)
