@@ -271,7 +271,10 @@ namespace StarterAssets
                     if (objectToActivate[i].name == "완전한 낚시대")
                         objectToActivate[i].SetActive(true);
                 }
-                Fishing();
+                if(!Input.GetKeyDown(KeyCode.F))
+                    Fishing();
+                else if(Input.GetKeyDown(KeyCode.F))
+                    EndFishing();
             }
             else
             {
@@ -279,7 +282,6 @@ namespace StarterAssets
                 {
                        objectToActivate[i].SetActive(false);
                 }
-                EndFishing();
                 Attack();
             }
         }
@@ -458,6 +460,9 @@ namespace StarterAssets
 
         private void Fishing()
         {
+            _input.attack = false;
+            _input.jump = false;
+            Debug.Log("Fishing");
             if (_hasAnimator && Grounded && !isJump && !isFishing && FishingZone)
             {
                 _controller.Move(Vector3.zero);
@@ -469,6 +474,10 @@ namespace StarterAssets
 
         private void EndFishing()
         {
+            if (_hasAnimator && Input.GetKeyDown(KeyCode.F))
+            {
+                _animator.SetBool(_animIDFishing, false);
+            }
             isFishing = false;
         }
 
@@ -486,7 +495,6 @@ namespace StarterAssets
 
         private void EndAttack()
         {
-            Debug.Log("도끼 끝");
             isAttack = false;
             isSwing = false;
             _input.attack = false;
@@ -494,7 +502,6 @@ namespace StarterAssets
 
         private void EndAttackDirection()
         {
-            Debug.Log("방향전환 가능");
             isAttackDirection = false;
         }
 
@@ -513,7 +520,6 @@ namespace StarterAssets
 
         private void EndAxe()
         {
-            Debug.Log("도끼 끝");
             isAxe = false;
             isSwing = false;
             _input.attack = false;
@@ -521,7 +527,6 @@ namespace StarterAssets
 
         private void EndAxeDirection()
         {
-            Debug.Log("방향전환 가능");
             isAxeDirection = false;
         }
 
@@ -880,7 +885,8 @@ namespace StarterAssets
                 else
                 {
                     FishingZone = true;
-                    conversationAppear("여기서 낚시 할 수 있겠는데? 여기서 낚시를 하자");
+                    dialogueQueue.Enqueue("여기서 낚시 할 수 있겠는데? 여기서 낚시를 하자");
+                    StartCoroutine(DialogueUIAppear());
                 }
             }
         }
