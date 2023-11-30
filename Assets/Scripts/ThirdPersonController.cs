@@ -111,10 +111,12 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
-        private int _animIDAttack; // 공격에 필요한 애니메이션 추가한 부분
+        private int _animIDPickAxe; // 곡괭이에 필요한 애니메이션 추가한 부분
         private int _animIDDeath; // 동현이가 새로 추가함
         private int _animIDGetItem; // 아이템을 줍는 애니메이션 추가한 부분
         private int _animIDAxe; // 도끼 애니메이션 추가한 부분
+        private int _animIDAttack; // 공격에 필요한 애니메이션
+
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
         private PlayerInput _playerInput;
@@ -158,14 +160,16 @@ namespace StarterAssets
         private int HandPosition;
 
         //공격을 할 때 사용할 변수
-        private bool isAttack = false;
-        private bool isAttackDirection = false;
+        private bool isPickAxe = false;
+        private bool isPickAxeDirection = false;
         private bool isJump = false;
         private bool isDead = false;
         private bool isGetItem = false;
         private bool isGetItemDirection = false;
         private bool isAxe = false;
         private bool isAxeDirection = false;
+        private bool isAttack = false;
+        private bool isAttackDirection = false;
 
         //게임 오브젝트 활성화 여부
         public GameObject[] objectToActivate;
@@ -211,7 +215,7 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
-            if (isAttackDirection || isGetItemDirection || isAxeDirection)
+            if (isPickAxeDirection || isGetItemDirection || isAxeDirection)
                 return;
 
             if (isDead)
@@ -247,7 +251,7 @@ namespace StarterAssets
                     if (objectToActivate[i].name == "곡괭이")
                         objectToActivate[i].SetActive(true);
                 }
-                Attack();
+                PickAxe();
             }
             else
             {
@@ -259,23 +263,36 @@ namespace StarterAssets
             }
         }
         private bool isSwing = false;
-        RaycastHit hitInfo;
+        private RaycastHit hitInfo;
+        private float maxDistance = 1f;
 
         private bool CheckObject()
         {
-            Ray ray = new Ray(transform.position, transform.forward);
-            
-            if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity))
+            Vector3 startRay = transform.position + new Vector3(0, 1, 0);
+            Vector3 direction = transform.forward;
+            float rayAngle = 45f; 
+            int totalRays = 10;
+
+            for (int i = 0; i < totalRays; i++)
             {
-                Debug.Log(hitInfo.transform.tag);
-                if (hitInfo.transform.tag == "Rock" && hasPickAxe)
+                float angle = -rayAngle / 2 + (rayAngle / (totalRays - 1)) * i;
+                Vector3 dir = Quaternion.Euler(0, angle, 0) * direction;
+
+                Ray ray = new Ray(startRay, dir);
+
+                if (Physics.Raycast(ray, out hitInfo, maxDistance))
                 {
-                    return true;
-                }
-                if (hitInfo.transform.tag == "Tree" && hasAxe)
-                {
+                    Debug.DrawRay(startRay, dir * hitInfo.distance, Color.blue);
                     Debug.Log(hitInfo.transform.tag);
-                    return true;
+                    if (hitInfo.transform.tag == "Rock" && hasPickAxe)
+                    {
+                        return true;
+                    }
+                    if (hitInfo.transform.tag == "Tree" && hasAxe)
+                    {
+                        Debug.Log(hitInfo.transform.tag);
+                        return true;
+                    }
                 }
             }
 
@@ -406,10 +423,37 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-            _animIDAttack = Animator.StringToHash("Attack");
+            _animIDPickAxe = Animator.StringToHash("PickAxe");
             _animIDDeath = Animator.StringToHash("Death");
             _animIDGetItem = Animator.StringToHash("GetItem");
             _animIDAxe = Animator.StringToHash("Axe");
+            _animIDAttack = Animator.StringToHash("Attack");
+        }
+
+        private void Attack()
+        {
+            if (_hasAnimator && Grounded && !isJump && !isAttack && _input.attack)
+            {
+                _controller.Move(Vector3.zero);
+                _animator.SetTrigger(_animIDAttack);
+                isAttack = true;
+                isSwing = true;
+                isAttackDirection = true;
+            }
+        }
+
+        private void EndAttack()
+        {
+            Debug.Log("도끼 끝");
+            isAttack = false;
+            isSwing = false;
+            _input.attack = false;
+        }
+
+        private void EndAttackDirection()
+        {
+            Debug.Log("방향전환 가능");
+            isAttackDirection = false;
         }
 
         //도끼 애니메이션 동작
@@ -429,6 +473,7 @@ namespace StarterAssets
         {
             Debug.Log("도끼 끝");
             isAxe = false;
+            isSwing = false;
             _input.attack = false;
         }
 
@@ -439,27 +484,28 @@ namespace StarterAssets
         }
 
         //공격함수 추가한 부분
-        private void Attack()
+        private void PickAxe()
         {
-            if (_hasAnimator && Grounded && !isJump && !isAttack && _input.attack)
+            if (_hasAnimator && Grounded && !isJump && !isPickAxe && _input.attack)
             {
                 _controller.Move(Vector3.zero);
-                _animator.SetTrigger(_animIDAttack);
-                isAttack = true;
+                _animator.SetTrigger(_animIDPickAxe);
+                isPickAxe = true;
                 isSwing = true;
-                isAttackDirection = true;
+                isPickAxeDirection = true;
             }
         }
 
-        private void EndAttack()
+        private void EndPickAxe()
         {
-            isAttack = false;
+            isPickAxe = false;
+            isSwing = false;
             _input.attack = false;
         }
 
-        private void EndAttackDirection()
+        private void EndPickAxeDirection()
         {
-            isAttackDirection = false;
+            isPickAxeDirection = false;
         }
 
         //플레이어 죽는 애니메이션 추가한 부분    
@@ -548,7 +594,7 @@ namespace StarterAssets
         private void Move()
         {
             //공격을 할 때는 함수 탈출 추가한 부분
-            if (isAttack || isDead || isGetItem || isAxe)
+            if (isPickAxe || isDead || isGetItem || isAxe || isAttack)
                 return;
 
             //플레이어의 에너지바가 0일 경우 못 뛰도록 추가한 부분 
