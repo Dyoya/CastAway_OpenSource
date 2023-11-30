@@ -39,6 +39,11 @@ public class CraftManual : MonoBehaviour
         go_Prefab = craft_fire[_slotNumber].go_prefab;
         isPreviewActivated = true;
         go_BaseUI.SetActive(false);
+        isActivated = false;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+
     }
     void Start()
     {
@@ -71,6 +76,10 @@ public class CraftManual : MonoBehaviour
                 Debug.Log(_location);
                 Debug.Log(go_Preview.transform.position);
             }
+            else
+            {
+
+            }
         }
     }
 
@@ -99,6 +108,8 @@ public class CraftManual : MonoBehaviour
     {
         isActivated = true;
         go_BaseUI.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
   
@@ -106,6 +117,8 @@ public class CraftManual : MonoBehaviour
     {
         isActivated = false;
         go_BaseUI.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Cancel()
@@ -115,6 +128,8 @@ public class CraftManual : MonoBehaviour
 
         isActivated = false;
         isPreviewActivated = false;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
 
         go_Preview = null;
         go_Prefab = null;
