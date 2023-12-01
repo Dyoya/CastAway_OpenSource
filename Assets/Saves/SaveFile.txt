@@ -1,1 +1,1 @@
-{"playerPos":{"x":-2.1266098022460939,"y":-0.008000016212463379,"z":-1.658575177192688},"playerRot":{"x":0.0,"y":220.4176788330078,"z":0.0},"inventoryArrayNum":[0],"inventoryItemName":["완전한 낚시대"],"inventoryItemNum":[1]}
+{"playerPos":{"x":-1.8280946016311646,"y":-0.010000169277191162,"z":-1.1005855798721314},"playerRot":{"x":0.0,"y":113.14022827148438,"z":0.0},"inventoryArrayNum":[0],"inventoryItemName":["완전한 낚시대"],"inventoryItemNum":[1]}
