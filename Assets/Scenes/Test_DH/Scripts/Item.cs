@@ -14,4 +14,8 @@ public class Item : ScriptableObject
     public int itemValue; //아이템 회복 양
 
     public string weaponType;
+    
+    public bool Food;
+    public bool Perfect;
+    public bool Cooked;
 }

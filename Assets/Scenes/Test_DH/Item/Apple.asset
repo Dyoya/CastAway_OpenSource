@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: Apple
   m_EditorClassIdentifier: 
   itemImage: {fileID: 21300000, guid: ada0d6fc145e7d54db2eb3b9b109ffc5, type: 3}
-  itemName: Apple
+  itemName: "\uC0AC\uACFC"
   itemType: 1
   itemPrefab: {fileID: 388876489497171537, guid: d0ddd93953187fd4195f9cea4a7b8a56,
     type: 3}
   itemValue: 15
   weaponType: 
+  Food: 1
+  Cooked: 0

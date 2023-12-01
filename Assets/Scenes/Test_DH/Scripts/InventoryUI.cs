@@ -43,6 +43,7 @@ public class InventoryUI : MonoBehaviour
         slots = go_SlotsParent.GetComponentsInChildren<slot>(); // 인벤토리 슬롯들을 가져옴
     }
 
+
     public int AcquireItem(Item _item, int _count = 1)
     {
         if (Item.ItemType.Equipment != _item.itemType) // 슬롯이 비어있지 않다면

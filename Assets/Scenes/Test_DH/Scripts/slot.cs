@@ -13,6 +13,8 @@ public class slot : MonoBehaviour
     public Item item; // 획득한 아이템
     public int itemCount; // 획득한 아이템 개수
     public Image itemImage; // 아이템의 이미지
+    public Image Cooked; // 요리된 아이템 표시
+    public Image Well;  // 잘 구워진 요리 표시
 
     //필요 컴포넌트
     [SerializeField]
@@ -22,11 +24,20 @@ public class slot : MonoBehaviour
     [SerializeField]
     private InventoryUI inventoryUI;
 
+    public int GetItemCount()
+    {
+        return itemCount;
+    }
     public string GetItemName()
     {
         if (item != null)
             return item.itemName;
         return null;
+    }
+
+    public bool isFood()
+    {
+        return item.Food;
     }
 
     //이미지의 투명도 조절
@@ -54,6 +65,14 @@ public class slot : MonoBehaviour
             text_Count.text = "0";
             go_CountImage.SetActive(false);
         }
+
+        if(item.Cooked)         //요리된 음식일 시 활성화
+        {
+            Cooked.gameObject.SetActive(true);
+            if (item.Perfect)
+                Well.gameObject.SetActive(true);
+        }
+
         SetColor(1);
     }
 
@@ -98,5 +117,7 @@ public class slot : MonoBehaviour
 
         text_Count.text = "0";
         go_CountImage.SetActive(false);
+        Cooked.gameObject.SetActive(false);
+        Well.gameObject.SetActive(false);
     }
 }

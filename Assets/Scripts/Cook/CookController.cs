@@ -14,6 +14,17 @@ public class CookController : MonoBehaviour
     [SerializeField] GameObject note = null;
     Vector2[] timingBoxs = null;
 
+    [SerializeField] private slot Foodslot;
+    [SerializeField] private slot Leftslot;
+    [SerializeField] private slot Rightslot;
+    [SerializeField] Transform CookedFoodFactory = null;
+    private Item item;
+    private int slot;
+
+    private string perfectFood = "잘요리된";
+    private string normalFood = "요리된";
+    private string charredFood = "숯";
+
     private void Start()
     {
         timingBoxs = new Vector2[timingRect.Length];
@@ -32,17 +43,94 @@ public class CookController : MonoBehaviour
         {
             if (timingBoxs[i].x <= notePosX && notePosX <= timingBoxs[i].y)
             {
-                Debug.Log("Hit" + i);   // i = 0 일때 퍼펙트 i = 1 일때 Good
-                CookUI.SetActive(false);
-                GameManager.isPause = false;
-                Player.GetComponent<ThirdPersonController>().enabled = true;
+                CloseCookUI();
+                if (i == 0)
+                {
+                    CookFood(slot, perfectFood);
+                }
+                if (i == 1)
+                {
+                    CookFood(slot, normalFood);
+                }
                 return;
             }
         }
 
         Debug.Log("Miss");
+        CloseCookUI();
+        CookFood(slot, charredFood);
+    }
+
+    private void Update()
+    {
+        FoodFrame();
+    }
+
+    private void FoodFrame()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            addFood(Leftslot);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            addFood(Rightslot);
+        }
+        
+    }
+
+    private void CookFood(int slot, string prefix)          
+    {
+        if (slot == 1)
+        {
+            CreateCookedFood(Leftslot, prefix);
+        }
+        if (slot == 0)
+        {
+            CreateCookedFood(Rightslot, prefix);
+        }
+    }
+    private void addFood(slot handslot)             // 음식 프레임에 음식 이미지 추가함수
+    {
+        if (handslot.isFood())
+        {
+            Foodslot.AddItem(handslot.item);
+            if (handslot == Leftslot)
+                slot = 1;
+            else
+                slot = 0;
+        }
+        else
+        {
+            Debug.Log("음식이 아닙니다.");
+        }
+    }
+
+    private void CreateCookedFood(slot handslot, string prefix)    // 요리된 음식을 플레이어 앞에 생성하는 함수
+    {
+        Transform cookedFoodTransform;
+        if (prefix == charredFood)
+        {
+            cookedFoodTransform = CookedFoodFactory.Find(prefix);
+        }
+        else
+        {
+            cookedFoodTransform = CookedFoodFactory.Find(prefix + handslot.GetItemName());
+        }
+
+        for (int i = 0; i < handslot.GetItemCount(); i++)
+        {
+            Vector3 spawnPosition = Player.transform.position + Player.transform.forward * 2f + new Vector3(0, 2, 0);
+            GameObject cookedFoodInstance = Instantiate(cookedFoodTransform.gameObject, spawnPosition, Quaternion.identity);
+        }
+
+        handslot.ClearSlot();
+    }
+    public void CloseCookUI()
+    {
         CookUI.SetActive(false);
         GameManager.isPause = false;
         Player.GetComponent<ThirdPersonController>().enabled = true;
+        Foodslot.ClearSlot();
     }
 }
