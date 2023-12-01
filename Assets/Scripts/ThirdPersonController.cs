@@ -270,11 +270,8 @@ namespace StarterAssets
                 {
                     if (objectToActivate[i].name == "완전한 낚시대")
                         objectToActivate[i].SetActive(true);
-                }
-                if(!Input.GetKeyDown(KeyCode.F))
-                    Fishing();
-                else if(Input.GetKeyDown(KeyCode.F))
-                    EndFishing();
+                }    
+                Fishing();
             }
             else
             {
@@ -389,15 +386,31 @@ namespace StarterAssets
             {
                 Debug.Log("1번 인벤");
                 string leftItemName = Leftslot.GetItemName();
-                ItemBool(leftItemName);
-                Leftslot.LeftHandThrowItem(HandPosition, leftItemName);
+                if (hasPerfactFishing && FishingZone)
+                {
+                    dialogueQueue.Enqueue("지금 낚시를 하고 있어서 아이템을 버릴 수 없어");
+                    StartCoroutine(DialogueUIAppear());
+                }
+                else
+                {
+                    ItemBool(leftItemName);
+                    Leftslot.LeftHandThrowItem(HandPosition, leftItemName);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.G) && HandPosition == 1)
             {
                 Debug.Log("2번 인벤");
                 string rightItemName = Leftslot.GetItemName();
-                ItemBool(rightItemName);
-                Rightslot.RightHandThrowItem(HandPosition, rightItemName);
+                if (hasPerfactFishing && FishingZone)
+                {
+                    dialogueQueue.Enqueue("지금 낚시를 하고 있어서 아이템을 버릴 수 없어");
+                    StartCoroutine(DialogueUIAppear());
+                }
+                else
+                {
+                    ItemBool(rightItemName);
+                    Rightslot.RightHandThrowItem(HandPosition, rightItemName);
+                }
             }
         }
 
@@ -470,11 +483,16 @@ namespace StarterAssets
                 isFishing = true;
                 return;
             }
+
+            if(isFishing && Input.GetKeyDown(KeyCode.F))
+            {
+                EndFishing();
+            }
         }
 
         private void EndFishing()
         {
-            if (_hasAnimator && Input.GetKeyDown(KeyCode.F))
+            if (_hasAnimator && isFishing)
             {
                 _animator.SetBool(_animIDFishing, false);
             }
