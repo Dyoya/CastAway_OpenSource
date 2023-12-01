@@ -32,4 +32,10 @@ public class HealthBar : MonoBehaviour
     {
         Pb.BarValue += Time.deltaTime;
     }
+
+    public void DecreaseHealth(int Damage)
+    {
+        if(Pb.BarValue > 0)
+            Pb.BarValue -= Damage;
+    }
 }

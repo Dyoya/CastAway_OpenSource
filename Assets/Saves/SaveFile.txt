@@ -1,1 +1,1 @@
-{"playerPos":{"x":1.3799799680709839,"y":-0.010000109672546387,"z":1.387986421585083},"playerRot":{"x":0.0,"y":280.9527282714844,"z":0.0},"inventoryArrayNum":[0],"inventoryItemName":["곡괭이"],"inventoryItemNum":[1]}
+{"playerPos":{"x":-2.1266098022460939,"y":-0.008000016212463379,"z":-1.658575177192688},"playerRot":{"x":0.0,"y":220.4176788330078,"z":0.0},"inventoryArrayNum":[0],"inventoryItemName":["완전한 낚시대"],"inventoryItemNum":[1]}

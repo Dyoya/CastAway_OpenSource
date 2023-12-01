@@ -46,6 +46,9 @@ public class BearBossBT : MonoBehaviour
     [SerializeField] GameObject RushRange;
     [SerializeField] GameObject[] StampRange;
     [SerializeField] GameObject EarthPrefab;
+    [SerializeField] GameObject body;
+    [SerializeField] GameObject LandRange;
+    [SerializeField] GameObject LandTrigger;
 
     NavMeshAgent _agent; //네비게이션
 
@@ -61,6 +64,7 @@ public class BearBossBT : MonoBehaviour
 
     float _patrolCurrentTime = 0;
 
+    #region Anim Name
     const string _IDLE_ANIM_STATE_NAME = "Idle";
     const string _IDLE_ANIM_TRIGGER_NAME = "idle";
 
@@ -82,14 +86,18 @@ public class BearBossBT : MonoBehaviour
     const string _RUSH_ANIM_STATE_NAME = "Rush";
     const string _RUSH_ANIM_TRIGGER_NAME = "rush";
 
+    const string _STAMP_ANIM_STATE_NAME = "Stamp";
+    const string _STAMP_ANIM_TRIGGER_NAME = "stamp";
+
     const string _JUMP_ANIM_STATE_NAME = "Jump";
     const string _JUMP_ANIM_TRIGGER_NAME = "jump";
 
     const string _LANDING_ANIM_STATE_NAME = "Landing";
     const string _LANDING_ANIM_TRIGGER_NAME = "landing";
 
-    const string _STAMP_ANIM_STATE_NAME = "Stamp";
-    const string _STAMP_ANIM_TRIGGER_NAME = "stamp";
+    const string _HOWLING_ANIM_STATE_NAME = "Howling";
+    const string _HOWLING_ANIM_TRIGGER_NAME = "howling";
+    #endregion
 
     // 데미지 임시 변수
     int _temporaryDamage = 0;
@@ -108,6 +116,9 @@ public class BearBossBT : MonoBehaviour
     Vector3 goal;
     bool isSkill = false;
     bool isStamp = false;
+    bool isJump = false;
+    bool doLandAnim = false;
+    Vector3 jumpVector;
 
     private void Awake()
     {
@@ -208,6 +219,7 @@ public class BearBossBT : MonoBehaviour
                                 (
                                     new List<INode>()
                                     {
+                                        new ActionNode(Howling),
                                         new ActionNode(Jump),
                                         new ActionNode(Landing),
                                     }
@@ -592,7 +604,7 @@ public class BearBossBT : MonoBehaviour
     // 돌진 패턴
     INode.ENodeState Charge()
     {
-        if (!skill[0].IsReady() || isStamp)
+        if (!skill[0].IsReady() || isStamp || isJump)
             return INode.ENodeState.ENS_Failure;
 
         // 차지
@@ -666,31 +678,10 @@ public class BearBossBT : MonoBehaviour
         
         return INode.ENodeState.ENS_Running;
     }
-    // 점프 패턴 - 크게 점프 후, 일정 시간 뒤에 플레이어 위치로 착지
-    INode.ENodeState Jump()
-    {
-        if (!skill[1].IsReady())
-            return INode.ENodeState.ENS_Failure;
-
-        // 점프
-        Debug.Log("점프");
-
-        return INode.ENodeState.ENS_Success;
-    }
-    INode.ENodeState Landing()
-    {
-        // 착지
-        Debug.Log("착지");
-
-        UseSkill();
-        skill[1].SetCooldown();
-
-        return INode.ENodeState.ENS_Success;
-    }
     // 내려찍기 패턴 - 플레이어 방향으로 찍어서 충격파 발사
     INode.ENodeState Stamp()
     {
-        if (!skill[2].IsReady())
+        if (!skill[2].IsReady() || isJump)
             return INode.ENodeState.ENS_Failure;
 
         // 내려찍기
@@ -709,7 +700,7 @@ public class BearBossBT : MonoBehaviour
 
             for(int i=0; i<StampRange.Length; i++)
             {
-                StartCoroutine(SetRange(StampRange[i], i * 0.2f));
+                StartCoroutine(SetRange(StampRange[i], i * 0.2f, true));
             }
         }
 
@@ -729,11 +720,11 @@ public class BearBossBT : MonoBehaviour
         }
 
     }
-    IEnumerator SetRange(GameObject go, float time)
+    IEnumerator SetRange(GameObject go, float time, bool active)
     {
         yield return new WaitForSeconds(time);
 
-        go.SetActive(true);
+        go.SetActive(active);
     }
     INode.ENodeState StampWait()
     {
@@ -741,6 +732,8 @@ public class BearBossBT : MonoBehaviour
             return INode.ENodeState.ENS_Running;
 
         //Debug.Log("스탬프 종료");
+        //foreach (GameObject go in StampRange)
+        //    StartCoroutine(SetRange(go, 0f, false));
 
         UseSkill();
         skill[2].SetCooldown();
@@ -750,11 +743,6 @@ public class BearBossBT : MonoBehaviour
         _agent.enabled = true;
 
         isStamp = false;
-        
-        foreach (GameObject go in StampRange)
-        {
-            go.SetActive(false);
-        }
 
         return INode.ENodeState.ENS_Success;
     }
@@ -770,14 +758,15 @@ public class BearBossBT : MonoBehaviour
         }
         
     }
-    IEnumerator SetEarth(GameObject go, Transform tf, float time)
+    IEnumerator SetEarth(GameObject range, Transform tf, float time)
     {
         yield return new WaitForSeconds(time);
 
         //Debug.Log("생성!");
 
-        go = Instantiate(EarthPrefab, tf);
+        GameObject go = Instantiate(EarthPrefab, tf);
 
+        StartCoroutine(SetRange(range, 1f, false));
         StartCoroutine(DestoryEarth(go));
     }
     IEnumerator DestoryEarth(GameObject go)
@@ -787,6 +776,129 @@ public class BearBossBT : MonoBehaviour
         //Debug.Log("파괴!");
 
         Destroy(go);
+    }
+    // 점프 패턴 - 크게 점프 후, 일정 시간 뒤에 플레이어 위치로 착지
+    // 0~3초 : 하울링 / 3~4초 : 점프 / 4~8초 : 추적 / 8~9초 : 착지 / 9~11초 : 하울링
+    INode.ENodeState Howling()
+    {
+        if (!skill[1].IsReady())
+            return INode.ENodeState.ENS_Failure;
+
+        isJump = true;
+
+        if (!isCharging)
+        {
+            Debug.Log("점프 준비");
+
+            _anim.SetTrigger(_HOWLING_ANIM_TRIGGER_NAME);
+
+            isSkill = true;
+            isMove = false;
+            _agent.enabled = false;
+
+            isCharging = true;
+        }
+
+        elapsedTime += Time.deltaTime;
+
+        if (elapsedTime > 3f)
+        {
+            return INode.ENodeState.ENS_Success;
+        }
+
+        return INode.ENodeState.ENS_Running;
+    }
+    INode.ENodeState Jump()
+    {
+        // 점프 애니메이션 실행
+        if (elapsedTime < 4f && !IsAnimationRunning(_JUMP_ANIM_STATE_NAME))
+        {
+            _anim.SetTrigger(_JUMP_ANIM_TRIGGER_NAME);
+        }
+
+        // 착지 1초 전 까지 플레이어 위치 추적
+        if(elapsedTime < 7f)
+            goal = Player.transform.position;
+
+        if (elapsedTime < 4f)
+        {
+            Debug.Log("점프 중");
+
+            // 점프
+            transform.Translate(new Vector3(0, 10, 0) * Time.deltaTime, Space.World);
+
+            return INode.ENodeState.ENS_Running;
+        }
+        else if (elapsedTime < 8f)
+        {
+            Debug.Log("착지 준비 중");
+            body.SetActive(false);
+            LandRange.SetActive(true);
+
+            LandRange.transform.position = new Vector3(goal.x, goal.y + 0.002f, goal.z);
+
+            transform.position = new Vector3(goal.x, goal.y + 10f, goal.z);
+
+            return INode.ENodeState.ENS_Running;
+        }
+        else
+        {
+            return INode.ENodeState.ENS_Success;
+        }
+    }
+    INode.ENodeState Landing()
+    {
+        // 착지
+        Debug.Log("착지");
+
+        body.SetActive(true);
+        LandRange.SetActive(false);
+        LandTrigger.SetActive(true);
+
+        if (elapsedTime < 9f)
+        {
+            transform.Translate(new Vector3(0, -10, 0) * Time.deltaTime, Space.World);
+
+            // 한 번만 애니메이션 실행
+            if (!doLandAnim)
+            {
+                _anim.SetTrigger(_LANDING_ANIM_TRIGGER_NAME);
+
+                doLandAnim = true;
+            }
+
+            return INode.ENodeState.ENS_Running;
+        }
+        else if (elapsedTime < 11.5f)
+        {
+            if (!IsAnimationRunning(_HOWLING_ANIM_STATE_NAME))
+            {
+                _anim.SetTrigger(_HOWLING_ANIM_TRIGGER_NAME);
+            }
+
+            return INode.ENodeState.ENS_Running;
+        }
+
+        // 종료
+        transform.position = goal;
+
+        LandTrigger.SetActive(false);
+
+        isSkill = false;
+        _agent.enabled = true;
+
+        isCharging = false;
+
+        doLandAnim = false;
+
+        UseSkill();
+        skill[1].SetCooldown();
+        elapsedTime = 0f;
+
+        isStamp = false;
+
+
+        return INode.ENodeState.ENS_Success;
     }
     // 스킬 취소됐을 때, 스킬 진행 상황 초기화
     INode.ENodeState initSkill()

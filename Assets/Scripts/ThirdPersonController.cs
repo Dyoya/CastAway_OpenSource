@@ -9,6 +9,8 @@ using System.ComponentModel;
 using static Item;
 using Unity.VisualScripting;
 using System.Reflection;
+using UnityEngine.Animations;
+
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -111,10 +113,13 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
-        private int _animIDAttack; // 공격에 필요한 애니메이션 추가한 부분
+        private int _animIDPickAxe; // 곡괭이에 필요한 애니메이션 추가한 부분
         private int _animIDDeath; // 동현이가 새로 추가함
         private int _animIDGetItem; // 아이템을 줍는 애니메이션 추가한 부분
         private int _animIDAxe; // 도끼 애니메이션 추가한 부분
+        private int _animIDAttack; // 공격에 필요한 애니메이션
+        private int _animIDFishing; // 낚시에 필요한 애니메이션
+
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
         private PlayerInput _playerInput;
@@ -158,14 +163,18 @@ namespace StarterAssets
         private int HandPosition;
 
         //공격을 할 때 사용할 변수
-        private bool isAttack = false;
-        private bool isAttackDirection = false;
+        private bool isPickAxe = false;
+        private bool isPickAxeDirection = false;
         private bool isJump = false;
         private bool isDead = false;
         private bool isGetItem = false;
         private bool isGetItemDirection = false;
         private bool isAxe = false;
         private bool isAxeDirection = false;
+        private bool isAttack = false;
+        private bool isAttackDirection = false;
+        private bool isFishing = false;
+
 
         //게임 오브젝트 활성화 여부
         public GameObject[] objectToActivate;
@@ -175,6 +184,14 @@ namespace StarterAssets
         private bool hasPickAxe = false;
         private bool hasString = false;
         private bool hasFishing = false;
+        private bool hasPerfactFishing = false;
+
+        //Zone 위치에 있는지 없는지
+        private bool FishingZone = false;
+
+        //애니메이션 시간 길이 가져오는 변수
+        public AnimationClip fishingAnimationClip;
+
 
         private void Awake()
         {
@@ -205,18 +222,21 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
 
             pd = GetComponent<PlayableDirector>();
+
+            //애니메이션 이벤트 추가
+            Debug.Log("Fishing 애니메이션 길이: " + fishingAnimationClip.length + "초");
         }
 
         private void Update()
         {
             _hasAnimator = TryGetComponent(out _animator);
 
-            if (isAttackDirection || isGetItemDirection || isAxeDirection)
+            if (isPickAxeDirection || isGetItemDirection || isAxeDirection)
                 return;
 
             if (isDead)
                 return;
-
+            
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -229,8 +249,16 @@ namespace StarterAssets
             ItemActiveAnimation();
         }
 
+        //Player가 데미지 받는 함수
+        public void AttackDamage(int damage = 5)
+        {
+            healthBar.DecreaseHealth(damage);
+        }
+
         private void ItemActiveAnimation()
         {
+            Debug.Log(FishingZone);
+            Debug.Log(hasPerfactFishing);
             if (hasAxe)
             {
                 for(int i = 0; i < objectToActivate.Length; i++)
@@ -247,7 +275,20 @@ namespace StarterAssets
                     if (objectToActivate[i].name == "곡괭이")
                         objectToActivate[i].SetActive(true);
                 }
-                Attack();
+                PickAxe();
+            }
+            else if(hasPerfactFishing && FishingZone)
+            {
+                Debug.Log(hasPerfactFishing);
+                for (int i = 0; i < objectToActivate.Length; i++)
+                {
+                    if (objectToActivate[i].name == "완전한 낚시대")
+                        objectToActivate[i].SetActive(true);
+                }
+                if (!isFishing && Input.GetKeyDown(KeyCode.F))
+                    StartFishing();
+                else if(isFishing)
+                    Fishing();
             }
             else
             {
@@ -258,27 +299,40 @@ namespace StarterAssets
                 Attack();
             }
         }
+
         private bool isSwing = false;
-        RaycastHit hitInfo;
+        private RaycastHit hitInfo;
+        private float maxDistance = 1f;
 
         private bool CheckObject()
         {
-            Ray ray = new Ray(transform.position, transform.forward);
-            
-            if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity))
+            Vector3 startRay = transform.position + new Vector3(0, 1, 0);
+            Vector3 direction = transform.forward;
+            float rayAngle = 45f; 
+            int totalRays = 10;
+
+            for (int i = 0; i < totalRays; i++)
             {
-                Debug.Log(hitInfo.transform.tag);
-                if (hitInfo.transform.tag == "Rock" && hasPickAxe)
+                float angle = -rayAngle / 2 + (rayAngle / (totalRays - 1)) * i;
+                Vector3 dir = Quaternion.Euler(0, angle, 0) * direction;
+
+                Ray ray = new Ray(startRay, dir);
+
+                if (Physics.Raycast(ray, out hitInfo, maxDistance))
                 {
-                    return true;
-                }
-                if (hitInfo.transform.tag == "Tree" && hasAxe)
-                {
+                    Debug.DrawRay(startRay, dir * hitInfo.distance, Color.blue);
                     Debug.Log(hitInfo.transform.tag);
-                    return true;
+                    if (hitInfo.transform.tag == "Rock" && hasPickAxe)
+                    {
+                        return true;
+                    }
+                    if (hitInfo.transform.tag == "Tree" && hasAxe)
+                    {
+                        Debug.Log(hitInfo.transform.tag);
+                        return true;
+                    }
                 }
             }
-
             return false;
         }
 
@@ -349,15 +403,31 @@ namespace StarterAssets
             {
                 Debug.Log("1번 인벤");
                 string leftItemName = Leftslot.GetItemName();
-                ItemBool(leftItemName);
-                Leftslot.LeftHandThrowItem(HandPosition, leftItemName);
+                if (hasPerfactFishing && FishingZone)
+                {
+                    dialogueQueue.Enqueue("지금 낚시를 하고 있어서 아이템을 버릴 수 없어");
+                    StartCoroutine(DialogueUIAppear());
+                }
+                else
+                {
+                    ItemBool(leftItemName);
+                    Leftslot.LeftHandThrowItem(HandPosition, leftItemName);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.G) && HandPosition == 1)
             {
                 Debug.Log("2번 인벤");
                 string rightItemName = Leftslot.GetItemName();
-                ItemBool(rightItemName);
-                Rightslot.RightHandThrowItem(HandPosition, rightItemName);
+                if (hasPerfactFishing && FishingZone)
+                {
+                    dialogueQueue.Enqueue("지금 낚시를 하고 있어서 아이템을 버릴 수 없어");
+                    StartCoroutine(DialogueUIAppear());
+                }
+                else
+                {
+                    ItemBool(rightItemName);
+                    Rightslot.RightHandThrowItem(HandPosition, rightItemName);
+                }
             }
         }
 
@@ -378,6 +448,10 @@ namespace StarterAssets
             else if (itemName == "낚시대")
             {
                 hasFishing = false;
+            }
+            else if (itemName == "완전한 낚시대")
+            {
+                hasPerfactFishing = false;
             }
         }
 
@@ -406,10 +480,71 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-            _animIDAttack = Animator.StringToHash("Attack");
+            _animIDPickAxe = Animator.StringToHash("PickAxe");
             _animIDDeath = Animator.StringToHash("Death");
             _animIDGetItem = Animator.StringToHash("GetItem");
             _animIDAxe = Animator.StringToHash("Axe");
+            _animIDAttack = Animator.StringToHash("Attack");
+            _animIDFishing = Animator.StringToHash("Fishing");
+        }
+
+        private void Fishing()
+        {
+            _input.attack = false;
+            _input.jump = false;
+            Debug.Log("Fishing");
+            if (_hasAnimator && Grounded && !isJump && FishingZone)
+            {
+                _controller.Move(Vector3.zero);
+                _animator.SetBool(_animIDFishing, true);
+
+                isFishing = true;
+                if(isFishing && Input.GetKeyDown(KeyCode.F))
+                    EndFishing();
+                return;
+            }
+        }
+
+        private void EndFishing()
+        {
+            if (_hasAnimator && isFishing)
+            {
+                Debug.Log("animation EndFishing");
+                _animator.SetBool(_animIDFishing, false);
+            }
+            isFishing = false;
+        }
+
+        private void StartFishing()
+        {
+            isFishing = true;
+        }
+
+
+        private void Attack()
+        {
+            if (_hasAnimator && Grounded && !isJump && !isAttack && _input.attack)
+            {
+                _controller.Move(Vector3.zero);
+                _animator.SetTrigger(_animIDAttack);
+                isAttack = true;
+                isSwing = true;
+                isAttackDirection = true;
+                AttackDamage();
+                return;
+            }
+        }
+
+        private void EndAttack()
+        {
+            isAttack = false;
+            isSwing = false;
+            _input.attack = false;
+        }
+
+        private void EndAttackDirection()
+        {
+            isAttackDirection = false;
         }
 
         //도끼 애니메이션 동작
@@ -422,44 +557,46 @@ namespace StarterAssets
                 isAxe = true;
                 isSwing = true;
                 isAxeDirection = true;
+                return;
             }
         }
 
         private void EndAxe()
         {
-            Debug.Log("도끼 끝");
             isAxe = false;
+            isSwing = false;
             _input.attack = false;
         }
 
         private void EndAxeDirection()
         {
-            Debug.Log("방향전환 가능");
             isAxeDirection = false;
         }
 
         //공격함수 추가한 부분
-        private void Attack()
+        private void PickAxe()
         {
-            if (_hasAnimator && Grounded && !isJump && !isAttack && _input.attack)
+            if (_hasAnimator && Grounded && !isJump && !isPickAxe && _input.attack)
             {
                 _controller.Move(Vector3.zero);
-                _animator.SetTrigger(_animIDAttack);
-                isAttack = true;
+                _animator.SetTrigger(_animIDPickAxe);
+                isPickAxe = true;
                 isSwing = true;
-                isAttackDirection = true;
+                isPickAxeDirection = true;
+                return;
             }
         }
 
-        private void EndAttack()
+        private void EndPickAxe()
         {
-            isAttack = false;
+            isPickAxe = false;
+            isSwing = false;
             _input.attack = false;
         }
 
-        private void EndAttackDirection()
+        private void EndPickAxeDirection()
         {
-            isAttackDirection = false;
+            isPickAxeDirection = false;
         }
 
         //플레이어 죽는 애니메이션 추가한 부분    
@@ -548,7 +685,7 @@ namespace StarterAssets
         private void Move()
         {
             //공격을 할 때는 함수 탈출 추가한 부분
-            if (isAttack || isDead || isGetItem || isAxe)
+            if (isPickAxe || isDead || isGetItem || isAxe || isAttack || isFishing)
                 return;
 
             //플레이어의 에너지바가 0일 경우 못 뛰도록 추가한 부분 
@@ -760,8 +897,6 @@ namespace StarterAssets
 
         private Queue<string> dialogueQueue = new Queue<string>();
 
-        public bool hasCompleteFishingRod = false;
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.tag == "Helicopter")
@@ -787,28 +922,16 @@ namespace StarterAssets
             }
             if (other.gameObject.tag == "FishingZone")
             {
-                if(!hasCompleteFishingRod)
+                if(!hasPerfactFishing)
                 {
                     conversationAppear("완전한 낚시대가 없어... 섬을 돌면서 바다에 휩쓸려온 재료들을 찾아서 완전한 낚시대를 만들어 보자!!");
                 }
                 else
                 {
-                    conversationAppear("여기서 낚시 할 수 있겠는데? 여기서 낚시를 하자");
+                    FishingZone = true;
+                    dialogueQueue.Enqueue("여기서 낚시 할 수 있겠는데? 여기서 낚시를 하자");
+                    StartCoroutine(DialogueUIAppear());
                 }
-            }
-            if(other.gameObject.tag == "Rock")
-            {
-                ApplyDamageToRock(other.gameObject);
-            }
-        }
-
-        private void ApplyDamageToRock(GameObject rock)
-        {
-            Rock rockHealth = rock.GetComponent<Rock>();
-
-            if (rockHealth != null)
-            {
-                rockHealth.Mining();
             }
         }
 
@@ -861,7 +984,6 @@ namespace StarterAssets
                                 }
                                 if (hasString && hasFishing)
                                 {
-                                    hasCompleteFishingRod = true;
                                     dialogueQueue.Enqueue("낚시대가 있으니까 물고기를 잡을 수 있겠다 강이나 해변으로 가보자!! ");
                                     StartCoroutine(DialogueUIAppear());
                                 }
@@ -908,6 +1030,10 @@ namespace StarterAssets
             {
                 hasFishing = true;
             }
+            else if (item.name == "완전한 낚시대")
+            {
+                hasPerfactFishing = true;
+            }
         }
 
         public void createprefabs(GameObject itemPrefabs, string name)
@@ -928,6 +1054,7 @@ namespace StarterAssets
             }
             if (other.gameObject.tag == "FishingZone")
             {
+                FishingZone = false;
                 ItemInfoDisappear();
             }
         }

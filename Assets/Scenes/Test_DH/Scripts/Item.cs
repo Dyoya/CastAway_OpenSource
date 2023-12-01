@@ -12,7 +12,7 @@ public class Item : ScriptableObject
     public ItemType itemType; //아이템의 유형
     public GameObject itemPrefab;
     public int itemValue; //아이템 회복 양
-
+    
     public string weaponType;
     
     public bool Food;
