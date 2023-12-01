@@ -9,6 +9,8 @@ using System.ComponentModel;
 using static Item;
 using Unity.VisualScripting;
 using System.Reflection;
+using UnityEngine.Animations;
+
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -187,6 +189,9 @@ namespace StarterAssets
         //Zone 위치에 있는지 없는지
         private bool FishingZone = false;
 
+        //애니메이션 시간 길이 가져오는 변수
+        public AnimationClip fishingAnimationClip;
+
 
         private void Awake()
         {
@@ -217,6 +222,9 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
 
             pd = GetComponent<PlayableDirector>();
+
+            //애니메이션 이벤트 추가
+            Debug.Log("Fishing 애니메이션 길이: " + fishingAnimationClip.length + "초");
         }
 
         private void Update()
@@ -228,7 +236,7 @@ namespace StarterAssets
 
             if (isDead)
                 return;
-
+            
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -239,6 +247,12 @@ namespace StarterAssets
             InvenControll();
             PlayHealthControll();
             ItemActiveAnimation();
+        }
+
+        //Player가 데미지 받는 함수
+        public void AttackDamage(int damage = 5)
+        {
+            healthBar.DecreaseHealth(damage);
         }
 
         private void ItemActiveAnimation()
@@ -270,8 +284,11 @@ namespace StarterAssets
                 {
                     if (objectToActivate[i].name == "완전한 낚시대")
                         objectToActivate[i].SetActive(true);
-                }    
-                Fishing();
+                }
+                if (!isFishing && Input.GetKeyDown(KeyCode.F))
+                    StartFishing();
+                else if(isFishing)
+                    Fishing();
             }
             else
             {
@@ -476,17 +493,15 @@ namespace StarterAssets
             _input.attack = false;
             _input.jump = false;
             Debug.Log("Fishing");
-            if (_hasAnimator && Grounded && !isJump && !isFishing && FishingZone)
+            if (_hasAnimator && Grounded && !isJump && FishingZone)
             {
                 _controller.Move(Vector3.zero);
-                _animator.SetTrigger(_animIDFishing);
-                isFishing = true;
-                return;
-            }
+                _animator.SetBool(_animIDFishing, true);
 
-            if(isFishing && Input.GetKeyDown(KeyCode.F))
-            {
-                EndFishing();
+                isFishing = true;
+                if(isFishing && Input.GetKeyDown(KeyCode.F))
+                    EndFishing();
+                return;
             }
         }
 
@@ -494,10 +509,17 @@ namespace StarterAssets
         {
             if (_hasAnimator && isFishing)
             {
+                Debug.Log("animation EndFishing");
                 _animator.SetBool(_animIDFishing, false);
             }
             isFishing = false;
         }
+
+        private void StartFishing()
+        {
+            isFishing = true;
+        }
+
 
         private void Attack()
         {
@@ -508,6 +530,8 @@ namespace StarterAssets
                 isAttack = true;
                 isSwing = true;
                 isAttackDirection = true;
+                AttackDamage();
+                return;
             }
         }
 
@@ -533,6 +557,7 @@ namespace StarterAssets
                 isAxe = true;
                 isSwing = true;
                 isAxeDirection = true;
+                return;
             }
         }
 
@@ -558,6 +583,7 @@ namespace StarterAssets
                 isPickAxe = true;
                 isSwing = true;
                 isPickAxeDirection = true;
+                return;
             }
         }
 
