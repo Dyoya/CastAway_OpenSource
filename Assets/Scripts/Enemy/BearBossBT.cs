@@ -732,8 +732,8 @@ public class BearBossBT : MonoBehaviour
             return INode.ENodeState.ENS_Running;
 
         //Debug.Log("스탬프 종료");
-        foreach (GameObject go in StampRange)
-            StartCoroutine(SetRange(go, 0f, false));
+        //foreach (GameObject go in StampRange)
+        //    StartCoroutine(SetRange(go, 0f, false));
 
         UseSkill();
         skill[2].SetCooldown();
@@ -758,14 +758,15 @@ public class BearBossBT : MonoBehaviour
         }
         
     }
-    IEnumerator SetEarth(GameObject go, Transform tf, float time)
+    IEnumerator SetEarth(GameObject range, Transform tf, float time)
     {
         yield return new WaitForSeconds(time);
 
         //Debug.Log("생성!");
 
-        go = Instantiate(EarthPrefab, tf);
+        GameObject go = Instantiate(EarthPrefab, tf);
 
+        StartCoroutine(SetRange(range, 1f, false));
         StartCoroutine(DestoryEarth(go));
     }
     IEnumerator DestoryEarth(GameObject go)
