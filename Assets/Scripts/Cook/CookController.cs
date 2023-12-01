@@ -92,17 +92,24 @@ public class CookController : MonoBehaviour
     }
     private void addFood(slot handslot)             // 음식 프레임에 음식 이미지 추가함수
     {
-        if (handslot.isFood())
+        if (handslot.item != null)
         {
-            Foodslot.AddItem(handslot.item);
-            if (handslot == Leftslot)
-                slot = 1;
+            if (handslot.isFood())
+            {
+                Foodslot.AddItem(handslot.item);
+                if (handslot == Leftslot)
+                    slot = 1;
+                else
+                    slot = 0;
+            }
             else
-                slot = 0;
+            {
+                Debug.Log("음식이 아닙니다.");
+            }
         }
         else
         {
-            Debug.Log("음식이 아닙니다.");
+            Debug.Log("인벤토리가 비어있습니다.");
         }
     }
 
