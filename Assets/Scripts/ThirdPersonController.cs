@@ -178,6 +178,7 @@ namespace StarterAssets
 
         //게임 오브젝트 활성화 여부
         public GameObject[] objectToActivate;
+        public GameObject FishingUI;
 
         //아이템 소유 여부
         private bool hasAxe = false;
@@ -188,10 +189,6 @@ namespace StarterAssets
 
         //Zone 위치에 있는지 없는지
         private bool FishingZone = false;
-
-        //애니메이션 시간 길이 가져오는 변수
-        public AnimationClip fishingAnimationClip;
-
 
         private void Awake()
         {
@@ -222,9 +219,6 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
 
             pd = GetComponent<PlayableDirector>();
-
-            //애니메이션 이벤트 추가
-            Debug.Log("Fishing 애니메이션 길이: " + fishingAnimationClip.length + "초");
         }
 
         private void Update()
@@ -513,11 +507,13 @@ namespace StarterAssets
                 _animator.SetBool(_animIDFishing, false);
             }
             isFishing = false;
+            FishingUI.SetActive(false);
         }
 
         private void StartFishing()
         {
             isFishing = true;
+            FishingUI.SetActive(true);
         }
 
 
