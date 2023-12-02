@@ -37,9 +37,11 @@ public class BearBossBT : MonoBehaviour
     private bool canAttack = true; // 다음 공격이 가능한지 여부를 나타내는 플래그
     private float lastAttackTime; // 마지막 공격 시간
 
-
+    private AudioSource _as;
     [Header("Sound")]
-    [SerializeField] AudioSource asDamagedSound; // 피격 사운드
+    [SerializeField] AudioClip sound_rush;
+    [SerializeField] AudioClip sound_howling;
+    //[SerializeField] AudioClip asDamagedSound; // 피격 사운드
 
     [Header("SkillRangeObject")]
     [SerializeField] GameObject rushTriggerCollision;
@@ -134,6 +136,7 @@ public class BearBossBT : MonoBehaviour
     {
         currentHp = maxhp;
         _agent.updateRotation = false;
+        _as = GetComponent<AudioSource>();
 
         skill = new List<BearBossSkill>
         {
@@ -476,7 +479,7 @@ public class BearBossBT : MonoBehaviour
         {
             currentHp -= _temporaryDamage;
 
-            PlayDamagedSound();
+            //PlayDamagedSound();
 
             _anim.SetTrigger(_DAMAGED_ANIM_TRIGGER_NAME);
 
@@ -492,6 +495,7 @@ public class BearBossBT : MonoBehaviour
         }
 
     }
+    /*
     protected void PlayDamagedSound()
     {
         if (asDamagedSound != null)
@@ -499,6 +503,7 @@ public class BearBossBT : MonoBehaviour
             asDamagedSound.Play();
         }
     }
+    */
     #endregion
 
     #region Die Node
@@ -591,7 +596,7 @@ public class BearBossBT : MonoBehaviour
     {
         foreach(BearBossSkill s in skill)
         {
-            s.currentCooldown += Random.Range(3f, 6f);
+            s.currentCooldown += Random.Range(3f, 5f);
         }
     }
     void Rotate()
@@ -621,6 +626,9 @@ public class BearBossBT : MonoBehaviour
             RushRange.SetActive(true);
 
             isCharging = true;
+
+            _as.clip = sound_rush;
+            _as.Play();
         }
 
         elapsedTime += Time.deltaTime;
@@ -731,10 +739,6 @@ public class BearBossBT : MonoBehaviour
         if (elapsedTime < 5f)
             return INode.ENodeState.ENS_Running;
 
-        //Debug.Log("스탬프 종료");
-        //foreach (GameObject go in StampRange)
-        //    StartCoroutine(SetRange(go, 0f, false));
-
         UseSkill();
         skill[2].SetCooldown();
         isSkill = false;
@@ -746,7 +750,7 @@ public class BearBossBT : MonoBehaviour
 
         return INode.ENodeState.ENS_Success;
     }
-    void StampAttack()
+    void StampAttack() //애니메이션에서 호출
     {
         //Debug.Log("스탬프 공격!");
 
@@ -791,6 +795,8 @@ public class BearBossBT : MonoBehaviour
             Debug.Log("점프 준비");
 
             _anim.SetTrigger(_HOWLING_ANIM_TRIGGER_NAME);
+            _as.clip = sound_howling;
+            _as.Play();
 
             isSkill = true;
             isMove = false;
@@ -874,6 +880,9 @@ public class BearBossBT : MonoBehaviour
             if (!IsAnimationRunning(_HOWLING_ANIM_STATE_NAME))
             {
                 _anim.SetTrigger(_HOWLING_ANIM_TRIGGER_NAME);
+
+                //_as.clip = sound_howling;
+                //_as.Play();
             }
 
             return INode.ENodeState.ENS_Running;
