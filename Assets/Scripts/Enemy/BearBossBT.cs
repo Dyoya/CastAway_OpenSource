@@ -1,3 +1,4 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -15,6 +16,7 @@ public class BearBossBT : MonoBehaviour
 {
     Transform _playerTransform;
     public GameObject Player;
+    ThirdPersonController _tpc;
 
     [Header("HP")]
     [SerializeField] int currentHp;
@@ -32,7 +34,7 @@ public class BearBossBT : MonoBehaviour
 
     [Header("Attack")]
     [SerializeField] bool isAttackEnemy; //true일 경우 공격형 적대 몬스터
-    //[SerializeField] int attackPower = 3; // Enemy 공격력
+    [SerializeField] int attackPower = 3; // Enemy 공격력
     [SerializeField] float attackCooldown = 2f; // 공격 쿨다운 시간
     private bool canAttack = true; // 다음 공격이 가능한지 여부를 나타내는 플래그
     private float lastAttackTime; // 마지막 공격 시간
@@ -110,6 +112,7 @@ public class BearBossBT : MonoBehaviour
     // 플레이어 인식 상태
     bool findPlayer = false;
 
+
     // 스킬 패턴 관련 변수
     bool isCharging = false;
     float elapsedTime = 0f;
@@ -134,15 +137,17 @@ public class BearBossBT : MonoBehaviour
     }
     private void Start()
     {
+        _tpc = Player.GetComponent<ThirdPersonController>();
+
         currentHp = maxhp;
         _agent.updateRotation = false;
         _as = GetComponent<AudioSource>();
 
         skill = new List<BearBossSkill>
         {
-            new BearBossSkill("돌진", 10f),
-            new BearBossSkill("점프", 16f),
-            new BearBossSkill("찍기", 12f),
+            new BearBossSkill("돌진", 12f),
+            new BearBossSkill("점프", 20f),
+            new BearBossSkill("찍기", 16f),
         };
 
         RushRange.SetActive(false);
@@ -273,6 +278,7 @@ public class BearBossBT : MonoBehaviour
             }
         );
     }
+    // 애니메이션이 실행 중이라면 True 반환
     protected bool IsAnimationRunning(string stateName)
     {
         if (_anim != null)
@@ -281,7 +287,7 @@ public class BearBossBT : MonoBehaviour
             {
                 var normalizedTime = _anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
-                return _anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) && _anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f;
+                return _anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) && normalizedTime < 1f;
             }
         }
 
@@ -300,15 +306,15 @@ public class BearBossBT : MonoBehaviour
     #region Attack Node
     protected INode.ENodeState CheckAttacking()
     {
+        if (IsAnimationRunning(_ATTACK_ANIM_STATE_NAME))
+        {
+            return INode.ENodeState.ENS_Running;
+        }
+
         // 이전 공격 후 일정 시간이 지나면 공격 가능으로 설정
         if (!canAttack && Time.time - lastAttackTime >= attackCooldown)
         {
             canAttack = true;
-        }
-
-        if (IsAnimationRunning(_ATTACK_ANIM_STATE_NAME))
-        {
-            return INode.ENodeState.ENS_Running;
         }
 
         return INode.ENodeState.ENS_Success;
@@ -325,6 +331,11 @@ public class BearBossBT : MonoBehaviour
                 _agent.isStopped = true;
                 _agent.velocity = Vector3.zero;
                 return INode.ENodeState.ENS_Success;
+            }
+
+            if (IsAnimationRunning(_ATTACK_ANIM_STATE_NAME))
+            {
+                return INode.ENodeState.ENS_Running;
             }
         }
 
@@ -356,6 +367,7 @@ public class BearBossBT : MonoBehaviour
     protected void TakeDamage()
     {
         // 플레이어한테 데미지 가함
+        _tpc.AttackDamage(attackPower);
     }
     #endregion
 
@@ -594,9 +606,10 @@ public class BearBossBT : MonoBehaviour
     #region Skill Node
     void UseSkill() // 스킬 사이에 내부 쿨타임 추가
     {
+        Debug.Log("내부쿨 추가");
         foreach(BearBossSkill s in skill)
         {
-            s.currentCooldown += Random.Range(3f, 5f);
+            s.currentCooldown += Random.Range(5f, 10f);
         }
     }
     void Rotate()
@@ -904,8 +917,7 @@ public class BearBossBT : MonoBehaviour
         skill[1].SetCooldown();
         elapsedTime = 0f;
 
-        isStamp = false;
-
+        isJump = false;
 
         return INode.ENodeState.ENS_Success;
     }
@@ -921,6 +933,9 @@ public class BearBossBT : MonoBehaviour
 
         // 내려찍기 초기화
         isStamp = false;
+
+        // 점프 초기화
+        isJump = false;
 
         return INode.ENodeState.ENS_Failure;
     }

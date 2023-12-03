@@ -1,15 +1,27 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BearStampTrigger : MonoBehaviour
 {
+    GameObject player;
+    ThirdPersonController _tpc;
+
     [Header("Damage")]
-    [SerializeField] int damaged = 10;
+    [SerializeField] int damage = 10;
+
+    private void Start()
+    {
+        player = GameObject.Find("Player");
+        _tpc = player.GetComponent<ThirdPersonController>();
+    }
 
     void OnTriggerEnter(Collider other)
     {
         // 플레이어에게 데미지 주기
+        _tpc.AttackDamage(damage);
+
         Debug.Log("플레이어 충돌!");
     }
 }

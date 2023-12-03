@@ -244,7 +244,7 @@ namespace StarterAssets
         }
 
         //Player가 데미지 받는 함수
-        public void AttackDamage(int damage = 5)
+        public void AttackDamage(int damage)
         {
             healthBar.DecreaseHealth(damage);
         }
@@ -526,7 +526,7 @@ namespace StarterAssets
                 isAttack = true;
                 isSwing = true;
                 isAttackDirection = true;
-                AttackDamage();
+                //AttackDamage();
                 return;
             }
         }

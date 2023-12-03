@@ -1,3 +1,4 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -9,6 +10,8 @@ using UnityEngine.UIElements;
 public class EnemyBT : MonoBehaviour
 {
     Transform _playerTransform;
+    GameObject player;
+    ThirdPersonController _tpc;
 
     [Header("HP")]
     [SerializeField] int currentHp;
@@ -26,7 +29,7 @@ public class EnemyBT : MonoBehaviour
 
     [Header("Attack")]
     [SerializeField] bool isAttackEnemy; //true일 경우 공격형 적대 몬스터
-    //[SerializeField] int attackPower = 3; // Enemy 공격력
+    [SerializeField] int attackPower = 3; // Enemy 공격력
     [SerializeField] float attackCooldown = 2f; // 공격 쿨다운 시간
     private bool canAttack = true; // 다음 공격이 가능한지 여부를 나타내는 플래그
     private float lastAttackTime; // 마지막 공격 시간
@@ -80,6 +83,9 @@ public class EnemyBT : MonoBehaviour
     }
     private void Start()
     {
+        player = GameObject.Find("Player");
+        _tpc = player.GetComponent<ThirdPersonController>();
+
         currentHp = maxhp;
         _agent.updateRotation = false;
     }
@@ -227,6 +233,7 @@ public class EnemyBT : MonoBehaviour
     protected void TakeDamage()
     {
         // 플레이어한테 데미지 가함
+        _tpc.AttackDamage(attackPower);
     }
     #endregion
 
