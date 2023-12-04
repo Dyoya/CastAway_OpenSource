@@ -14,17 +14,19 @@ public class BearCutScene : MonoBehaviour
     }
     IEnumerator Bear()
     {
+        animator.SetBool("Sleep", true);
+        yield return new WaitForSeconds(23f);
+        animator.SetBool("Sleep", false);
         yield return new WaitForSeconds(1f);
-        animator.SetTrigger("WalkF");
-        Tweener walkTween =  transform.DOMove(new Vector3(120, 1.75f, -210), 5f).SetSpeedBased();
-        yield return walkTween.WaitForCompletion();
-        animator.SetTrigger("Buff");
-        yield return new WaitForSeconds(2f);
-        animator.SetTrigger("WalkF");
-        transform.DOMove(new Vector3(130, 1.75f, -190), 5f).SetSpeedBased();
+        animator.SetBool("WakeUp", true);
+        yield return new WaitForSeconds(3f);
+        animator.SetBool("ShoutOut", true);
+        yield return new WaitForSeconds(1f);
+        animator.SetBool("ShoutOut", false);
+        yield return new WaitForSeconds(1f);
+        animator.SetBool("Angry", true);
+        yield return new WaitForSeconds(1f);
+        animator.SetBool("Angry", false);
 
-        Vector3 direction = (new Vector3(130, 1.75f, -190) - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);
-        transform.DORotateQuaternion(lookRotation, 2.0f);
     }
 }
