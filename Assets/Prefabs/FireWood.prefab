@@ -146,9 +146,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8714894037292873018}
-  - {fileID: 8047952608028620964}
   m_Father: {fileID: 4032079052525022944}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &4032079052514440852
 ParticleSystem:
@@ -4979,6 +4978,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4032079052950776205}
+  - {fileID: 8047952608028620964}
   - {fileID: 4032079052514440842}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -5095,11 +5095,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8047952608028620967}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.07, z: 0}
+  m_LocalPosition: {x: 0, y: 0.153, z: 0}
   m_LocalScale: {x: 0.8, y: 0.3, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4032079052514440842}
+  m_Father: {fileID: 4032079052525022944}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8047952608028620971
