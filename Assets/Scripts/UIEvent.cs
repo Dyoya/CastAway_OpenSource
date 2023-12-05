@@ -7,73 +7,72 @@ using UnityEngine.SceneManagement;
 
 public class UIEvent : MonoBehaviour
 {
-    public GameObject MainUI;
-    public GameObject OptionUI;
+    [SerializeField] private GameObject Pauseui;
+    [SerializeField] private GameObject mapUI;
+    [SerializeField] private GameObject MinimapUI;
+    [SerializeField] private SaveAndLoad theSaveAndLoad;
+    // pause 메뉴에서 계속하기 버튼 이벤트 함수입니다.
 
-    public static UIEvent instance;
-    
-    private SaveAndLoad theSaveAndLoad;
-
-    private void Awake()
+    public void ResumeButtonClicked(GameObject obj)
     {
-        //if (instance == null)
-        //{
-        //    instance = this;
-        //    DontDestroyOnLoad(gameObject);
-        //}
-        //else
-        //    Destroy(this.gameObject);
+        GameManager.isPause = false;
+        obj.SetActive(false);
+        Time.timeScale = 1f; // 1배속 (정상 속도)
     }
 
-    // UI를 모두 끄는 이벤트 함수 입니다.
-    private void closeAllUI()
+    // pause 메뉴에서 저장하기 버튼 이벤트 함수입니다.
+    public void SaveButtonClicked()
     {
-        MainUI.SetActive(false);
-        OptionUI.SetActive(false);
+        Debug.Log("저장하기");
+        theSaveAndLoad.SaveData();
+    }
+    //pause 메뉴에서 메뉴로 돌아가기 버튼 이벤트 함수입니다.
+    public void ExitButtonClicked()
+    {
+        Time.timeScale = 1f; // 1배속 (정상 속도)
+        SceneManager.LoadScene(0);
     }
 
-    // 게임 스타트 버튼 이벤트 함수입니다.
-    public void StartButtonClicked()
+    void Update()
     {
-        SceneManager.LoadScene(2);
-    }
-    // 불러오기 버튼 이벤트 함수입니다.
-    public void LoadButtonClicked()
-    {
-        Debug.Log("불러오기");
-
-        StartCoroutine(LoadCoroutine());
-    }
-
-    IEnumerator LoadCoroutine()
-    {
-        AsyncOperation operation = SceneManager.LoadSceneAsync("Test_DH");
-
-        while(!operation.isDone)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            yield return null;
+            if (!GameManager.isPause)
+                CallMenu(Pauseui);
+            else
+                ResumeButtonClicked(Pauseui);
         }
 
-        theSaveAndLoad = FindObjectOfType<SaveAndLoad>();
-        theSaveAndLoad.LoadData();
-        Destroy(gameObject);
+        //동현이가 추가함 맵 UI 표시
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            if (!GameManager.isPause)
+            {
+                MiniMapClose(MinimapUI);
+                CallMenu(mapUI);
+            }
+            else
+            {
+                ResumeButtonClicked(mapUI);
+                MiniMapOpen(MinimapUI);
+            }
+
+        }
+    }
+    private void CallMenu(GameObject obj)
+    {
+        GameManager.isPause = true;
+        obj.SetActive(true);
+        Time.timeScale = 0f; // 시간의 흐름 설정. 0배속. 즉 시간을 멈춤.
     }
 
-    // 게임 메인화면으로 가는 버튼 이벤트 함수입니다.
-    public void returnToMainButtonClicked()
+    public void MiniMapClose(GameObject obj)
     {
-        closeAllUI();
-        MainUI.SetActive(true);
+        obj.SetActive(false);
     }
-    // 옵션 버튼 이벤트 함수입니다.
-    public void OptionButtonClicked()
+
+    public void MiniMapOpen(GameObject obj)
     {
-        closeAllUI();
-        OptionUI.SetActive(true);
-    }
-    // 게임 종료 버튼 이벤트 함수입니다.
-    public void QuitButtonClicked()
-    {
-        Application.Quit();
+        obj.SetActive(true);
     }
 }

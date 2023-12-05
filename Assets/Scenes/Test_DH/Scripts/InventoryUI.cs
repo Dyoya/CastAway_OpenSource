@@ -22,8 +22,6 @@ public class InventoryUI : MonoBehaviour
 
     [SerializeField] private Item[] items;
 
-    public GameObject Items;
-
     [SerializeField] private StarterAssets.ThirdPersonController thePlayer;
 
 

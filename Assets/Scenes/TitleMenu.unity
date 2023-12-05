@@ -422,6 +422,7 @@ GameObject:
   - component: {fileID: 143963961}
   - component: {fileID: 143963960}
   - component: {fileID: 143963963}
+  - component: {fileID: 143963964}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -468,6 +469,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44cf1c8dab4a0ac43aa477e815c49803, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &143963964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143963958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddea351187e1e6849aaad0aa22583187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MainUI: {fileID: 1190666119}
+  OptionUI: {fileID: 67622470}
 --- !u!1 &284554176
 GameObject:
   m_ObjectHideFlags: 0
@@ -814,8 +829,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1876002375}
-        m_TargetAssemblyTypeName: UIEvent, Assembly-CSharp
+      - m_Target: {fileID: 143963964}
+        m_TargetAssemblyTypeName: TitleMenuEvent, Assembly-CSharp
         m_MethodName: StartButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -1111,8 +1126,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1876002375}
-        m_TargetAssemblyTypeName: UIEvent, Assembly-CSharp
+      - m_Target: {fileID: 143963964}
+        m_TargetAssemblyTypeName: TitleMenuEvent, Assembly-CSharp
         m_MethodName: LoadButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -1360,8 +1375,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1876002375}
-        m_TargetAssemblyTypeName: UIEvent, Assembly-CSharp
+      - m_Target: {fileID: 143963964}
+        m_TargetAssemblyTypeName: TitleMenuEvent, Assembly-CSharp
         m_MethodName: OptionButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -1775,8 +1790,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1876002375}
-        m_TargetAssemblyTypeName: UIEvent, Assembly-CSharp
+      - m_Target: {fileID: 143963964}
+        m_TargetAssemblyTypeName: TitleMenuEvent, Assembly-CSharp
         m_MethodName: returnToMainButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -2306,8 +2321,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1876002375}
-        m_TargetAssemblyTypeName: UIEvent, Assembly-CSharp
+      - m_Target: {fileID: 143963964}
+        m_TargetAssemblyTypeName: TitleMenuEvent, Assembly-CSharp
         m_MethodName: QuitButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -3324,7 +3339,6 @@ GameObject:
   - component: {fileID: 1876002373}
   - component: {fileID: 1876002372}
   - component: {fileID: 1876002371}
-  - component: {fileID: 1876002375}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3416,20 +3430,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1876002375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1876002370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e490fb218ac8f264fb6a69d047ff5716, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MainUI: {fileID: 1190666119}
-  OptionUI: {fileID: 67622470}
 --- !u!1 &1945840719
 GameObject:
   m_ObjectHideFlags: 0

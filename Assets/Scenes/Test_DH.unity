@@ -210,8 +210,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 832592574}
-        m_TargetAssemblyTypeName: PauseUI, Assembly-CSharp
+      - m_Target: {fileID: 820286858}
+        m_TargetAssemblyTypeName: UIEvent, Assembly-CSharp
         m_MethodName: SaveButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -413,8 +413,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 832592574}
-        m_TargetAssemblyTypeName: PauseUI, Assembly-CSharp
+      - m_Target: {fileID: 820286858}
+        m_TargetAssemblyTypeName: UIEvent, Assembly-CSharp
         m_MethodName: ExitButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -895,44 +895,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 981301756}
   m_PrefabAsset: {fileID: 0}
---- !u!84 &82229230
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 5
-  m_Width: 150
-  m_Height: 150
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 4
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 1
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &87397089
 GameObject:
   m_ObjectHideFlags: 0
@@ -1206,20 +1168,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 478136, guid: 98e2b8a7d6de642f8ae08a3cbb957b7a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -485.82733
+      value: -495.81747
       objectReference: {fileID: 0}
     - target: {fileID: 478136, guid: 98e2b8a7d6de642f8ae08a3cbb957b7a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -236.24179
+      value: -233.9831
       objectReference: {fileID: 0}
     - target: {fileID: 478136, guid: 98e2b8a7d6de642f8ae08a3cbb957b7a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.1643248
+      value: 2.380129
       objectReference: {fileID: 0}
     - target: {fileID: 2057960, guid: 98e2b8a7d6de642f8ae08a3cbb957b7a, type: 3}
       propertyPath: m_TargetTexture
       value: 
-      objectReference: {fileID: 2000534557}
+      objectReference: {fileID: 1494852776}
     - target: {fileID: 2057960, guid: 98e2b8a7d6de642f8ae08a3cbb957b7a, type: 3}
       propertyPath: orthographic size
       value: 30
@@ -1275,7 +1237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22409240, guid: 98e2b8a7d6de642f8ae08a3cbb957b7a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 22409240, guid: 98e2b8a7d6de642f8ae08a3cbb957b7a, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -6065,6 +6027,7 @@ GameObject:
   - component: {fileID: 820286856}
   - component: {fileID: 820286855}
   - component: {fileID: 820286857}
+  - component: {fileID: 820286858}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6111,6 +6074,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44cf1c8dab4a0ac43aa477e815c49803, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &820286858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820286853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e490fb218ac8f264fb6a69d047ff5716, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pauseui: {fileID: 87397089}
+  mapUI: {fileID: 345623846}
+  MinimapUI: {fileID: 69765037}
+  theSaveAndLoad: {fileID: 820286857}
 --- !u!1 &825529706 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 124524, guid: 98e2b8a7d6de642f8ae08a3cbb957b7a,
@@ -6168,7 +6147,6 @@ GameObject:
   - component: {fileID: 832592572}
   - component: {fileID: 832592571}
   - component: {fileID: 832592570}
-  - component: {fileID: 832592574}
   m_Layer: 5
   m_Name: CanvasPause
   m_TagString: Untagged
@@ -6258,22 +6236,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &832592574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 832592569}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecda8b76197bd7e41b69a3c146204fe5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Pauseui: {fileID: 87397089}
-  mapUI: {fileID: 345623846}
-  MinimapUI: {fileID: 69765037}
-  theSaveAndLoad: {fileID: 820286857}
 --- !u!4 &838709271 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9060322107364697984, guid: fc8d767d28f5b2d49aa444eb9cd99531,
@@ -8598,8 +8560,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 832592574}
-        m_TargetAssemblyTypeName: PauseUI, Assembly-CSharp
+      - m_Target: {fileID: 820286858}
+        m_TargetAssemblyTypeName: UIEvent, Assembly-CSharp
         m_MethodName: ResumeButtonClicked
         m_Mode: 2
         m_Arguments:
@@ -9083,8 +9045,33 @@ MonoBehaviour:
   go_InventoryBase: {fileID: 0}
   go_SlotsParent: {fileID: 1230986372}
   hungryBar: {fileID: 1149924099}
-  items: []
-  Items: {fileID: 0}
+  items:
+  - {fileID: 11400000, guid: 48ce4bff384c8f148aaa4f6c5ad5f94d, type: 2}
+  - {fileID: 11400000, guid: 71ff52f54b585534d9c7cc764f1cf544, type: 2}
+  - {fileID: 11400000, guid: 8477008ce86d09649b5a0a2798fab0de, type: 2}
+  - {fileID: 11400000, guid: 0739f5bf7f8115c48bb4607f72b19d04, type: 2}
+  - {fileID: 11400000, guid: 74ff7ca8c0fcc3347b01e5fe6f5c84c0, type: 2}
+  - {fileID: 11400000, guid: b772468d6e637314c932919279d5bd74, type: 2}
+  - {fileID: 11400000, guid: f1a49f52f6191094d82c4bf0c5e73e5b, type: 2}
+  - {fileID: 11400000, guid: 8986918c8d75350449ad0ecb4b31e4e0, type: 2}
+  - {fileID: 11400000, guid: 195ae60b03422184bad91b1fc0e7b45a, type: 2}
+  - {fileID: 11400000, guid: bc8f2154433cfcf4f901edddbc773a9c, type: 2}
+  - {fileID: 11400000, guid: b41dc2d81cd9f3144bc3cbc1c86a85cf, type: 2}
+  - {fileID: 11400000, guid: d19f2b36af33fd745901c5cab398a999, type: 2}
+  - {fileID: 11400000, guid: 9556320da5db3e74da282a0ef5fe0864, type: 2}
+  - {fileID: 11400000, guid: c4e71464663b7624481b63eefb0b95e2, type: 2}
+  - {fileID: 11400000, guid: e8f350c2da5f9cd408b95619da9a6639, type: 2}
+  - {fileID: 11400000, guid: 5b713721323fe7143b7a9cca73df9dab, type: 2}
+  - {fileID: 11400000, guid: dfe92452cfe746741bd5b50c98bbb248, type: 2}
+  - {fileID: 11400000, guid: 46ce1799660c0fe4dacb4aef8bf978ca, type: 2}
+  - {fileID: 11400000, guid: aa3c4e56905f720439cc82ce671b85ef, type: 2}
+  - {fileID: 11400000, guid: c6e02457c5e4351448eaa385154ae576, type: 2}
+  - {fileID: 11400000, guid: fd6f521b33572064390f9f904a612452, type: 2}
+  - {fileID: 11400000, guid: 6fa278aa9bda1f3478887a120e83c07e, type: 2}
+  - {fileID: 11400000, guid: 726bc2fa137ae434e82190875dcf420d, type: 2}
+  - {fileID: 11400000, guid: 768bb0754bc182d458dc7450ff0df813, type: 2}
+  - {fileID: 11400000, guid: 9eeca1568e35c874ab82bb55206080fa, type: 2}
+  - {fileID: 11400000, guid: 8b5a3e1d14546204e999d222dd396ec9, type: 2}
   thePlayer: {fileID: 1896703309}
 --- !u!1001 &1231824533
 PrefabInstance:
@@ -10470,6 +10457,44 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!84 &1494852776
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 5
+  m_Width: 150
+  m_Height: 150
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 4
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 1
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &1503873576
 GameObject:
   m_ObjectHideFlags: 0
@@ -12216,44 +12241,6 @@ GameObject:
   m_PrefabInstance: {fileID: 2151641714427385043}
   m_PrefabAsset: {fileID: 0}
 --- !u!84 &1992158285
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 5
-  m_Width: 150
-  m_Height: 150
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 4
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 1
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 0
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
---- !u!84 &2000534557
 RenderTexture:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
