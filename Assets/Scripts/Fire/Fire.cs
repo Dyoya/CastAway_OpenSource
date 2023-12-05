@@ -21,7 +21,7 @@ public class Fire : MonoBehaviour
     [SerializeField]
     private GameObject fire;
 
-    bool isFire = true;
+    bool isFire = false;
 
     GameObject player;
     ThirdPersonController _tpc;
@@ -57,6 +57,10 @@ public class Fire : MonoBehaviour
         {
             _currentDamageTime -= Time.deltaTime;
         }
+    }
+    public void addDurationTime(float time)
+    {
+        _currentDurationTime += time;
     }
 
     private void FireOff()
