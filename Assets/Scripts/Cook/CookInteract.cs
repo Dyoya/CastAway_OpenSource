@@ -13,7 +13,7 @@ public class CookInteract : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             Debug.Log("¸ð´ÚºÒ À§");
-            if (Input.GetKey(KeyCode.E))
+            if (Input.GetKey(KeyCode.C))
             {
                 GameManager.isPause = true;
                 Player.GetComponent<ThirdPersonController>().enabled = false;
