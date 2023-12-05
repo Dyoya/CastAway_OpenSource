@@ -56,8 +56,6 @@ public class CraftManual : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
-        else
-            return;
     }
     void Start()
     {
