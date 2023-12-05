@@ -16,9 +16,9 @@ public class FishingGame : MonoBehaviour
     public GameObject fishPrefab; // Inspector에서 물고기 프리팹을 연결해주세요.
     public StarterAssets.ThirdPersonController player; // Inspector에서 Player 스크립트를 가진 오브젝트를 연결해주세요.
 
-    private float gaugeSpeed = 0.01f;
-    private float fishSpeed = 0.1f;
-    private float playerSpeed = 0.1f;
+    private float gaugeSpeed = 0.001f;
+    private float fishSpeed = 5f;
+    private float playerSpeed = 1f;
     private float direction = 1f;
 
     private void Start()
@@ -35,12 +35,12 @@ public class FishingGame : MonoBehaviour
 
     private void PlayerControll()
     {
-        if (Input.GetKey(KeyCode.O) && playerBar.anchoredPosition.y < 36.6f)
+        if (Input.GetKey(KeyCode.UpArrow) && playerBar.anchoredPosition.y < 36.6f)
         {
             Debug.Log("up키적용");
             playerBar.anchoredPosition += new Vector2(0, playerSpeed);
         }
-        if (Input.GetKey(KeyCode.L) && playerBar.anchoredPosition.y > -36.6f)
+        if (Input.GetKey(KeyCode.DownArrow) && playerBar.anchoredPosition.y > -36.6f)
         {
             Debug.Log("down키적용");
             playerBar.anchoredPosition -= new Vector2(0, playerSpeed);
@@ -64,7 +64,6 @@ public class FishingGame : MonoBehaviour
 
         float fishSize = fishBar.sizeDelta.y * fishBar.localScale.y;
         float playerSize = playerBar.sizeDelta.y * playerBar.localScale.y;
-
 
         if (fishBar.anchoredPosition.y + fishSize / 2 >= playerBar.anchoredPosition.y - playerSize / 2 &&
             fishBar.anchoredPosition.y - fishSize / 2 <= playerBar.anchoredPosition.y + playerSize / 2)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Rock : MonoBehaviour
@@ -28,6 +29,11 @@ public class Rock : MonoBehaviour
     [SerializeField]
     private AudioClip effect_sound2;
 
+    [SerializeField]
+    private StarterAssets.ThirdPersonController thePlayer;
+    [SerializeField]
+    private GameObject ItemPrefab;
+
     public void Mining()
     {
         audioSource.clip = effect_sound1;
@@ -47,6 +53,10 @@ public class Rock : MonoBehaviour
         audioSource.clip = effect_sound2;
         audioSource.Play();
 
+        for(int i = 0; i < 3; i++)
+        {
+            thePlayer.createprefabs(ItemPrefab, "µ¹¸ÍÀÌ");
+        }
         col.enabled = false;
         Destroy(go_rock);
 

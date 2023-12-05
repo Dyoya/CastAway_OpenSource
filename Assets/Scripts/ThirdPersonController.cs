@@ -296,7 +296,7 @@ namespace StarterAssets
 
         private bool isSwing = false;
         private RaycastHit hitInfo;
-        private float maxDistance = 1f;
+        private float maxDistance = 3f;
 
         private bool CheckObject()
         {
@@ -508,12 +508,14 @@ namespace StarterAssets
             }
             isFishing = false;
             FishingUI.SetActive(false);
+            this.GetComponent<PlayerInput>().enabled = true;
         }
 
         private void StartFishing()
         {
             isFishing = true;
             FishingUI.SetActive(true);
+            this.GetComponent<PlayerInput>().enabled = false;
         }
 
 
@@ -1097,7 +1099,7 @@ namespace StarterAssets
                 conversationImage.gameObject.SetActive(true);
                 conversationText.text = dialogue;
 
-                yield return new WaitForSeconds(3);
+                yield return new WaitForSeconds(2);
 
                 ItemInfoDisappear();
             }

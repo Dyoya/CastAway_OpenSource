@@ -26,6 +26,11 @@ public class Tree : MonoBehaviour
     [SerializeField]
     private AudioClip effect_sound2;
 
+    [SerializeField]
+    private StarterAssets.ThirdPersonController thePlayer;
+    [SerializeField]
+    private GameObject ItemPrefab;
+
     public void Mining()
     {
         audioSource.clip = effect_sound1;
@@ -47,5 +52,10 @@ public class Tree : MonoBehaviour
 
         box.enabled = false;
         Destroy(go_tree);
+
+        for (int i = 0; i < 3; i++)
+        {
+            thePlayer.createprefabs(ItemPrefab, "³ª¹µ°¡Áö");
+        }
     }
 }

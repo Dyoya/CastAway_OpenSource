@@ -17,5 +17,8 @@ MonoBehaviour:
   itemType: 2
   itemPrefab: {fileID: 6183871195530136800, guid: 50919cfe4326de14292810cc7f58b2a8,
     type: 3}
-  itemValue: 5
+  itemValue: 0
   weaponType: 
+  Food: 0
+  Perfect: 0
+  Cooked: 0

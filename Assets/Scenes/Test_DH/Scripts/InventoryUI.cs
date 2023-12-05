@@ -86,6 +86,10 @@ public class InventoryUI : MonoBehaviour
                 slots[i].ClearSlot();
             return;
         }
+        else if(slots[i].item != null && Item.ItemType.Ingredient == _item.itemType)
+        {
+
+        }
     }
 
     public void ThrowItem(Item _item, int i, string name)
@@ -101,33 +105,19 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public Item FindItemByName(string itemName)
+    private bool SlotHasItem(string itemname, int itemcount) 
     {
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i].item != null)
             {
-                if (slots[i].item.name == itemName)
+                if (slots[i].item.itemName == itemname && slots[i].itemCount == itemcount) // 슬롯의 아이템 이름이 획득한 아이템 이름과 같다면
                 {
-                    return slots[i].item;
+                    slots[i].SetSlotCount(-itemcount); // 슬롯에 아이템 감소
+                    return true;
                 }
             }
         }
-        return null;
-    }
-
-    public int FindItemSlotIndex(Item item)
-    {
-        for (int i = 0; i < slots.Length; i++)
-        {
-            if (slots[i].item != null)
-            {
-                if (slots[i].item == item)
-                {
-                    return i;
-                }
-            }
-        }
-        return -1;
+        return false;
     }
 }

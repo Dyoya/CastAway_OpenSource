@@ -32,16 +32,32 @@ public class CraftManual : MonoBehaviour
     [SerializeField]
     private float range;
 
+    //동현이가 추가함
+    [SerializeField]
+    private GameObject slot1;
+    [SerializeField]
+    private GameObject slot2;
+    [SerializeField]
+    private GameObject slot3;
+
+    [SerializeField]
+    private InventoryUI inventory;
 
     public void SlotClick(int _slotNumber)
     {
-        go_Preview = Instantiate(craft_fire[_slotNumber].go_PreviewPrefab, tf_Player.position + tf_Player.forward, Quaternion.identity);
-        go_Prefab = craft_fire[_slotNumber].go_prefab;
-        isPreviewActivated = true;
-        go_BaseUI.SetActive(false);
-        isActivated = false;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        if (true)
+        {
+            //inventory.SlotHasItem(itemname, itemcount);
+            go_Preview = Instantiate(craft_fire[_slotNumber].go_PreviewPrefab, tf_Player.position + tf_Player.forward, Quaternion.identity);
+            go_Prefab = craft_fire[_slotNumber].go_prefab;
+            isPreviewActivated = true;
+            go_BaseUI.SetActive(false);
+            isActivated = false;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+            return;
     }
     void Start()
     {
