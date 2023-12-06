@@ -4,25 +4,27 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class FireTextTrigger : MonoBehaviour
+public class FireOnTrigger : MonoBehaviour
 {
     GameObject _player;
-    [SerializeField] GameObject FireGameUI;
+    [SerializeField] GameObject Fire;
     [SerializeField] GameObject textUI;
     [SerializeField] TextMeshProUGUI text;
-    FireGame _fg;
+    [SerializeField] float addTime = 10f;
+    Fire _fireScripts;
+    bool keyPressed = false;
 
     void Start()
     {
         _player = GameObject.Find("Player");
-        _fg = GetComponent<FireGame>();
+        _fireScripts = Fire.GetComponent<Fire>();
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
             textUI.SetActive(true);
-            text.text = "E : 불 피우기";
+            text.text = "E : 불씨 키우기";
         }
     }
 
@@ -31,22 +33,32 @@ public class FireTextTrigger : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             Debug.Log("모닥불 근처");
-            
-            if (Input.GetKeyDown(KeyCode.E))
+
+            if (Input.GetKeyDown(KeyCode.E) && !keyPressed)
             {
-                textUI.SetActive(false);
-                GameManager.isPause = true;
-                _player.GetComponent<ThirdPersonController>().enabled = false;
-                _fg.StartGame(FireGameUI);
+                keyPressed = true;
+
+                // 나뭇가지 소모
+                Debug.Log("불씨 증가!");
+
+                _fireScripts.addDurationTime(addTime);
+
+                StartCoroutine(Delay(0.5f));
             }
         }
     }
+    IEnumerator Delay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        keyPressed = false;
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
             textUI.SetActive(false);
-            _fg.StopGame();
         }
     }
 }

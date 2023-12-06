@@ -34,7 +34,7 @@ public class FireGame : MonoBehaviour
             slider.value -= 0.3f * Time.deltaTime;
 
             // 게임 성공
-            if (slider.value >= 0.99) 
+            if (slider.value >= 0.95) 
             {
                 StopGame();
                 FireTrigger.GetComponent<Fire>().FireOn(60f);
@@ -67,7 +67,7 @@ public class FireGame : MonoBehaviour
     }
     public void clickButton()
     {
-        slider.value += 0.1f;
+        slider.value += 0.05f;
     }
 
     public void StartGame(GameObject FireGameUI)
