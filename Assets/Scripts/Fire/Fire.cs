@@ -13,13 +13,16 @@ public class Fire : MonoBehaviour
     float _currentDamageTime;
 
     [SerializeField] private float durationTime;
-    float _currentDurationTime;
+    public float _currentDurationTime;
 
     [SerializeField]
     private ParticleSystem _ps;
 
     [SerializeField]
     private GameObject fire;
+
+    [SerializeField] GameObject FireOffTrigger;
+    [SerializeField] GameObject FireOnTrigger;
 
     bool isFire = false;
 
@@ -67,6 +70,8 @@ public class Fire : MonoBehaviour
     {
         _ps.Stop();
         isFire = false;
+        FireOnTrigger.SetActive(false);
+        FireOffTrigger.SetActive(true);
 
         StartCoroutine(SetFire(false));
     }
@@ -75,6 +80,9 @@ public class Fire : MonoBehaviour
     {
         _ps.DORestart();
         isFire = true;
+        FireOnTrigger.SetActive(true);
+        FireOffTrigger.SetActive(false);
+
         _currentDurationTime += time;
 
         StartCoroutine(SetFire(true));

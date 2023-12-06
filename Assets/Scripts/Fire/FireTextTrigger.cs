@@ -19,8 +19,11 @@ public class FireTextTrigger : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        textUI.SetActive(true);
-        text.text = "E : 불 피우기";
+        if (other.gameObject.tag == "Player")
+        {
+            textUI.SetActive(true);
+            text.text = "E : 불 피우기";
+        }
     }
 
     private void OnTriggerStay(Collider other)
@@ -29,7 +32,7 @@ public class FireTextTrigger : MonoBehaviour
         {
             Debug.Log("모닥불 근처");
             
-            if (Input.GetKey(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 textUI.SetActive(false);
                 GameManager.isPause = true;

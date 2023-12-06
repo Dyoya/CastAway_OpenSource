@@ -2735,8 +2735,9 @@ GameObject:
   - component: {fileID: 764031975}
   - component: {fileID: 764031974}
   - component: {fileID: 764031973}
+  - component: {fileID: 764031976}
   m_Layer: 0
-  m_Name: Trigger
+  m_Name: AddFireTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2820,6 +2821,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 764031971}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &764031976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764031971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8999e178d496e04f95a1bb883432b47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Fire: {fileID: 1294976925}
+  textUI: {fileID: 1326905901}
+  text: {fileID: 962662350}
+  addTime: 10
 --- !u!1 &764598633
 GameObject:
   m_ObjectHideFlags: 0
@@ -4061,8 +4078,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e490fb218ac8f264fb6a69d047ff5716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainUI: {fileID: 0}
-  OptionUI: {fileID: 0}
+  Pauseui: {fileID: 0}
+  mapUI: {fileID: 0}
+  MinimapUI: {fileID: 0}
+  theSaveAndLoad: {fileID: 0}
 --- !u!114 &863789987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8231,7 +8250,6 @@ MonoBehaviour:
   go_SlotsParent: {fileID: 1655012680}
   hungryBar: {fileID: 1668065162}
   items: []
-  Items: {fileID: 0}
   thePlayer: {fileID: 1607366455}
 --- !u!224 &1659752531 stripped
 RectTransform:
@@ -10922,13 +10940,23 @@ PrefabInstance:
     - target: {fileID: 8047952608028620967, guid: d6bac051c42f7d04598ef21a4c56f14b,
         type: 3}
       propertyPath: m_Name
-      value: FireTrigger
+      value: FireDamageTrigger
       objectReference: {fileID: 0}
     - target: {fileID: 8047952608028620968, guid: d6bac051c42f7d04598ef21a4c56f14b,
         type: 3}
       propertyPath: durationTime
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8047952608028620968, guid: d6bac051c42f7d04598ef21a4c56f14b,
+        type: 3}
+      propertyPath: FireOnTrigger
+      value: 
+      objectReference: {fileID: 764031971}
+    - target: {fileID: 8047952608028620968, guid: d6bac051c42f7d04598ef21a4c56f14b,
+        type: 3}
+      propertyPath: FireOffTrigger
+      value: 
+      objectReference: {fileID: 1443424795}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6bac051c42f7d04598ef21a4c56f14b, type: 3}
 --- !u!4 &8047952607960013283 stripped
