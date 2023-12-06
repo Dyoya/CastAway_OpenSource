@@ -14,6 +14,11 @@ public class HungryBar : MonoBehaviour
         Pb.BarValue = 100;
     }
 
+    public void SetBar(float value)
+    {
+        Pb.BarValue = value;
+    }
+
     //배고픔 감소(달릴 때)
     public void DecreaseHungry(float Decreasespeed)
     {

@@ -129,6 +129,7 @@ public class CookController : MonoBehaviour
         {
             Vector3 spawnPosition = Player.transform.position + Player.transform.forward * 2f + new Vector3(0, 2, 0);
             GameObject cookedFoodInstance = Instantiate(cookedFoodTransform.gameObject, spawnPosition, Quaternion.identity);
+            cookedFoodInstance.SetActive(true);
         }
 
         handslot.ClearSlot();
