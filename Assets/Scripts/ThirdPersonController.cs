@@ -165,15 +165,15 @@ namespace StarterAssets
         private int HandPosition;
 
         //공격을 할 때 사용할 변수
-        private bool isPickAxe = false;
+        public bool isPickAxe = false;
         private bool isPickAxeDirection = false;
         private bool isJump = false;
         private bool isDead = false;
         private bool isGetItem = false;
         private bool isGetItemDirection = false;
-        private bool isAxe = false;
+        public bool isAxe = false;
         private bool isAxeDirection = false;
-        private bool isAttack = false;
+        public bool isAttack = false;
         private bool isAttackDirection = false;
         private bool isFishing = false;
 
@@ -530,7 +530,6 @@ namespace StarterAssets
                 isAttack = true;
                 isSwing = true;
                 isAttackDirection = true;
-                //AttackDamage();
                 return;
             }
         }
@@ -1123,13 +1122,6 @@ namespace StarterAssets
             
             conversationImage.gameObject.SetActive(true);
             conversationText.text = ItemName;
-
-            //int fishingRodSlotIndex = inventory.FindItemSlotIndex(fishingRod);
-            //int fishingLineSlotIndex = inventory.FindItemSlotIndex(fishingLine);
-            //inventory.UsedItem(fishingRod, fishingRodSlotIndex);
-            //inventory.UsedItem(fishingLine, fishingLineSlotIndex);
-
-            //createprefabs();
         }
     }
 }

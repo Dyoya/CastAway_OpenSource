@@ -31,7 +31,7 @@ public class FireGame : MonoBehaviour
         if(isGame)
         {
             currentTime -= Time.deltaTime;
-            slider.value -= 0.3f * Time.deltaTime;
+            slider.value -= 0.2f * Time.deltaTime;
 
             // 게임 성공
             if (slider.value >= 0.95) 
