@@ -14,8 +14,8 @@ public class EnemyBT : MonoBehaviour
     ThirdPersonController _tpc;
 
     [Header("HP")]
-    [SerializeField] int currentHp;
-    [SerializeField] int maxhp = 15;
+    [SerializeField] float currentHp;
+    [SerializeField] float maxhp = 15;
 
     [Header("Distance")]
     [SerializeField] float moveSpeed = 6f; // Enemy 이동 속도
@@ -66,7 +66,12 @@ public class EnemyBT : MonoBehaviour
     const string _MOVE_ANIM_TRIGGER_NAME = "move";
 
     // 데미지 임시 변수
-    int _temporaryDamage = 0;
+    public float temporaryDamage = 0;
+
+    public void TakeDamage(float damage)
+    {
+        temporaryDamage = damage;
+    }
 
     bool isMove = false;
     bool isReturn = false;
@@ -97,6 +102,8 @@ public class EnemyBT : MonoBehaviour
         // agent 회전각 구하기
         Vector3 lookrotation = _agent.steeringTarget - transform.position;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookrotation), 5f * Time.deltaTime);
+
+        Debug.Log(temporaryDamage);
     }
     INode SettingBT()
     {
@@ -167,9 +174,9 @@ public class EnemyBT : MonoBehaviour
     #region Public Func
     public void SetDamage(int  damage)
     {
-        if(_temporaryDamage != 0)
+        if(temporaryDamage != 0)
         {
-            _temporaryDamage = damage;
+            temporaryDamage = damage;
         }
     }
     #endregion
@@ -351,15 +358,15 @@ public class EnemyBT : MonoBehaviour
     }
     protected INode.ENodeState Damaged()
     {
-        if (_temporaryDamage > 0)
+        if (temporaryDamage > 0)
         {
-            currentHp -= _temporaryDamage;
+            currentHp -= temporaryDamage;
 
             PlayDamagedSound();
 
             _anim.SetTrigger(_DAMAGED_ANIM_TRIGGER_NAME);
 
-            _temporaryDamage = 0;
+            temporaryDamage = 0;
 
             //Debug.Log("Damaged : Success");
             return INode.ENodeState.ENS_Success;
