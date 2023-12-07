@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 [System.Serializable]
 public class Craft
@@ -35,50 +34,27 @@ public class CraftManual : MonoBehaviour
 
     //동현이가 추가함
     [SerializeField]
-    private GameObject[] slots;
+    private GameObject slot1;
+    [SerializeField]
+    private GameObject slot2;
+    [SerializeField]
+    private GameObject slot3;
 
     [SerializeField]
     private InventoryUI inventory;
 
-    public string itemName;
-    public int itemCount;
-
-    public string GetItemName()
-    {
-        return itemName;
-    }
-
-    public int GetItemCount()
-    {
-        return itemCount;
-    }
-
     public void SlotClick(int _slotNumber)
     {
-        foreach (GameObject slot in slots)
+        if (true)
         {
-            TextMeshProUGUI text = slot.GetComponent<TextMeshProUGUI>();
-
-            string[] lines = text.text.Split('\n');
-
-            foreach (string line in lines)
-            {
-                string[] parts = line.Split(' ');
-
-                string itemName = parts[0];
-                int itemCount = int.Parse(parts[1]);
-
-                if (inventory.SlotHasItem(itemName, itemCount))
-                {
-                    go_Preview = Instantiate(craft_fire[_slotNumber].go_PreviewPrefab, tf_Player.position + tf_Player.forward, Quaternion.identity);
-                    go_Prefab = craft_fire[_slotNumber].go_prefab;
-                    isPreviewActivated = true;
-                    go_BaseUI.SetActive(false);
-                    isActivated = false;
-                    Cursor.visible = false;
-                    Cursor.lockState = CursorLockMode.Locked;
-                }
-            }
+            //inventory.SlotHasItem(itemname, itemcount);
+            go_Preview = Instantiate(craft_fire[_slotNumber].go_PreviewPrefab, tf_Player.position + tf_Player.forward, Quaternion.identity);
+            go_Prefab = craft_fire[_slotNumber].go_prefab;
+            isPreviewActivated = true;
+            go_BaseUI.SetActive(false);
+            isActivated = false;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
     void Start()

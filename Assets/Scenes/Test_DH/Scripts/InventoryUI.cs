@@ -106,13 +106,13 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public bool SlotHasItem(string itemname, int itemcount)
+    private bool SlotHasItem(string itemname, int itemcount) 
     {
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i].item != null)
             {
-                if (slots[i].item.itemName == itemname && slots[i].itemCount >= itemcount) // 슬롯의 아이템 이름이 획득한 아이템 이름과 같다면
+                if (slots[i].item.itemName == itemname && slots[i].itemCount == itemcount) // 슬롯의 아이템 이름이 획득한 아이템 이름과 같다면
                 {
                     slots[i].SetSlotCount(-itemcount); // 슬롯에 아이템 감소
                     return true;
