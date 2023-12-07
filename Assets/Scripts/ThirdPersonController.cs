@@ -145,6 +145,8 @@ namespace StarterAssets
             }
         }
 
+        private MapObjectData theMapObject;
+
         //동현이가 새로 추가한 변수(스테미너 관련 변수)
         public HungryBar hungryBar;
         public HealthBar healthBar;
@@ -181,11 +183,11 @@ namespace StarterAssets
         public GameObject FishingUI;
 
         //아이템 소유 여부
-        private bool hasAxe = false;
-        private bool hasPickAxe = false;
-        private bool hasString = false;
-        private bool hasFishing = false;
-        private bool hasPerfactFishing = false;
+        public bool hasAxe = false;
+        public bool hasPickAxe = false;
+        public bool hasString = false;
+        public bool hasFishing = false;
+        public bool hasPerfactFishing = false;
 
         //Zone 위치에 있는지 없는지
         private bool FishingZone = false;
@@ -965,7 +967,7 @@ namespace StarterAssets
                         }
                         else
                         {
-                            int isAcquired = inventory.AcquireItem(other.gameObject.GetComponent<ItemPickup>().item);
+                            int isAcquired = inventory.AcquireItem(other.gameObject.GetComponent<ItemPickup>().item);                          
                             CheckInventoryForItems(other.gameObject);
                             if (isAcquired == 0)
                             {
@@ -1032,12 +1034,16 @@ namespace StarterAssets
                 hasPerfactFishing = true;
             }
         }
-
+        private InventoryUI theInven;
+        
         public void createprefabs(GameObject itemPrefabs, string name)
         {
             Vector3 spawnPosition = transform.position + transform.forward + new Vector3(0, 1, 0);
             completeFishingRodPrefab = (GameObject) Instantiate(itemPrefabs, spawnPosition, Quaternion.identity);
             completeFishingRodPrefab.name = name;
+            Debug.Log(completeFishingRodPrefab + " 이름도 " + completeFishingRodPrefab.name + " 그냥 이름은 ");
+            theMapObject = FindObjectOfType<MapObjectData>();
+            theMapObject.AddItemObjects(completeFishingRodPrefab);
         }
 
         private void OnTriggerExit(Collider other)

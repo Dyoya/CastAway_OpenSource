@@ -42,6 +42,7 @@ public class Tree : MonoBehaviour
         if (HP <= 0)
         {
             Destruction();
+            gameObject.GetComponent<ObtainableObject>().ChangeDestroyed();
         }
     }
 

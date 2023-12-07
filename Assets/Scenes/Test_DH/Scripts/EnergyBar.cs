@@ -11,6 +11,11 @@ public class EnergyBar : MonoBehaviour
         Pb.BarValue = 100;
     }
 
+    public void SetBar(float value)
+    {
+        Pb.BarValue = value;
+    }
+
     //스테미너 감소
     public void DecreaseStamina()
     {

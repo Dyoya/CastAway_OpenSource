@@ -20,21 +20,24 @@ public class InventoryUI : MonoBehaviour
 
     public slot[] getSlots() { return slots; }
 
-    [SerializeField] private Item[] items;
+    private MapObjectData theMapObject; //데이터 세이브 관련
 
     [SerializeField] private StarterAssets.ThirdPersonController thePlayer;
 
+    [SerializeField] private List<Item> items = new List<Item>();
 
-    public void LoadToInven(int _arrayNum, string _itemName, int _itemNum) 
+    public void LoadToInven(int _arrayNum, string _itemName, int _itemNum)
     {
-        for(int i = 0; i < items.Length; i++)
+        foreach (Item item in items)
         {
-            if (items[i].itemName == _itemName)
+            if (item.itemName == _itemName)
             {
-                slots[_arrayNum].AddItem(items[i], _itemNum);
+                slots[_arrayNum].AddItem(item, _itemNum);
+                break; // 해당 아이템을 찾았으면 루프 종료
             }
         }
     }
+
 
     void Start()
     {
@@ -52,7 +55,7 @@ public class InventoryUI : MonoBehaviour
                 {
                     if (slots[i].item.itemName == _item.itemName && slots[i].itemCount < 5) // 슬롯의 아이템 이름이 획득한 아이템 이름과 같다면
                     {
-                        slots[i].SetSlotCount(_count); // 슬롯에 아이템 개수 추가
+                        slots[i].SetSlotCount(_count); // 슬롯에 아이템 개수 추가         
                         return 0;
                     }
                     else if (slots[i].item.itemName == _item.itemName && slots[i].itemCount == 5)

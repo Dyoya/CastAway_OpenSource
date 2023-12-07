@@ -18,4 +18,5 @@ public class Item : ScriptableObject
     public bool Food;
     public bool Perfect;
     public bool Cooked;
+    public bool Consumed;
 }

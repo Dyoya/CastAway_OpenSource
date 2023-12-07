@@ -45,6 +45,7 @@ public class TitleMenuEvent : MonoBehaviour
         {
             yield return null;
         }
+
         thePlayer = FindObjectOfType<CharacterController>();
         thePlayer.GetComponent<ThirdPersonController>().enabled = false;
         theSaveAndLoad = FindAnyObjectByType<SaveAndLoad>();

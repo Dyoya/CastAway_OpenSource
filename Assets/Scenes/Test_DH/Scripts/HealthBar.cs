@@ -28,6 +28,11 @@ public class HealthBar : MonoBehaviour
         }
     }
 
+    public void SetBar(float value)
+    {
+        Pb.BarValue = value;
+    }
+
     public void IncreaseHealth()
     {
         Pb.BarValue += Time.deltaTime;
