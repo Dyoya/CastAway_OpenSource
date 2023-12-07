@@ -394,35 +394,37 @@ namespace StarterAssets
                 Rightslot.RightHanduseItem(HandPosition);
             }
 
-            //손위치를 보고 버리기
-            if (Input.GetKeyDown(KeyCode.G) && HandPosition == 0)
+            //손위치를 보고 버리기 -> 여기 수정 필요
+            if (Input.GetKeyDown(KeyCode.G))
             {
-                Debug.Log("1번 인벤");
-                string leftItemName = Leftslot.GetItemName();
-                if (hasPerfactFishing && FishingZone)
+                string ItemName;
+                if (HandPosition == 0)
                 {
-                    dialogueQueue.Enqueue("지금 낚시를 하고 있어서 아이템을 버릴 수 없어");
-                    StartCoroutine(DialogueUIAppear());
+                    ItemName = Leftslot.GetItemName();
+                    if (hasPerfactFishing && FishingZone)
+                    {
+                        dialogueQueue.Enqueue("지금 낚시를 하고 있어서 아이템을 버릴 수 없어");
+                        StartCoroutine(DialogueUIAppear());
+                    }
+                    else
+                    {
+                        Leftslot.LeftHandThrowItem(HandPosition, ItemName);
+                        ItemBool(ItemName);
+                    }
                 }
-                else
+                else if(HandPosition == 1)
                 {
-                    ItemBool(leftItemName);
-                    Leftslot.LeftHandThrowItem(HandPosition, leftItemName);
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.G) && HandPosition == 1)
-            {
-                Debug.Log("2번 인벤");
-                string rightItemName = Rightslot.GetItemName();
-                if (hasPerfactFishing && FishingZone)
-                {
-                    dialogueQueue.Enqueue("지금 낚시를 하고 있어서 아이템을 버릴 수 없어");
-                    StartCoroutine(DialogueUIAppear());
-                }
-                else
-                {
-                    ItemBool(rightItemName);
-                    Rightslot.RightHandThrowItem(HandPosition, rightItemName);
+                    ItemName = Rightslot.GetItemName();
+                    if (hasPerfactFishing && FishingZone)
+                    {
+                        dialogueQueue.Enqueue("지금 낚시를 하고 있어서 아이템을 버릴 수 없어");
+                        StartCoroutine(DialogueUIAppear());
+                    }
+                    else
+                    {
+                        Rightslot.RightHandThrowItem(HandPosition, ItemName);
+                        ItemBool(ItemName);
+                    }
                 }
             }
         }
