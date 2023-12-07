@@ -3,60 +3,59 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using static System.TimeZoneInfo;
 
 public class LightController : MonoBehaviour
 {
-    public Light sunLight;  // 햇빛을 조절할 라이트
-    public Material[] skyboxes; // 여러 개의 Skybox를 저장할 배열
-    public TextMeshProUGUI timeText;  // Text 오브젝트를 받아올 변수
+    public Light sunLight;  
+    public Material[] skyboxes; 
+    public TextMeshProUGUI timeText;  
 
-    public Color dayColor = new Color(1.0f, 1.0f, 1.0f);      // 주간 색상 (흰색)
-    public Color eveningColor = new Color(1.0f, 0.5f, 0.25f);  // 저녁 색상
-    public Color nightColor = new Color(0.0f, 0.0f, 1.0f);     // 야간 색상 (파란색)
+    public Color dayColor = new Color(1.0f, 1.0f, 1.0f);
+    public Color eveningColor = new Color(1.0f, 0.5f, 0.25f);
+    public Color nightColor = new Color(0.0f, 0.0f, 1.0f);
 
-    public float dayDuration = 10.0f;       // 주간 지속 시간 (초)
-    public float eveningDuration = 10.0f;   // 저녁 지속 시간 (초)
-    public float nightDuration = 10.0f;     // 야간 지속 시간 (초)
+    public float dayDuration = 10.0f;
+    public float eveningDuration = 10.0f;
+    public float nightDuration = 10.0f;
 
     private float hourDuration;
     private int currentHour = 6;
-    private float timeElapsed = 0.0f;  // 경과 시간
+    private float timeElapsed = 0.0f;
+
+    private MaterialPropertyBlock propertyBlock;
 
     void Start()
     {
         hourDuration = (dayDuration + eveningDuration + nightDuration) / 24;
-        InvokeRepeating("UpdateTime", 0f, hourDuration); //함수호출 주기
+        InvokeRepeating("UpdateTime", 0f, hourDuration);
     }
+
     void Update()
     {
         timeElapsed += Time.deltaTime;
   
         if (timeElapsed < dayDuration)
         {
-            // 주간 시간
-            float t = Mathf.Clamp01(timeElapsed / dayDuration);  // 0에서 1로 정규화
+            float t = Mathf.Clamp01(timeElapsed / dayDuration);
             sunLight.color = Color.Lerp(dayColor, eveningColor, t);
         }
         else if (timeElapsed < dayDuration + eveningDuration)
         {
-            // 저녁 시간
             float t = (timeElapsed - dayDuration) / eveningDuration;
             sunLight.color = Color.Lerp(eveningColor, nightColor, t);
         }
         else
         {
-            // 야간 시간
             float t = (timeElapsed - dayDuration - eveningDuration) / nightDuration;
             sunLight.color = Color.Lerp(nightColor, dayColor, t);
 
-            // 전환 시간이 지나면 초기화
             if (timeElapsed >= dayDuration + eveningDuration + nightDuration)
             {
                 timeElapsed = 0.0f;
             }
         }
     }
+
     void UpdateTime()
     {
         if(currentHour == 24)
