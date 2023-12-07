@@ -30,8 +30,9 @@ public class FireTextTrigger : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("모닥불 근처");
+            //Debug.Log("모닥불 근처");
             
+            // 불 피우기
             if (Input.GetKeyDown(KeyCode.E))
             {
                 textUI.SetActive(false);

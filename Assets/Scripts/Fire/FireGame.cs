@@ -79,7 +79,10 @@ public class FireGame : MonoBehaviour
     public void StopGame()
     {
         isGame = false;
-        FireGameUI.SetActive(false);
+        if(FireGameUI != null)
+        {
+            this.FireGameUI.SetActive(false);
+        }
         GameManager.isPause = false;
         _player.GetComponent<ThirdPersonController>().enabled = true;
     }

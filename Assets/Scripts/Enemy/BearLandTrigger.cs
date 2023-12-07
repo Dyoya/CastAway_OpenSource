@@ -20,8 +20,11 @@ public class BearLandTrigger : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         // 플레이어에게 데미지 주기
-        _tpc.AttackDamage(damage);
+        if(other.tag == "Player")
+        {
+            _tpc.AttackDamage(damage);
 
-        Debug.Log("플레이어 충돌!");
+            Debug.Log("플레이어 충돌!");
+        }
     }
 }

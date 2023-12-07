@@ -13,7 +13,7 @@ public class Fire : MonoBehaviour
     float _currentDamageTime;
 
     [SerializeField] private float durationTime;
-    public float _currentDurationTime;
+    public float currentDurationTime;
 
     [SerializeField]
     private ParticleSystem _ps;
@@ -33,7 +33,7 @@ public class Fire : MonoBehaviour
     {
         player = GameObject.Find("Player");
 
-        _currentDurationTime = durationTime;
+        currentDurationTime = durationTime;
 
         _tpc = player.GetComponent<ThirdPersonController>();
     }
@@ -49,9 +49,9 @@ public class Fire : MonoBehaviour
 
     private void ElapseTime()
     {
-        _currentDurationTime -= Time.deltaTime;
+        currentDurationTime -= Time.deltaTime;
 
-        if (_currentDurationTime <= 0) 
+        if (currentDurationTime <= 0) 
         {
             FireOff();
         }
@@ -63,7 +63,7 @@ public class Fire : MonoBehaviour
     }
     public void addDurationTime(float time)
     {
-        _currentDurationTime += time;
+        currentDurationTime += time;
     }
 
     private void FireOff()
@@ -83,7 +83,7 @@ public class Fire : MonoBehaviour
         FireOnTrigger.SetActive(true);
         FireOffTrigger.SetActive(false);
 
-        _currentDurationTime += time;
+        currentDurationTime += time;
 
         StartCoroutine(SetFire(true));
     }

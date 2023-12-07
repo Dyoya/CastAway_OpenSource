@@ -19,21 +19,20 @@ public class FireOnTrigger : MonoBehaviour
         _player = GameObject.Find("Player");
         _fireScripts = Fire.GetComponent<Fire>();
     }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
-            textUI.SetActive(true);
-            text.text = "E : ºÒ¾¾ Å°¿ì±â";
-        }
-    }
 
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("¸ð´ÚºÒ ±ÙÃ³");
+            textUI.SetActive(true);
+            text.text = "E : ºÒ¾¾ Å°¿ì±â" +  "(left : " + Mathf.FloorToInt(_fireScripts.currentDurationTime).ToString() + "s)";
+        }
 
+        if (other.gameObject.tag == "Player")
+        {
+            //Debug.Log("¸ð´ÚºÒ ±ÙÃ³");
+
+            //ºÒ¾¾ Å°¿ì±â
             if (Input.GetKeyDown(KeyCode.E) && !keyPressed)
             {
                 keyPressed = true;
