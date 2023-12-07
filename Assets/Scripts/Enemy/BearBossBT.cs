@@ -19,8 +19,8 @@ public class BearBossBT : MonoBehaviour
     ThirdPersonController _tpc;
 
     [Header("HP")]
-    [SerializeField] int currentHp;
-    [SerializeField] int maxhp = 15;
+    [SerializeField] float currentHp;
+    [SerializeField] float maxhp = 15;
 
     [Header("Distance")]
     [SerializeField] float moveSpeed = 6f; // Enemy 이동 속도
@@ -68,6 +68,11 @@ public class BearBossBT : MonoBehaviour
 
     float _patrolCurrentTime = 0;
 
+    public void TakeDamage(float damage)
+    {
+        temporaryDamage = damage;
+    }
+
     #region Anim Name
     const string _IDLE_ANIM_STATE_NAME = "Idle";
     const string _IDLE_ANIM_TRIGGER_NAME = "idle";
@@ -104,7 +109,7 @@ public class BearBossBT : MonoBehaviour
     #endregion
 
     // 데미지 임시 변수
-    int _temporaryDamage = 0;
+    public float temporaryDamage = 0;
 
     bool isMove = false;
     bool isReturn = false;
@@ -296,9 +301,9 @@ public class BearBossBT : MonoBehaviour
     #region Public Func
     public void SetDamage(int damage)
     {
-        if (_temporaryDamage != 0)
+        if (temporaryDamage != 0)
         {
-            _temporaryDamage = damage;
+            temporaryDamage = damage;
         }
     }
     #endregion
@@ -487,15 +492,15 @@ public class BearBossBT : MonoBehaviour
     }
     protected INode.ENodeState Damaged()
     {
-        if (_temporaryDamage > 0)
+        if (temporaryDamage > 0)
         {
-            currentHp -= _temporaryDamage;
+            currentHp -= temporaryDamage;
 
             //PlayDamagedSound();
 
             _anim.SetTrigger(_DAMAGED_ANIM_TRIGGER_NAME);
 
-            _temporaryDamage = 0;
+            temporaryDamage = 0;
 
             //Debug.Log("Damaged : Success");
             return INode.ENodeState.ENS_Success;

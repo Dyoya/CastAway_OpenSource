@@ -17,6 +17,7 @@ TagManager:
   - Bonfire
   - Rock
   - Tree
+  - Boss
   layers:
   - Default
   - TransparentFX
