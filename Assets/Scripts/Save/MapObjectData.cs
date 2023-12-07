@@ -19,9 +19,14 @@ public class MapObjectData : MonoBehaviour
         return items;
     }
 
+    public void DestroyMapItem(int i)
+    {
+        Destroy(items[i]);
+    }
+
     public void DestroyObtainableObject(int i, bool destroy)
     {
-        if (destroy && i >= 0 && i < objects.Count)
+        if (destroy == true)
         {
             objects[i].GetComponent<ObtainableObject>().DestroyMe();
         }

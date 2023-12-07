@@ -24,7 +24,6 @@ public class SaveData
     public List<int> invenArrayNumber = new List<int>();
     public List<string> invenItemName = new List<string>();
     public List<int> invenItemNumber = new List<int>();
-    public List<bool> mapObject = new List<bool>();
 
     // 맵 아이템 배치 저장 리스트
     public List<string> MapObjectName = new List<string>();
@@ -88,6 +87,7 @@ public class SaveAndLoad : MonoBehaviour
         saveData.mapObjectRotations.Clear();
         saveData.DestroyedObject.Clear();
 
+
         slot[] slots = theInven.getSlots();
 
         for (int i = 0; i < slots.Length; i++)
@@ -111,6 +111,10 @@ public class SaveAndLoad : MonoBehaviour
             if (objects[i] != null)
             {
                 saveData.DestroyedObject.Add(objects[i].GetComponent<ObtainableObject>().getDestroyed());
+            }
+            else
+            {
+                saveData.DestroyedObject.Add(true);
             }
         }
 
@@ -139,6 +143,7 @@ public class SaveAndLoad : MonoBehaviour
         Debug.Log("저장 완료");
         Debug.Log(json);
     }
+
 
     public void LoadData()
     {
@@ -195,35 +200,43 @@ public class SaveAndLoad : MonoBehaviour
                 }
             }
             GameObject loadedObject = null;
-           
-            while (initNum < saveData.MapObjectName.Count)
+
+            int index = 0;
+
+            while (index < saveData.MapObjectName.Count)
             {
-                Debug.Log("initNum " + initNum + "saveData.MapObjectName[initNum] " + saveData.MapObjectName[initNum]);
-                if (saveData.MapObjectName[initNum] != null && saveData.MapObjectName[initNum] != "")
+                if (index < initNum)
                 {
-                    loadedObject = prefabList.Find(prefab => prefab.name == saveData.MapObjectName[initNum]);
-                    if (loadedObject == null)
+                    if (saveData.MapObjectName == null || saveData.MapObjectName[index] == "") 
                     {
-                        Debug.Log("오브젝트가 널임");
-                        loadedObject = prefabList.Find(prefab => prefab.name == saveData.MapObjectName[initNum]);
+                        theMapObject.DestroyMapItem(index);
+                        index++;
                     }
                     else
                     {
-                        Debug.Log("오브젝트 찾음 " + loadedObject + " " + initNum + " 오브젝트 이름" + loadedObject.name);
-                        GameObject newMapObject = Instantiate(loadedObject, saveData.mapObjectPositions[initNum], Quaternion.Euler(saveData.mapObjectRotations[initNum]));
-                        newMapObject.name = loadedObject.name;
-                        theMapObject.AddItemObjects(newMapObject);
-                        loadedObject = null;
-                        initNum++;
-                    }
+                        index++;
+                    }                
                 }
                 else
                 {
-                    Debug.Log("널임");
-                    initNum++;
-                }              
-            }
-            yield return null;
+                    if (saveData.MapObjectName != null || saveData.MapObjectName[index] != "")
+                    {
+                        loadedObject = prefabList.Find(prefab => prefab.name == saveData.MapObjectName[index]);
+                        Debug.Log("loadedObject Name " + loadedObject);
+                        GameObject newMapObject = Instantiate(loadedObject, saveData.mapObjectPositions[index], Quaternion.Euler(saveData.mapObjectRotations[index]));
+                        newMapObject.name = loadedObject.name;
+                        theMapObject.AddItemObjects(newMapObject);
+                        loadedObject = null;
+                        index++;
+                        
+                    }
+                    else
+                    {
+                        index++;
+                    }            
+                }                            
+            }         
         }
+        yield return null;
     }
 }

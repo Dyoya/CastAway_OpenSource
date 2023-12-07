@@ -413,7 +413,7 @@ namespace StarterAssets
             else if (Input.GetKeyDown(KeyCode.G) && HandPosition == 1)
             {
                 Debug.Log("2번 인벤");
-                string rightItemName = Leftslot.GetItemName();
+                string rightItemName = Rightslot.GetItemName();
                 if (hasPerfactFishing && FishingZone)
                 {
                     dialogueQueue.Enqueue("지금 낚시를 하고 있어서 아이템을 버릴 수 없어");
@@ -1042,7 +1042,6 @@ namespace StarterAssets
             Vector3 spawnPosition = transform.position + transform.forward + new Vector3(0, 1, 0);
             completeFishingRodPrefab = (GameObject) Instantiate(itemPrefabs, spawnPosition, Quaternion.identity);
             completeFishingRodPrefab.name = name;
-            Debug.Log(completeFishingRodPrefab + " 이름도 " + completeFishingRodPrefab.name + " 그냥 이름은 ");
             theMapObject = FindObjectOfType<MapObjectData>();
             theMapObject.AddItemObjects(completeFishingRodPrefab);
         }
