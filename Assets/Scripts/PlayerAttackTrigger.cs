@@ -37,6 +37,7 @@ public class PlayerAttackTrigger : MonoBehaviour
 
             if(!_controller.isAttack && _input.attack)
             {
+                Debug.Log("Enemy ÀÎ½Ä");
                 if (_controller.isAxe)
                 {
                     other.GetComponent<EnemyBT>().TakeDamage(AxeDamage);
