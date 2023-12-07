@@ -68,11 +68,6 @@ public class EnemyBT : MonoBehaviour
     // 데미지 임시 변수
     public float temporaryDamage = 0;
 
-    public void TakeDamage(float damage)
-    {
-        temporaryDamage = damage;
-    }
-
     bool isMove = false;
     bool isReturn = false;
 
@@ -223,8 +218,6 @@ public class EnemyBT : MonoBehaviour
             // 공격 애니메이션 실행
             _anim.SetTrigger(_ATTACK_ANIM_TRIGGER_NAME);
 
-            StartCoroutine(TakeDamgeC());
-
             // 플레이어 방향 바라보도록 설정
             Vector3 temp = (_playerTransform.position - transform.position).normalized;
             temp.y = 0;
@@ -238,12 +231,6 @@ public class EnemyBT : MonoBehaviour
         }
 
         return INode.ENodeState.ENS_Failure;
-    }
-    IEnumerator TakeDamgeC()
-    {
-        yield return new WaitForSeconds(0.27f);
-
-        TakeDamage();
     }
     protected void TakeDamage()
     {
