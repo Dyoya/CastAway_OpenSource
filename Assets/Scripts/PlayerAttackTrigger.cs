@@ -1,7 +1,6 @@
 using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEditor.Timeline.Actions.MenuPriority;
@@ -27,21 +26,21 @@ public class PlayerAttackTrigger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.tag == "Enemy")
         {
-            Debug.Log("트리거 내부 Enemy 인식");
+            //Debug.Log("Enemy 인식");
 
-            if(!_controller.isAttack && Input.GetMouseButtonDown((int)MouseButton.Left))
+            if(!_controller.isAttack && _input.attack)
             {
-                Debug.Log("좌클릭 Enemy 인식");
+                Debug.Log("Enemy 인식");
                 if (_controller.isAxe)
                 {
-                    other.GetComponent<EnemyBT>().temporaryDamage = AxeDamage;
+                    other.GetComponent<EnemyBT>().TakeDamage(AxeDamage);
                 }
                 else if (_controller.isPickAxe)
                 {
@@ -49,7 +48,7 @@ public class PlayerAttackTrigger : MonoBehaviour
                 }
                 else
                 {
-                    other.GetComponent<EnemyBT>().temporaryDamage = HandDamage;
+                    other.GetComponent<EnemyBT>().TakeDamage(HandDamage);
                 }
             }
             

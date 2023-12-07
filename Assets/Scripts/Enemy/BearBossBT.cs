@@ -68,6 +68,11 @@ public class BearBossBT : MonoBehaviour
 
     float _patrolCurrentTime = 0;
 
+    public void TakeDamage(float damage)
+    {
+        temporaryDamage = damage;
+    }
+
     #region Anim Name
     const string _IDLE_ANIM_STATE_NAME = "Idle";
     const string _IDLE_ANIM_TRIGGER_NAME = "idle";
@@ -350,6 +355,8 @@ public class BearBossBT : MonoBehaviour
             // 공격 애니메이션 실행
             _anim.SetTrigger(_ATTACK_ANIM_TRIGGER_NAME);
 
+            StartCoroutine(TakeDamgeC());
+
             // 플레이어 방향 바라보도록 설정
             Vector3 temp = (_playerTransform.position - transform.position).normalized;
             temp.y = 0;
@@ -363,6 +370,12 @@ public class BearBossBT : MonoBehaviour
         }
 
         return INode.ENodeState.ENS_Failure;
+    }
+    IEnumerator TakeDamgeC()
+    {
+        yield return new WaitForSeconds(0.27f);
+
+        TakeDamage();
     }
     void TakeDamage()
     {
