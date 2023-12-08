@@ -83,7 +83,7 @@ public class PlaneCrash: MonoBehaviour
         text.text = talk;
         TMPDOText(text);
 
-        yield return new WaitForSeconds((text.text.Length / 5) + 1f);
+        yield return new WaitForSeconds((text.text.Length / 10) + 2f);
         NextTalk();        
     }
 

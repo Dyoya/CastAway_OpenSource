@@ -1,11 +1,21 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class HelicopterController : MonoBehaviour
 {
     Vector3 currentLocalPosition;
+
+    public TMP_Text startTxt;
+    public TextMeshProUGUI text;
+
+    string dialogue;
+    public string[] startDialogues;
+    public string[] dialogues;
+
     void Start()
     {
         StartCoroutine(HelicopterMove());
@@ -24,5 +34,53 @@ public class HelicopterController : MonoBehaviour
         yield return new WaitForSeconds(5f);
         currentLocalPosition = transform.localPosition;
         transform.DOLocalMove(currentLocalPosition - new Vector3(0, 80, 0), 10f);
+        yield return new WaitForSeconds(15f);
+        StartTalk(startDialogues);
+    }
+
+    public static void TMPDOText(TextMeshProUGUI text)
+    {
+        float totalCharacters = text.text.Length;
+        float duration = totalCharacters / 5;
+
+        text.maxVisibleCharacters = 0;
+        DOTween.To(x => text.maxVisibleCharacters = (int)x, 0f, text.text.Length, duration).SetEase(Ease.Linear);
+    }
+
+    IEnumerator Typing(string talk)
+    {
+        text.text = talk;
+        TMPDOText(text);
+
+        yield return new WaitForSeconds((text.text.Length / 10) + 2f);
+        NextTalk();
+    }
+
+    public int talkNum;
+    public void StartTalk(string[] talks)
+    {
+        dialogues = talks;
+
+        StartCoroutine(Typing(dialogues[talkNum]));
+    }
+
+    public void NextTalk()
+    {
+        startTxt.text = null;
+        talkNum++;
+
+        if (talkNum == dialogues.Length)
+        {
+            EndTalk();
+            return;
+        }
+
+        StartCoroutine(Typing(dialogues[talkNum]));
+    }
+    public void EndTalk()
+    {
+        talkNum = 0;
+        Debug.Log("´ë»ç ³¡");
+        SceneManager.LoadScene(0);
     }
 }
