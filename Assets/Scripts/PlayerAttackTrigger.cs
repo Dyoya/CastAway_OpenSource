@@ -12,7 +12,7 @@ public class PlayerAttackTrigger : MonoBehaviour
     ThirdPersonController _controller;
     StarterAssetsInputs _input;
 
-    [SerializeField] float HandDamage = 2f;
+    [SerializeField] int HandDamage = 2;
     [SerializeField] int AxeDamage = 10;
     [SerializeField] int PickAxeDamage = 12;
 
@@ -34,7 +34,7 @@ public class PlayerAttackTrigger : MonoBehaviour
     {
         if (other.gameObject.tag == "Enemy")
         {
-            Debug.Log("트리거 내부 Enemy 인식");
+            //Debug.Log("트리거 내부 Enemy 인식");
 
             if (_controller.isAxe)
             {
@@ -47,6 +47,24 @@ public class PlayerAttackTrigger : MonoBehaviour
             else
             {
                 other.GetComponentInParent<EnemyBT>().temporaryDamage = HandDamage;
+            }
+        }
+
+        if (other.gameObject.tag == "escapeEnemy")
+        {
+            //Debug.Log("트리거 내부 도망 Enemy 인식");
+
+            if (_controller.isAxe)
+            {
+                other.GetComponentInParent<EscapeEnemyBT>().temporaryDamage = AxeDamage;
+            }
+            else if (_controller.isPickAxe)
+            {
+                other.GetComponentInParent<EscapeEnemyBT>().temporaryDamage = PickAxeDamage;
+            }
+            else
+            {
+                other.GetComponentInParent<EscapeEnemyBT>().temporaryDamage = HandDamage;
             }
         }
 

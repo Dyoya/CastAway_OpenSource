@@ -19,8 +19,8 @@ public class BearBossBT : MonoBehaviour
     ThirdPersonController _tpc;
 
     [Header("HP")]
-    [SerializeField] float currentHp;
-    [SerializeField] float maxhp = 15;
+    [SerializeField] int currentHp;
+    [SerializeField] int maxhp = 15;
 
     [Header("Distance")]
     [SerializeField] float moveSpeed = 6f; // Enemy 이동 속도
@@ -104,7 +104,7 @@ public class BearBossBT : MonoBehaviour
     #endregion
 
     // 데미지 임시 변수
-    public float temporaryDamage = 0;
+    public int temporaryDamage = 0;
 
     bool isMove = false;
     bool isReturn = false;

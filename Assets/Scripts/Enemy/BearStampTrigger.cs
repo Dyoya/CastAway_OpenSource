@@ -9,7 +9,7 @@ public class BearStampTrigger : MonoBehaviour
     ThirdPersonController _tpc;
 
     [Header("Damage")]
-    [SerializeField] int damage = 10;
+    [SerializeField] int damage = 20;
 
     private void Start()
     {

@@ -522,11 +522,12 @@ namespace StarterAssets
             this.GetComponent<PlayerInput>().enabled = false;
         }
 
-
+        [SerializeField] GameObject AttackTriggerRange;
         private void Attack()
         {
             if (_hasAnimator && Grounded && !isJump && !isAttack && _input.attack)
             {
+                AttackTriggerRange.SetActive(true);
                 _controller.Move(Vector3.zero);
                 _animator.SetTrigger(_animIDAttack);
                 isAttack = true;
@@ -538,6 +539,7 @@ namespace StarterAssets
 
         private void EndAttack()
         {
+            AttackTriggerRange.SetActive(false);
             isAttack = false;
             isSwing = false;
             _input.attack = false;

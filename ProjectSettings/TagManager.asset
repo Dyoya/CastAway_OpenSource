@@ -18,6 +18,7 @@ TagManager:
   - Rock
   - Tree
   - Boss
+  - escapeEnemy
   layers:
   - Default
   - TransparentFX
