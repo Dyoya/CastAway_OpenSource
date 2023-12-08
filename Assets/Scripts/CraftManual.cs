@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 [System.Serializable]
@@ -34,27 +36,71 @@ public class CraftManual : MonoBehaviour
 
     //동현이가 추가함
     [SerializeField]
-    private GameObject slot1;
-    [SerializeField]
-    private GameObject slot2;
-    [SerializeField]
-    private GameObject slot3;
+    private GameObject[] slots;
 
     [SerializeField]
     private InventoryUI inventory;
 
     public void SlotClick(int _slotNumber)
     {
-        if (true)
+        foreach (GameObject slot in slots)
         {
-            //inventory.SlotHasItem(itemname, itemcount);
-            go_Preview = Instantiate(craft_fire[_slotNumber].go_PreviewPrefab, tf_Player.position + tf_Player.forward, Quaternion.identity);
-            go_Prefab = craft_fire[_slotNumber].go_prefab;
-            isPreviewActivated = true;
-            go_BaseUI.SetActive(false);
-            isActivated = false;
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
+            if (!slot.activeInHierarchy)
+                continue;
+
+            TextMeshProUGUI[] texts = slot.GetComponentsInChildren<TextMeshProUGUI>();
+
+            TextMeshProUGUI ExplainText = null;
+
+            foreach (TextMeshProUGUI text in texts)
+            {
+                if (text.gameObject.name == "ExplainText")
+                {
+                    ExplainText = text;
+                    break;
+                }
+            }
+
+            if(ExplainText != null)
+            {
+                string[] lines = ExplainText.text.Split('\n'); // 텍스트를 줄바꿈 문자를 기준으로 분리
+
+                Dictionary<string, int> materials = new Dictionary<string, int>();
+
+                foreach (string line in lines)
+                {
+                    string[] parts = line.Split(' '); // 텍스트를 공백을 기준으로 분리
+
+                    string itemName = parts[0];
+                    int itemCount = int.Parse(parts[1]);
+                    // 딕셔너리에 재료 추가
+                    materials[itemName] = itemCount;
+                }
+
+                bool hasAllMaterials = true; // 모든 재료가 있어야됨
+                foreach (KeyValuePair<string, int> material in materials)
+                {
+                    Debug.Log(material.Key);
+                    Debug.Log(material.Value);
+                    if (!inventory.SlotHasItem(material.Key, material.Value))
+                    {
+                        hasAllMaterials = false;
+                        break;
+                    }
+                }
+
+                if (hasAllMaterials)
+                {
+                    go_Preview = Instantiate(craft_fire[_slotNumber].go_PreviewPrefab, tf_Player.position + tf_Player.forward, Quaternion.identity);
+                    go_Prefab = craft_fire[_slotNumber].go_prefab;
+                    isPreviewActivated = true;
+                    go_BaseUI.SetActive(false);
+                    isActivated = false;
+                    Cursor.visible = false;
+                    Cursor.lockState = CursorLockMode.Locked;
+                }
+                
+            }
         }
     }
     void Start()

@@ -106,7 +106,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    private bool SlotHasItem(string itemname, int itemcount) 
+    public bool SlotHasItem(string itemname, int itemcount) 
     {
         for (int i = 0; i < slots.Length; i++)
         {
