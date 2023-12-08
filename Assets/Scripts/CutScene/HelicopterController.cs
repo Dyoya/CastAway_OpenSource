@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class HelicopterController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    Vector3 currentLocalPosition;
     void Start()
     {
         StartCoroutine(HelicopterMove());
@@ -13,27 +13,16 @@ public class HelicopterController : MonoBehaviour
 
     IEnumerator HelicopterMove()
     {
-        transform.DOMove(new Vector3(-763, 15, 18), 5);
-        yield return new WaitForSeconds(5f);
-        transform.DOMove(new Vector3(-763, -3.5f, 18), 5);
-        yield return new WaitForSeconds(5f);
-    }
+        yield return new WaitForSeconds(1f);
+        currentLocalPosition = transform.localPosition;
+        transform.DOLocalMove(currentLocalPosition - new Vector3(-200, 0, 0), 20f);
+        yield return new WaitForSeconds(15f);
+        currentLocalPosition = transform.localPosition;
+        transform.DOLocalRotate(new Vector3(0,-10, 0), 5f).SetEase(Ease.Linear);
+        transform.DOLocalMove(currentLocalPosition - new Vector3(0, 0, -30), 5f).SetEase(Ease.InOutQuad);
 
-    public void EscapeHelicopter()
-    {
-        StartCoroutine(Escape());
-    }
-
-    IEnumerator Escape()
-    {
-        transform.DOMove(new Vector3(-765.69f, 50, 16), 6);
-        Debug.Log("Test1");
-        yield return new WaitForSeconds(6f);
-        transform.DOMove(new Vector3(-800f, 50, 16), 6);
-        Debug.Log("Test2");
-        transform.DORotate(new Vector3(0, 90, 0), 20f).SetEase(Ease.Linear);
-        Debug.Log("Test3");
-        transform.DOMove(new Vector3(-1000, 50, 300), 20f).SetEase(Ease.InOutQuad);
-        Debug.Log("Test4");
+        yield return new WaitForSeconds(5f);
+        currentLocalPosition = transform.localPosition;
+        transform.DOLocalMove(currentLocalPosition - new Vector3(0, 80, 0), 10f);
     }
 }

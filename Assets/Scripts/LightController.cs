@@ -31,27 +31,44 @@ public class LightController : MonoBehaviour
     void Update()
     {
         timeElapsed += Time.deltaTime;
-  
-        if (timeElapsed < dayDuration)
+
+        if (currentHour > 6 && currentHour < 16)
         {
-            // 주간 시간
-            float t = Mathf.Clamp01(timeElapsed / dayDuration);  // 0에서 1로 정규화
+            // Daytime (6 to 16)
+            sunLight.color = dayColor;
+        }
+        else if (currentHour == 16 && timeElapsed < hourDuration)
+        {
+            // Transition from dayColor to eveningColor at the beginning of 16
+            float t = Mathf.Clamp01(timeElapsed / hourDuration);
             sunLight.color = Color.Lerp(dayColor, eveningColor, t);
         }
-        else if (timeElapsed < dayDuration + eveningDuration)
+        else if (currentHour > 16 && currentHour < 19)
         {
-            // 저녁 시간
-            float t = (timeElapsed - dayDuration) / eveningDuration;
+            // Evening (16 to 17)
+            sunLight.color = eveningColor;
+        }
+        else if (currentHour == 19 && timeElapsed < hourDuration)
+        {
+            // Transition from eveningColor to nightColor at the beginning of 17
+            float t = Mathf.Clamp01(timeElapsed / hourDuration);
             sunLight.color = Color.Lerp(eveningColor, nightColor, t);
+        }
+        else if ((currentHour > 19 && currentHour < 24) || (currentHour >= 0 && currentHour < 6))
+        {
+            // Night (17 to 24)
+            sunLight.color = nightColor;
+        }
+        else if (currentHour == 6 && timeElapsed < hourDuration)
+        {
+            // Transition from nightColor to dayColor at the beginning of 24
+            float t = Mathf.Clamp01(timeElapsed / hourDuration);
+            sunLight.color = Color.Lerp(nightColor, dayColor, t);
         }
         else
         {
-            // 야간 시간
-            float t = (timeElapsed - dayDuration - eveningDuration) / nightDuration;
-            sunLight.color = Color.Lerp(nightColor, dayColor, t);
-
-            // 전환 시간이 지나면 초기화
-            if (timeElapsed >= dayDuration + eveningDuration + nightDuration)
+            // Reset timeElapsed when the full cycle is completed
+            if (timeElapsed >= hourDuration)
             {
                 timeElapsed = 0.0f;
             }
@@ -59,7 +76,7 @@ public class LightController : MonoBehaviour
     }
     void UpdateTime()
     {
-        if(currentHour == 24)
+        if (currentHour == 24)
         {
             currentHour = 0;
         }

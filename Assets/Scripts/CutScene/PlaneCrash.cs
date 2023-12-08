@@ -27,15 +27,22 @@ public class PlaneCrash: MonoBehaviour
     string dialogue;
     public string[] startDialogues;
     public string[] dialogues;
-    
+
+    public List<AudioClip> soundEffects;
+
+    private AudioSource audioSource;
+
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>(); // AudioSource 초기화     
+
         StartTalk(startDialogues);
     }
 
     IEnumerator Explosion()
     {
+        StartCoroutine(PlaySoundEffect(soundEffects, 0));
         pd.Play();
         bird1.SetActive(true);
         bird3.SetActive(true);
@@ -47,8 +54,8 @@ public class PlaneCrash: MonoBehaviour
 
         if (effectPrefab1 != null)
         {
-            // 첫 번째 이펙트 재생
             effectPrefab1.SetActive(true);
+            StartCoroutine(PlaySoundEffect(soundEffects, 1));
         }
 
         if (effectPrefab2 != null)
@@ -106,5 +113,12 @@ public class PlaneCrash: MonoBehaviour
         talkNum = 0;
         StartCoroutine(Explosion());
         Debug.Log("대사 끝");
+    }
+
+    IEnumerator PlaySoundEffect(List<AudioClip> soundList, int i)
+    {
+        audioSource.clip = soundList[i];
+        audioSource.Play();
+        yield return null;
     }
 }

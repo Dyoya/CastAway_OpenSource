@@ -902,19 +902,6 @@ namespace StarterAssets
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag == "Helicopter")
-            {
-                Helicopter.SetActive(true);
-                other.gameObject.SetActive(false);
-                pd.Play(ta[0]);
-            }
-            if (other.tag == "Escape")
-            {
-                HelicopterController otherScript = GameObject.Find("Helicopter").GetComponent<HelicopterController>();
-                pd.Play(ta[1]);
-                otherScript.EscapeHelicopter();
-                other.gameObject.SetActive(false);
-            }
             if (other.gameObject.tag == "Item")
             {
                 triggerItems.Add(other.gameObject);
