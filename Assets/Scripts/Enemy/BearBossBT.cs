@@ -189,9 +189,8 @@ public class BearBossBT : MonoBehaviour
                     new List<INode>()
                     {
                         new ActionNode(CheckDieHp),
-                        new ActionNode(Die),
                         new ActionNode(CheckDieAnim),
-                        new ActionNode(DestroyObject),
+                        new ActionNode(Die),
                     }
                 ),
                 // 스킬 패턴 노드
@@ -523,31 +522,37 @@ public class BearBossBT : MonoBehaviour
     {
         if (currentHp <= 0)
         {
+            //Debug.Log("사망 체력 확인");
             return INode.ENodeState.ENS_Success;
         }
 
         return INode.ENodeState.ENS_Failure;
     }
-    protected INode.ENodeState Die()
-    {
-        _anim.SetTrigger(_DIE_ANIM_TRIGGER_NAME);
-
-        return INode.ENodeState.ENS_Success;
-    }
     protected INode.ENodeState CheckDieAnim()
     {
         if (IsAnimationRunning(_DIE_ANIM_STATE_NAME))
         {
+            //Debug.Log("사망 애니메이션 재생중");
             return INode.ENodeState.ENS_Running;
         }
 
         return INode.ENodeState.ENS_Success;
     }
-    protected INode.ENodeState DestroyObject()
+    protected INode.ENodeState Die()
     {
-        Destroy(gameObject);
+        if (!IsAnimationRunning(_DIE_ANIM_STATE_NAME))
+        {
+            //Debug.Log("사망 애니메이션 재생");
+            _anim.SetTrigger(_DIE_ANIM_TRIGGER_NAME);
+        }
 
         return INode.ENodeState.ENS_Success;
+    }
+
+    protected void DestroyObject()
+    {
+        Debug.Log("파괴");
+        Destroy(gameObject);
     }
     #endregion
 

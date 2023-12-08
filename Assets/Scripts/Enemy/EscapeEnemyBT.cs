@@ -53,7 +53,7 @@ public class EscapeEnemyBT : MonoBehaviour
     const string _MOVE_ANIM_TRIGGER_NAME = "move";
 
     // 데미지 임시 변수
-    int _temporaryDamage = 0;
+    public int temporaryDamage = 0;
 
     bool isMove = false;
 
@@ -92,9 +92,8 @@ public class EscapeEnemyBT : MonoBehaviour
                     new List<INode>()
                     {
                         new ActionNode(CheckDieHp),
-                        new ActionNode(Die),
                         new ActionNode(CheckDieAnim),
-                        new ActionNode(DestroyObject),
+                        new ActionNode(Die),
                     }
                 ),
                 new SequenceNode
@@ -141,9 +140,9 @@ public class EscapeEnemyBT : MonoBehaviour
     #region Public Func
     public void SetDamage(int damage)
     {
-        if (_temporaryDamage != 0)
+        if (temporaryDamage != 0)
         {
-            _temporaryDamage = damage;
+            temporaryDamage = damage;
         }
     }
     #endregion
@@ -227,15 +226,15 @@ public class EscapeEnemyBT : MonoBehaviour
     }
     INode.ENodeState Damaged()
     {
-        if (_temporaryDamage > 0)
+        if (temporaryDamage > 0)
         {
-            currentHp -= _temporaryDamage;
+            currentHp -= temporaryDamage;
 
             PlayDamagedSound();
 
             _anim.SetTrigger(_DAMAGED_ANIM_TRIGGER_NAME);
 
-            _temporaryDamage = 0;
+            temporaryDamage = 0;
 
             //Debug.Log("Damaged : Success");
             return INode.ENodeState.ENS_Success;
@@ -257,35 +256,41 @@ public class EscapeEnemyBT : MonoBehaviour
     #endregion
 
     #region Die Node
-    INode.ENodeState CheckDieHp()
+    protected INode.ENodeState CheckDieHp()
     {
         if (currentHp <= 0)
         {
+            //Debug.Log("사망 체력 확인");
             return INode.ENodeState.ENS_Success;
         }
 
         return INode.ENodeState.ENS_Failure;
     }
-    INode.ENodeState Die()
-    {
-        _anim.SetTrigger(_DIE_ANIM_TRIGGER_NAME);
-
-        return INode.ENodeState.ENS_Success;
-    }
-    INode.ENodeState CheckDieAnim()
+    protected INode.ENodeState CheckDieAnim()
     {
         if (IsAnimationRunning(_DIE_ANIM_STATE_NAME))
         {
+            //Debug.Log("사망 애니메이션 재생중");
             return INode.ENodeState.ENS_Running;
         }
 
         return INode.ENodeState.ENS_Success;
     }
-    INode.ENodeState DestroyObject()
+    protected INode.ENodeState Die()
     {
-        Destroy(gameObject);
+        if (!IsAnimationRunning(_DIE_ANIM_STATE_NAME))
+        {
+            //Debug.Log("사망 애니메이션 재생");
+            _anim.SetTrigger(_DIE_ANIM_TRIGGER_NAME);
+        }
 
         return INode.ENodeState.ENS_Success;
+    }
+
+    protected void DestroyObject()
+    {
+        Debug.Log("파괴");
+        Destroy(gameObject);
     }
     #endregion
 

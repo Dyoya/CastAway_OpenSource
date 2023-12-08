@@ -30,52 +30,48 @@ public class PlayerAttackTrigger : MonoBehaviour
 
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Enemy")
         {
             Debug.Log("트리거 내부 Enemy 인식");
 
-            if(!_controller.isAttack && Input.GetMouseButtonDown((int)MouseButton.Left))
+            if (_controller.isAxe)
             {
-                Debug.Log("좌클릭 Enemy 인식");
-                if (_controller.isAxe)
-                {
-                    other.GetComponent<EnemyBT>().temporaryDamage = AxeDamage;
-                }
-                else if (_controller.isPickAxe)
-                {
-                    other.GetComponent<EnemyBT>().temporaryDamage = PickAxeDamage;
-                }
-                else
-                {
-                    other.GetComponent<EnemyBT>().temporaryDamage = HandDamage;
-                }
+                other.GetComponentInParent<EnemyBT>().temporaryDamage = AxeDamage;
             }
-            
+            else if (_controller.isPickAxe)
+            {
+                other.GetComponentInParent<EnemyBT>().temporaryDamage = PickAxeDamage;
+            }
+            else
+            {
+                other.GetComponentInParent<EnemyBT>().temporaryDamage = HandDamage;
+            }
         }
 
         if (other.gameObject.tag == "Boss")
         {
             //Debug.Log("Boss 인식");
 
-            if (!_controller.isAttack && _input.attack)
+            if (_controller.isAxe)
             {
-                if (_controller.isAxe)
-                {
-                    other.GetComponent<BearBossBT>().temporaryDamage = AxeDamage;
-                }
-                else if (_controller.isPickAxe)
-                {
-                    other.GetComponent<BearBossBT>().temporaryDamage = PickAxeDamage;
-                }
-                else
-                {
-                    other.GetComponent<BearBossBT>().temporaryDamage = HandDamage;
-                }
+                other.GetComponentInParent<BearBossBT>().temporaryDamage = AxeDamage;
             }
-
+            else if (_controller.isPickAxe)
+            {
+                other.GetComponentInParent<BearBossBT>().temporaryDamage = PickAxeDamage;
+            }
+            else
+            {
+                other.GetComponentInParent<BearBossBT>().temporaryDamage = HandDamage;
+            }
         }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        
     }
 
 }
