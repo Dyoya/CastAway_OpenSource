@@ -297,6 +297,15 @@
 - **PlayerAttackTrigger.cs** 수정
     - 플레이어 공격 코드 수정
 
+### 2023-12-09
+`[0.5.5]`
+- Enemy 스포너 추가
+- **EnemyManger.cs** 스크립트 추가
+    - Enemy 스포너 관리 스크립
+- 모닥불 코드 수정
+- **EndingTrigger.cs** 스크립트 추가
+    - 엔딩 조건 판별 기능
+    - 구조를 위한 돌, 모닥불 설치 기능
 
 <br/><br/>
 
