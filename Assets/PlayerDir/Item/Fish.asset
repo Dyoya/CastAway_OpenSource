@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be59a46c003868e48955bf6c37a0a7be, type: 3}
   m_Name: Fish
   m_EditorClassIdentifier: 
-  itemImage: {fileID: 21300000, guid: ae16b8daf627ac949b026b7f09e16dd4, type: 3}
+  itemImage: {fileID: 21300000, guid: 78144e41b32af9345b0b99a8fba54250, type: 3}
   itemName: "\uBB3C\uACE0\uAE30"
   itemType: 1
   itemPrefab: {fileID: 3828846876288801734, guid: 1c6865324f95c004293d5d1efe86d559,
@@ -20,4 +20,6 @@ MonoBehaviour:
   itemValue: 35
   weaponType: 
   Food: 1
+  Perfect: 0
   Cooked: 0
+  Consumed: 0

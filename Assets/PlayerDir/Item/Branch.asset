@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be59a46c003868e48955bf6c37a0a7be, type: 3}
   m_Name: Branch
   m_EditorClassIdentifier: 
-  itemImage: {fileID: 21300000, guid: 6535b2d8254760a46a6c3a76f7f24a26, type: 3}
+  itemImage: {fileID: 21300000, guid: 68d8920e900ffba42b70f2a1cbe755ae, type: 3}
   itemName: "\uB098\uBB47\uAC00\uC9C0"
   itemType: 2
   itemPrefab: {fileID: 6183871195530136800, guid: 50919cfe4326de14292810cc7f58b2a8,
@@ -22,3 +22,4 @@ MonoBehaviour:
   Food: 0
   Perfect: 0
   Cooked: 0
+  Consumed: 0

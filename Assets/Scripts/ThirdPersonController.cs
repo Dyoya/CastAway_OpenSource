@@ -408,8 +408,8 @@ namespace StarterAssets
                     }
                     else
                     {
-                        Leftslot.LeftHandThrowItem(HandPosition, ItemName);
                         ItemBool(ItemName);
+                        Leftslot.LeftHandThrowItem(HandPosition, ItemName);
                     }
                 }
                 else if(HandPosition == 1)
@@ -422,8 +422,8 @@ namespace StarterAssets
                     }
                     else
                     {
-                        Rightslot.RightHandThrowItem(HandPosition, ItemName);
                         ItemBool(ItemName);
+                        Rightslot.RightHandThrowItem(HandPosition, ItemName);
                     }
                 }
             }
@@ -893,9 +893,6 @@ namespace StarterAssets
         [SerializeField]
         private Image conversationImage;
 
-        [SerializeField]
-        private GameObject completeFishingRodPrefab;
-
         private List<GameObject> triggerItems = new List<GameObject>();
 
         private Queue<string> dialogueQueue = new Queue<string>();
@@ -1026,14 +1023,16 @@ namespace StarterAssets
             }
         }
         private InventoryUI theInven;
-        
+
+        private GameObject completePrefab;
+
         public void createprefabs(GameObject itemPrefabs, string name)
         {
-            Vector3 spawnPosition = transform.position + transform.forward + new Vector3(0, 1, 0);
-            completeFishingRodPrefab = (GameObject) Instantiate(itemPrefabs, spawnPosition, Quaternion.identity);
-            completeFishingRodPrefab.name = name;
+            Vector3 spawnPosition = transform.position + transform.forward + new Vector3(0, 2, 0);
+            completePrefab = (GameObject) Instantiate(itemPrefabs, spawnPosition, Quaternion.identity);
+            completePrefab.name = name;
             theMapObject = FindObjectOfType<MapObjectData>();
-            theMapObject.AddItemObjects(completeFishingRodPrefab);
+            theMapObject.AddItemObjects(completePrefab);
         }
 
         private void OnTriggerExit(Collider other)

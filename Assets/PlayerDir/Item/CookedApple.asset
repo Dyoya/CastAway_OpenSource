@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be59a46c003868e48955bf6c37a0a7be, type: 3}
   m_Name: CookedApple
   m_EditorClassIdentifier: 
-  itemImage: {fileID: 21300000, guid: ada0d6fc145e7d54db2eb3b9b109ffc5, type: 3}
+  itemImage: {fileID: 21300000, guid: f9def74f9911dd54bb22d3f458d71d44, type: 3}
   itemName: "\uC694\uB9AC\uB41C\uC0AC\uACFC"
   itemType: 1
   itemPrefab: {fileID: 388876489497171537, guid: d0ddd93953187fd4195f9cea4a7b8a56,
@@ -20,4 +20,6 @@ MonoBehaviour:
   itemValue: 15
   weaponType: 
   Food: 1
+  Perfect: 0
   Cooked: 1
+  Consumed: 0

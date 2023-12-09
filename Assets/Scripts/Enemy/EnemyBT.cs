@@ -417,11 +417,18 @@ public class EnemyBT : MonoBehaviour
         return INode.ENodeState.ENS_Success;
     }
 
+    [SerializeField] GameObject ItemPrefab; // 아이템 프리팹
+
     protected void DestroyObject()
     {
         Debug.Log("파괴");
         _enemyManager.BearDie();
         Destroy(gameObject);
+
+        for (int i = 0; i < 3; i++)
+        {
+            _tpc.createprefabs(ItemPrefab, "고기");
+        }
     }
     #endregion
 

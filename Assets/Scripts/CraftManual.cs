@@ -41,68 +41,92 @@ public class CraftManual : MonoBehaviour
     [SerializeField]
     private InventoryUI inventory;
 
+    [SerializeField]
+    private StarterAssets.ThirdPersonController thePlayer;
+
     public void SlotClick(int _slotNumber)
     {
-        foreach (GameObject slot in slots)
+        Debug.Log(_slotNumber);
+        GameObject slot = slots[_slotNumber];
+
+        if (!slot.activeInHierarchy)
+            return;
+
+        TextMeshProUGUI[] texts = slot.GetComponentsInChildren<TextMeshProUGUI>();
+
+        TextMeshProUGUI ExplainText = null;
+
+        foreach (TextMeshProUGUI text in texts)
         {
-            if (!slot.activeInHierarchy)
-                continue;
-
-            TextMeshProUGUI[] texts = slot.GetComponentsInChildren<TextMeshProUGUI>();
-
-            TextMeshProUGUI ExplainText = null;
-
-            foreach (TextMeshProUGUI text in texts)
+            if (text.gameObject.name == "ExplainText")
             {
-                if (text.gameObject.name == "ExplainText")
+                ExplainText = text;
+                break;
+            }
+        }
+
+        if (ExplainText != null)
+        {
+            string[] lines = ExplainText.text.Split('\n'); // 텍스트를 줄바꿈 문자를 기준으로 분리
+
+            Dictionary<string, int> materials = new Dictionary<string, int>();
+
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split(' '); // 텍스트를 공백을 기준으로 분리
+
+                string itemName = parts[0];
+                int itemCount = int.Parse(parts[1]);
+
+                // 딕셔너리에 재료 추가
+                materials[itemName] = itemCount;
+            }
+
+            bool hasAllMaterials = true; // 모든 재료가 있어야됨
+            foreach (KeyValuePair<string, int> material in materials)
+            {
+                Debug.Log(material.Key);
+                Debug.Log(material.Value);
+                if (!inventory.SlotHasItem(material.Key, material.Value))
                 {
-                    ExplainText = text;
+                    hasAllMaterials = false;
                     break;
                 }
             }
 
-            if(ExplainText != null)
+            if (hasAllMaterials && _slotNumber <= 2)
             {
-                string[] lines = ExplainText.text.Split('\n'); // 텍스트를 줄바꿈 문자를 기준으로 분리
-
-                Dictionary<string, int> materials = new Dictionary<string, int>();
-
-                foreach (string line in lines)
-                {
-                    string[] parts = line.Split(' '); // 텍스트를 공백을 기준으로 분리
-
-                    string itemName = parts[0];
-                    int itemCount = int.Parse(parts[1]);
-                    // 딕셔너리에 재료 추가
-                    materials[itemName] = itemCount;
-                }
-
-                bool hasAllMaterials = true; // 모든 재료가 있어야됨
-                foreach (KeyValuePair<string, int> material in materials)
-                {
-                    Debug.Log(material.Key);
-                    Debug.Log(material.Value);
-                    if (!inventory.SlotHasItem(material.Key, material.Value))
-                    {
-                        hasAllMaterials = false;
-                        break;
-                    }
-                }
-
-                if (hasAllMaterials)
-                {
-                    go_Preview = Instantiate(craft_fire[_slotNumber].go_PreviewPrefab, tf_Player.position + tf_Player.forward, Quaternion.identity);
-                    go_Prefab = craft_fire[_slotNumber].go_prefab;
-                    isPreviewActivated = true;
-                    go_BaseUI.SetActive(false);
-                    isActivated = false;
-                    Cursor.visible = false;
-                    Cursor.lockState = CursorLockMode.Locked;
-                }
-                
+                Debug.Log("빌드 실행");
+                go_Preview = Instantiate(craft_fire[_slotNumber].go_PreviewPrefab, tf_Player.position + tf_Player.forward, Quaternion.identity);
+                go_Prefab = craft_fire[_slotNumber].go_prefab;
+                isPreviewActivated = true;
+                go_BaseUI.SetActive(false);
+                isActivated = false;
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            else if(hasAllMaterials && _slotNumber >= 3)
+            {
+                GameObject itemPrefab = GetItemPrefabBasedOnSlotNumber(_slotNumber);
+                string itemName = GetItemNameBasedOnSlotNumber(_slotNumber);
+                thePlayer.createprefabs(itemPrefab, itemName);
             }
         }
     }
+
+    [SerializeField]
+    private GameObject[] prefab;
+    private GameObject GetItemPrefabBasedOnSlotNumber(int number)
+    {   
+        return prefab[number];
+    }
+
+    private string GetItemNameBasedOnSlotNumber(int number)
+    {
+        return prefab[number].name;
+    }
+
+
     void Start()
     {
         go_BaseUI.SetActive(false);
@@ -110,7 +134,10 @@ public class CraftManual : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab) && !isPreviewActivated)
+        {
             Window();
+            GameManager.isPause = !GameManager.isPause;
+        }
 
         if (isPreviewActivated)
             PreviewPositionUpdate();
@@ -120,14 +147,6 @@ public class CraftManual : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
             Cancel();
-        
-        /*
-        Cursor.visible = isActivated;
-        if(Cursor.visible)
-            Cursor.lockState = CursorLockMode.None;
-        else
-            Cursor.lockState = CursorLockMode.Locked;
-        */
     }
 
     private void PreviewPositionUpdate()

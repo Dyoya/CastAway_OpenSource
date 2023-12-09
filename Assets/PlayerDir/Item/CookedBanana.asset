@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be59a46c003868e48955bf6c37a0a7be, type: 3}
   m_Name: CookedBanana
   m_EditorClassIdentifier: 
-  itemImage: {fileID: 21300000, guid: e924e57d77ce0cc428d96d455c631fb5, type: 3}
+  itemImage: {fileID: 21300000, guid: 435a3ae3b94548e45a5a15c99cc05ba9, type: 3}
   itemName: "\uC694\uB9AC\uB41C\uBC14\uB098\uB098"
   itemType: 1
   itemPrefab: {fileID: 2230530226155236490, guid: 869b55c0dc2962d41a835b0eeb3c4b36,
@@ -20,4 +20,6 @@ MonoBehaviour:
   itemValue: 15
   weaponType: 
   Food: 1
+  Perfect: 0
   Cooked: 1
+  Consumed: 0

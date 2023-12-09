@@ -87,10 +87,6 @@ public class InventoryUI : MonoBehaviour
                 slots[i].ClearSlot();
             return;
         }
-        else if(slots[i].item != null && Item.ItemType.Ingredient == _item.itemType)
-        {
-
-        }
     }
 
     public void ThrowItem(Item _item, int i, string name)
@@ -100,7 +96,6 @@ public class InventoryUI : MonoBehaviour
             slots[i].SetSlotCount(-1);
             if (slots[i].itemCount <= 0)
                 slots[i].ClearSlot();
-            
             thePlayer.createprefabs(_item.itemPrefab, name);
             return;
         }

@@ -549,10 +549,17 @@ public class BearBossBT : MonoBehaviour
         return INode.ENodeState.ENS_Success;
     }
 
+    [SerializeField] GameObject ItemPrefab; // 아이템 프리팹
+
     protected void DestroyObject()
     {
         Debug.Log("파괴");
         Destroy(gameObject);
+
+        for (int i = 0; i < 6; i++)
+        {
+            _tpc.createprefabs(ItemPrefab, "고기");
+        }
     }
     #endregion
 
