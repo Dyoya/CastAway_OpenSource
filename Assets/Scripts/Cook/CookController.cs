@@ -14,12 +14,12 @@ public class CookController : MonoBehaviour
     [SerializeField] GameObject note = null;
     Vector2[] timingBoxs = null;
 
-    [SerializeField] private slot Foodslot;
+    [SerializeField] private slot Foodslot = null;
     [SerializeField] private slot Leftslot;
     [SerializeField] private slot Rightslot;
     [SerializeField] Transform CookedFoodFactory = null;
     private Item item;
-    private int slot;
+    public int slot;
 
     private string perfectFood = "肋夸府等";
     private string normalFood = "夸府等";
@@ -79,7 +79,7 @@ public class CookController : MonoBehaviour
         
     }
 
-    private void CookFood(int slot, string prefix)          
+    public void CookFood(int slot, string prefix)          
     {
         if (slot == 1)
         {
@@ -136,9 +136,22 @@ public class CookController : MonoBehaviour
     }
     public void CloseCookUI()
     {
-        CookUI.SetActive(false);
-        GameManager.isPause = false;
-        Player.GetComponent<ThirdPersonController>().enabled = true;
-        Foodslot.ClearSlot();
+        if(note.GetComponent<Note>().enabled == false)
+        {
+            CookUI.SetActive(false);
+            GameManager.isPause = false;
+            Player.GetComponent<ThirdPersonController>().enabled = true;
+            Foodslot.ClearSlot();
+        }    
+    }
+
+    public int getSlotInt()
+    {
+        return slot;
+    }
+
+    public int getFoodSlot()
+    {
+        return Foodslot.itemCount;
     }
 }

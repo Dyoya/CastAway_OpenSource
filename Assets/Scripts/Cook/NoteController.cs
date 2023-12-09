@@ -7,7 +7,9 @@ public class NoteController : MonoBehaviour
 {
     CookController theTimingManager;
     [SerializeField] GameObject note = null;
-
+    CookController theCookController;
+    private AudioSource audioSource;
+    private string charredFood = "½¡";
     private void Start()
     {
         theTimingManager = FindObjectOfType<CookController>();
@@ -18,23 +20,31 @@ public class NoteController : MonoBehaviour
         if (collision.CompareTag("Note"))
         {
             note.GetComponent<Note>().enabled = false;
+            theTimingManager.CloseCookUI();
+            theTimingManager.CookFood(theTimingManager.getSlotInt(), charredFood);
         }
     }
 
     public void CookButtonClicked()
     {
-        if (note != null)
+        if (theTimingManager.getFoodSlot() != 0)
         {
-            if (!note.GetComponent<Note>().enabled)
+            audioSource = GetComponent<AudioSource>();
+            if (note != null)
             {
-                note.GetComponent<Note>().enabled = true;
-                theTimingManager.boxNote = note;
+                if (!note.GetComponent<Note>().enabled)
+                {
+                    note.GetComponent<Note>().enabled = true;
+                    audioSource.Play();
+                    theTimingManager.boxNote = note;
+                }
+                else
+                {
+                    theTimingManager.CheckTiming();
+                    audioSource.Stop();
+                    note.GetComponent<Note>().enabled = false;
+                }
             }
-            else
-            {
-                theTimingManager.CheckTiming();
-                note.GetComponent<Note>().enabled = false;               
-            }
-        }
+        }     
     }
 }
