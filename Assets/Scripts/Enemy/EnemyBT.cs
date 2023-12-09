@@ -48,6 +48,8 @@ public class EnemyBT : MonoBehaviour
 
     BehaviorTreeRunner _BTRunner = null;
 
+    EnemyManager _enemyManager;
+
     float _patrolCurrentTime = 0;
 
     const string _IDLE_ANIM_STATE_NAME = "Idle";
@@ -88,6 +90,8 @@ public class EnemyBT : MonoBehaviour
 
         currentHp = maxhp;
         _agent.updateRotation = false;
+
+        _enemyManager = GameObject.Find("EnemyManager").GetComponent<EnemyManager>();
     }
     private void Update()
     {
@@ -416,6 +420,7 @@ public class EnemyBT : MonoBehaviour
     protected void DestroyObject()
     {
         Debug.Log("ÆÄ±«");
+        _enemyManager.BearDie();
         Destroy(gameObject);
     }
     #endregion
