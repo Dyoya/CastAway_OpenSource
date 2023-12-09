@@ -42,6 +42,12 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    public void init()
+    {
+        _currentRabbitNum = 0;
+        _currentBearNum = 0;
+    }
+
     // °õ ½ºÆù ÇÔ¼ö
     void spawnBear()
     {

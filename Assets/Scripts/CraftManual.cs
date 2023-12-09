@@ -120,11 +120,14 @@ public class CraftManual : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
             Cancel();
+        
+        /*
         Cursor.visible = isActivated;
         if(Cursor.visible)
             Cursor.lockState = CursorLockMode.None;
         else
             Cursor.lockState = CursorLockMode.Locked;
+        */
     }
 
     private void PreviewPositionUpdate()

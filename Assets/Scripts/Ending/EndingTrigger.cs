@@ -57,10 +57,15 @@ public class EndingTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player" && _currentFireNum < _totalFireNum)
+        if (other.gameObject.tag == "Player" && (_currentRockNum < _totalRockNum))
         {
             textUI.SetActive(true);
-            text.text = "E : 구조 요청 준비하기";
+            text.text = "E : 구조 요청 준비하기 (돌 1개)";
+        }
+        else if (other.gameObject.tag == "Player" && (_currentFireNum < _totalFireNum))
+        {
+            textUI.SetActive(true);
+            text.text = "E : 구조 요청 준비하기 (나뭇가지 5개)";
         }
     }
     private void OnTriggerStay(Collider other)
