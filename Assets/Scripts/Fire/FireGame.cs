@@ -37,7 +37,7 @@ public class FireGame : MonoBehaviour
             if (slider.value >= 0.95) 
             {
                 StopGame();
-                FireTrigger.GetComponent<Fire>().FireOn(60f);
+                FireTrigger.GetComponent<Fire>().FireOn();
             }
 
             // 게임 실패
@@ -48,10 +48,6 @@ public class FireGame : MonoBehaviour
             }
 
             SetText(currentTime);
-        }
-        else
-        {
-            initSetting();
         }
     }
     void SetText(float time)
@@ -72,6 +68,7 @@ public class FireGame : MonoBehaviour
 
     public void StartGame(GameObject FireGameUI)
     {
+        initSetting();
         this.FireGameUI = FireGameUI;
         isGame = true;
         this.FireGameUI.SetActive(true);

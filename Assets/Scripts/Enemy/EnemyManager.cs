@@ -40,8 +40,6 @@ public class EnemyManager : MonoBehaviour
         {
             spawnRabbit();
         }
-
-        Debug.Log(_currentBearNum);
     }
 
     // °õ ½ºÆù ÇÔ¼ö
