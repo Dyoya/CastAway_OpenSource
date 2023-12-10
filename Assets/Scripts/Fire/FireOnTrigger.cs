@@ -11,6 +11,10 @@ public class FireOnTrigger : MonoBehaviour
     [SerializeField] GameObject textUI;
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] float addTime = 10f;
+
+    [SerializeField] GameObject CookUI;
+
+    bool isCooked = false;
     Fire _fireScripts;
     bool keyPressed = false;
 
@@ -24,8 +28,12 @@ public class FireOnTrigger : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            textUI.SetActive(true);
-            text.text = "E : 불씨 키우기" +  "(left : " + Mathf.FloorToInt(_fireScripts.currentDurationTime).ToString() + "s)";
+            if(!isCooked)
+            {
+                textUI.SetActive(true);
+                text.text = "C : 요리 / E : 불씨 키우기" + "(left : " + Mathf.FloorToInt(_fireScripts.currentDurationTime).ToString() + "s)";
+                text.fontSize = 14;
+            }
         }
 
         if (other.gameObject.tag == "Player")
@@ -42,7 +50,16 @@ public class FireOnTrigger : MonoBehaviour
 
                 _fireScripts.addDurationTime(addTime);
 
-                StartCoroutine(Delay(0.5f));
+                StartCoroutine(Delay(0.3f));
+            }
+            // 요리
+            if (Input.GetKey(KeyCode.C))
+            {
+                isCooked = true;
+                textUI.SetActive(false);
+                GameManager.isPause = true;
+                _player.GetComponent<ThirdPersonController>().enabled = false;
+                CookUI.SetActive(true);
             }
         }
     }
@@ -58,6 +75,13 @@ public class FireOnTrigger : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             textUI.SetActive(false);
+
+            CookUI.SetActive(false);
+            GameManager.isPause = false;
+            _player.GetComponent<ThirdPersonController>().enabled = true;
+            isCooked = false;
+
+            text.fontSize = 20;
         }
     }
 }
