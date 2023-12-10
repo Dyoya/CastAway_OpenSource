@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfdfba84375270740962d6cff75434c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 1
+  HP: 3
   destroyTime: 3
   box: {fileID: 5896582498182416015}
   go_tree: {fileID: 6911412675807551134}
@@ -180,6 +180,9 @@ MonoBehaviour:
   audioSource: {fileID: 5896582498182416002}
   effect_sound1: {fileID: 8300000, guid: 3e21bc67318b44a488f33299a191ea0a, type: 3}
   effect_sound2: {fileID: 8300000, guid: 1283551a33a0d1e429123884d1b0a6d5, type: 3}
+  thePlayer: {fileID: 0}
+  ItemPrefab: {fileID: 6183871195530136800, guid: 50919cfe4326de14292810cc7f58b2a8,
+    type: 3}
 --- !u!1001 &5896582497789514046
 PrefabInstance:
   m_ObjectHideFlags: 0
