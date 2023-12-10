@@ -12,8 +12,23 @@ EditorBuildSettings:
     path: Assets/Scenes/Test_DH.unity
     guid: 81bcfea685b3f974aa4718e046b6a109
   - enabled: 1
+    path: Assets/Scenes/Boss.unity
+    guid: 6079a2d46127c3f4b8985aa8d71117ce
+  - enabled: 1
     path: Assets/Scenes/CutScene/PlaneCrashCutScene.unity
     guid: 929ae0ecc3f696144bb7fe1eaa6c51ff
+  - enabled: 1
+    path: Assets/Scenes/CutScene/BossCutScene.unity
+    guid: 7859d720dbd7aac48aff2401ab683bdb
+  - enabled: 1
+    path: Assets/Scenes/CutScene/EscapeCutScene.unity
+    guid: 16a5f40cea496064cbbae16150f4ea0b
+  - enabled: 1
+    path: Assets/Scenes/Test_DW.unity
+    guid: 31b34672f9fdbc04ca11d11f4c05508b
+  - enabled: 1
+    path: Assets/Scenes/Test_DW2.unity
+    guid: f12db55b6fdccb140abd97b510ba8c54
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7,
       type: 2}

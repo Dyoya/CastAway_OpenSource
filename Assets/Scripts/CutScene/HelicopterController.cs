@@ -81,6 +81,6 @@ public class HelicopterController : MonoBehaviour
     {
         talkNum = 0;
         Debug.Log("´ë»ç ³¡");
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("TitleMenu");
     }
 }

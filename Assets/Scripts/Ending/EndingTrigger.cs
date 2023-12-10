@@ -12,11 +12,11 @@ public class EndingTrigger : MonoBehaviour
 
     [SerializeField] GameObject[] rockPrefab;
     int _totalRockNum;
-    int _currentRockNum = 0;
+    public int _currentRockNum = 0;
 
     [SerializeField] GameObject[] firePrefab;
     int _totalFireNum;
-    int _currentFireNum = 0;
+    public int _currentFireNum = 0;
 
     int activeFire = 0;
 

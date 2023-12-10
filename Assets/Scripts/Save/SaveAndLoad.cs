@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using StarterAssets;
 using System;
 using System.Collections;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class SaveData
@@ -31,6 +33,9 @@ public class SaveData
     public List<Vector3> mapObjectRotations = new List<Vector3>();
 
     public List<bool> DestroyedObject = new List<bool>();
+
+    public int currentRockNum;
+    public int currentFireNum;
 }
 
 public class SaveAndLoad : MonoBehaviour
@@ -49,6 +54,7 @@ public class SaveAndLoad : MonoBehaviour
     private HealthBar theHealthBar;
     private EnergyBar theEnergyBar;
     private HungryBar theHungryBar;
+    private EndingTrigger theEndingTrigger;
 
     void Start()
     {
@@ -68,7 +74,7 @@ public class SaveAndLoad : MonoBehaviour
         theHealthBar = FindObjectOfType<HealthBar>();
         theEnergyBar = FindObjectOfType<EnergyBar>();
         theHungryBar = FindObjectOfType<HungryBar>();
-
+        theEndingTrigger = FindObjectOfType<EndingTrigger>();
 
         saveData.playerPos = thePlayer.transform.position;
         saveData.playerRot = thePlayer.transform.eulerAngles;
@@ -76,6 +82,8 @@ public class SaveAndLoad : MonoBehaviour
         saveData.HealthBarValue = theHealthBar.Pb.BarValue;
         saveData.EnergyBarValue = theEnergyBar.Pb.BarValue;
         saveData.HungryBarValue = theHungryBar.Pb.BarValue;
+        saveData.currentRockNum = theEndingTrigger._currentRockNum;
+        saveData.currentFireNum = theEndingTrigger._currentFireNum;
 
         // 저장전 데이터 초기화
         saveData.invenArrayNumber.Clear();
@@ -144,6 +152,73 @@ public class SaveAndLoad : MonoBehaviour
         Debug.Log(json);
     }
 
+    public void BossSaveData()
+    {
+        theInven = FindObjectOfType<InventoryUI>();
+        theHealthBar = FindObjectOfType<HealthBar>();
+        theEnergyBar = FindObjectOfType<EnergyBar>();
+        theHungryBar = FindObjectOfType<HungryBar>();
+
+        saveData.HealthBarValue = theHealthBar.Pb.BarValue;
+        saveData.EnergyBarValue = theEnergyBar.Pb.BarValue;
+        saveData.HungryBarValue = theHungryBar.Pb.BarValue;
+
+        saveData.invenArrayNumber.Clear();
+        saveData.invenItemName.Clear();
+        saveData.invenItemNumber.Clear();
+
+        slot[] slots = theInven.getSlots();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].item != null)
+            {
+                saveData.invenArrayNumber.Add(i);
+                saveData.invenItemName.Add(slots[i].item.itemName);
+                saveData.invenItemNumber.Add(slots[i].itemCount);
+                if (slots[i].item.itemType == Item.ItemType.Equipment)
+                    saveData.Equipment = slots[i].item.itemName;
+            }
+        }
+    }
+
+    public void BossLoadData()
+    {
+        string loadJson = File.ReadAllText(SAVE_DATA_DIRECTORY + SAVE_FILENAME);
+        saveData = JsonUtility.FromJson<SaveData>(loadJson);
+
+        thePlayer = FindObjectOfType<CharacterController>();
+        theInven = FindObjectOfType<InventoryUI>();
+        theHealthBar = FindObjectOfType<HealthBar>();
+        theEnergyBar = FindObjectOfType<EnergyBar>();
+        theHungryBar = FindObjectOfType<HungryBar>();
+
+        theHealthBar.SetBar(saveData.HealthBarValue);
+        theEnergyBar.SetBar(saveData.EnergyBarValue);
+        theHungryBar.SetBar(saveData.HungryBarValue);
+
+        for (int i = 0; i < saveData.invenItemName.Count; i++)
+        {
+            theInven.LoadToInven(saveData.invenArrayNumber[i], saveData.invenItemName[i], saveData.invenItemNumber[i]);
+        }
+
+        if (saveData.Equipment != null)
+        {
+            Debug.Log(SceneManager.GetActiveScene().name);
+            ThirdPersonController TPC = thePlayer.GetComponent<ThirdPersonController>();
+            switch (saveData.Equipment)
+            {
+                case "도끼":
+                    TPC.hasAxe = true;
+                    break;
+                case "곡괭이":
+                    TPC.hasPickAxe = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     public void LoadData()
     {
@@ -162,10 +237,14 @@ public class SaveAndLoad : MonoBehaviour
             theHealthBar = FindObjectOfType<HealthBar>();
             theEnergyBar = FindObjectOfType<EnergyBar>();
             theHungryBar = FindObjectOfType<HungryBar>();
+            theEndingTrigger = FindObjectOfType<EndingTrigger>();
 
             theHealthBar.SetBar(saveData.HealthBarValue);
             theEnergyBar.SetBar(saveData.EnergyBarValue);
             theHungryBar.SetBar(saveData.HungryBarValue);
+
+            theEndingTrigger._currentRockNum = saveData.currentRockNum;
+            theEndingTrigger._currentFireNum = saveData.currentFireNum;
 
             //플레이어 위치 로드
             thePlayer.transform.position = saveData.playerPos;

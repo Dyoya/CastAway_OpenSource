@@ -44,11 +44,12 @@ public class BearCutScene : MonoBehaviour
         animator.SetBool("Angry", false);
         yield return new WaitForSeconds(2f);
         StartCoroutine(LoadCoroutine());
+        yield return null;
     }
 
     IEnumerator LoadCoroutine()
     {
-        AsyncOperation operation = SceneManager.LoadSceneAsync(1);
+        AsyncOperation operation = SceneManager.LoadSceneAsync(3);
 
         while (!operation.isDone)
         {
@@ -58,8 +59,8 @@ public class BearCutScene : MonoBehaviour
         thePlayer = FindObjectOfType<CharacterController>();
         thePlayer.GetComponent<ThirdPersonController>().enabled = false;
         theSaveAndLoad = FindAnyObjectByType<SaveAndLoad>();
-        theSaveAndLoad.LoadData();
-        yield return new WaitForSeconds(1f);
+        theSaveAndLoad.BossLoadData();
+        yield return new WaitForSeconds(0.1f);
         thePlayer.GetComponent<ThirdPersonController>().enabled = true;
         gameObject.SetActive(false);
     }

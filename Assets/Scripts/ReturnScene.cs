@@ -8,6 +8,6 @@ public class ReturnScene : MonoBehaviour
     // Start is called before the first frame update
     public void LoadScene()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("Test_DW2");
     }
 }

@@ -28,7 +28,7 @@ public class TitleMenuEvent : MonoBehaviour
     // 게임 스타트 버튼 이벤트 함수입니다.
     public void StartButtonClicked()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene("PlaneCrashCutScene");
     }
     // 불러오기 버튼 이벤트 함수입니다.
     public void LoadButtonClicked()
@@ -39,7 +39,7 @@ public class TitleMenuEvent : MonoBehaviour
 
     IEnumerator LoadCoroutine()
     {
-        AsyncOperation operation = SceneManager.LoadSceneAsync(1);
+        AsyncOperation operation = SceneManager.LoadSceneAsync("Test_DW2");
 
         while (!operation.isDone)
         {
