@@ -44,6 +44,8 @@ public class CraftManual : MonoBehaviour
     [SerializeField]
     private StarterAssets.ThirdPersonController thePlayer;
 
+    MapObjectData theMapObject;
+
     public void SlotClick(int _slotNumber)
     {
         Debug.Log(_slotNumber);
@@ -176,12 +178,14 @@ public class CraftManual : MonoBehaviour
     {
         if (isPreviewActivated && go_Preview.GetComponent<PreviewObject>().isBuildable())
         {
-            Instantiate(go_Prefab, hitInfo.point, Quaternion.identity);
+            GameObject build = Instantiate(go_Prefab, hitInfo.point, Quaternion.identity);
             Destroy(go_Preview);
             isActivated = false;
             isPreviewActivated = false;
             go_Preview = null;
             go_Prefab = null;
+            theMapObject = FindObjectOfType<MapObjectData>();
+            theMapObject.AddItemObjects(build);
         }
     }
     //Tab키 누르면 실행
