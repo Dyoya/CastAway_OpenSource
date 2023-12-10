@@ -49,7 +49,7 @@ public class BearCutScene : MonoBehaviour
 
     IEnumerator LoadCoroutine()
     {
-        AsyncOperation operation = SceneManager.LoadSceneAsync(3);
+        AsyncOperation operation = SceneManager.LoadSceneAsync("Boss");
 
         while (!operation.isDone)
         {

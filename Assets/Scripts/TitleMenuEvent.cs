@@ -50,7 +50,7 @@ public class TitleMenuEvent : MonoBehaviour
         thePlayer.GetComponent<ThirdPersonController>().enabled = false;
         theSaveAndLoad = FindAnyObjectByType<SaveAndLoad>();
         theSaveAndLoad.LoadData();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
         thePlayer.GetComponent<ThirdPersonController>().enabled = true;
         gameObject.SetActive(false);
     }

@@ -36,6 +36,7 @@ public class SaveData
 
     public int currentRockNum;
     public int currentFireNum;
+    public string currentTime;
 }
 
 public class SaveAndLoad : MonoBehaviour
@@ -55,6 +56,7 @@ public class SaveAndLoad : MonoBehaviour
     private EnergyBar theEnergyBar;
     private HungryBar theHungryBar;
     private EndingTrigger theEndingTrigger;
+    private LightController theLightController;
 
     void Start()
     {
@@ -75,6 +77,7 @@ public class SaveAndLoad : MonoBehaviour
         theEnergyBar = FindObjectOfType<EnergyBar>();
         theHungryBar = FindObjectOfType<HungryBar>();
         theEndingTrigger = FindObjectOfType<EndingTrigger>();
+        theLightController = FindObjectOfType<LightController>();
 
         saveData.playerPos = thePlayer.transform.position;
         saveData.playerRot = thePlayer.transform.eulerAngles;
@@ -84,6 +87,7 @@ public class SaveAndLoad : MonoBehaviour
         saveData.HungryBarValue = theHungryBar.Pb.BarValue;
         saveData.currentRockNum = theEndingTrigger._currentRockNum;
         saveData.currentFireNum = theEndingTrigger._currentFireNum;
+        saveData.currentTime = theLightController.formattedTime;
 
         // 저장전 데이터 초기화
         saveData.invenArrayNumber.Clear();
@@ -157,7 +161,7 @@ public class SaveAndLoad : MonoBehaviour
         theInven = FindObjectOfType<InventoryUI>();
         theHealthBar = FindObjectOfType<HealthBar>();
         theEnergyBar = FindObjectOfType<EnergyBar>();
-        theHungryBar = FindObjectOfType<HungryBar>();
+        theHungryBar = FindObjectOfType<HungryBar>();       
 
         saveData.HealthBarValue = theHealthBar.Pb.BarValue;
         saveData.EnergyBarValue = theEnergyBar.Pb.BarValue;
@@ -238,10 +242,13 @@ public class SaveAndLoad : MonoBehaviour
             theEnergyBar = FindObjectOfType<EnergyBar>();
             theHungryBar = FindObjectOfType<HungryBar>();
             theEndingTrigger = FindObjectOfType<EndingTrigger>();
+            theLightController = FindObjectOfType<LightController>();
 
             theHealthBar.SetBar(saveData.HealthBarValue);
             theEnergyBar.SetBar(saveData.EnergyBarValue);
             theHungryBar.SetBar(saveData.HungryBarValue);
+
+            theLightController.SetTime(saveData.currentTime);
 
             theEndingTrigger._currentRockNum = saveData.currentRockNum;
             theEndingTrigger._currentFireNum = saveData.currentFireNum;

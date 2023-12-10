@@ -23,6 +23,8 @@ public class LightController : MonoBehaviour
     private int currentHour = 6;
     private float timeElapsed = 0.0f;  // 경과 시간
 
+    public string formattedTime;
+
     void Start()
     {
         hourDuration = (dayDuration + eveningDuration + nightDuration) / 24;
@@ -80,7 +82,17 @@ public class LightController : MonoBehaviour
         {
             currentHour = 0;
         }
-        string formattedTime = $"{currentHour++:D2}:00";
+        formattedTime = $"{currentHour++:D2}:00";
         timeText.text = formattedTime;
+    }
+
+    public void SetTime(string loadedFormattedTime)
+    {
+        formattedTime = loadedFormattedTime;
+        currentHour = int.Parse(loadedFormattedTime.Substring(0, 2));
+        timeText.text = formattedTime;
+
+        float normalizedHour = currentHour / 24f;
+        timeElapsed = hourDuration * normalizedHour;
     }
 }
