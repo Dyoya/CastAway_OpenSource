@@ -135,7 +135,7 @@ public class CraftManual : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab) && !isPreviewActivated)
+        if (Input.GetKeyDown(KeyCode.B) && !isPreviewActivated)
         {
             Window();
             GameManager.isPause = !GameManager.isPause;
