@@ -117,7 +117,8 @@ public class slot : MonoBehaviour
 
         text_Count.text = "0";
         go_CountImage.SetActive(false);
-        Cooked.gameObject.SetActive(false);
+        if (Cooked.gameObject.active == true)
+            Cooked.gameObject.SetActive(false);
         Well.gameObject.SetActive(false);
     }
 }
