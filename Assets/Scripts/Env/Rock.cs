@@ -53,7 +53,9 @@ public class Rock : MonoBehaviour
         audioSource.clip = effect_sound2;
         audioSource.Play();
 
-        for(int i = 0; i < 3; i++)
+        gameObject.GetComponent<ObtainableObject>().ChangeDestroyed();
+
+        for (int i = 0; i < 3; i++)
         {
             thePlayer.createprefabs(ItemPrefab, "µ¹¸ÍÀÌ");
         }

@@ -39,7 +39,7 @@ public class TitleMenuEvent : MonoBehaviour
 
     IEnumerator LoadCoroutine()
     {
-        AsyncOperation operation = SceneManager.LoadSceneAsync("Test_DW2");
+        AsyncOperation operation = SceneManager.LoadSceneAsync("Test_DH2");
 
         while (!operation.isDone)
         {

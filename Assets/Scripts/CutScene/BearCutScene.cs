@@ -59,6 +59,7 @@ public class BearCutScene : MonoBehaviour
         thePlayer = FindObjectOfType<CharacterController>();
         thePlayer.GetComponent<ThirdPersonController>().enabled = false;
         theSaveAndLoad = FindAnyObjectByType<SaveAndLoad>();
+        yield return new WaitForSeconds(0.1f);
         theSaveAndLoad.BossLoadData();
         yield return new WaitForSeconds(0.1f);
         thePlayer.GetComponent<ThirdPersonController>().enabled = true;

@@ -13,7 +13,7 @@ public class ObtainableObject : MonoBehaviour
     }
 
     public bool getDestroyed()
-    {
+    {      
         return Destroyed;
     }
     
