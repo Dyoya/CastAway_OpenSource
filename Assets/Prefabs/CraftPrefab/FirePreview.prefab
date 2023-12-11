@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8682063124558655538}
   - component: {fileID: -8712050078574200620}
   - component: {fileID: 1331605904933507485}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: FirePreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b20a25cf12d4af4a96679655dad849b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerGround: 9
+  layerGround: 0
   green: {fileID: 2100000, guid: 6ed41e33d65bedd42a030155ed26e6b5, type: 2}
   red: {fileID: 2100000, guid: daf54470a0b0d9446b5c7e9ec2d08fc9, type: 2}
 --- !u!65 &-8712050078574200620
@@ -180,6 +180,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bush_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2bd57b0b74f27c54d93ff39f7f98809d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2bd57b0b74f27c54d93ff39f7f98809d, type: 3}

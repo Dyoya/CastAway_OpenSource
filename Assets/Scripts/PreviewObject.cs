@@ -46,13 +46,13 @@ public class PreviewObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer != layerGround && other.gameObject.layer != IGNORE_RAYCAST_LAYER)
+        if ((other.gameObject.layer != layerGround && other.gameObject.layer != IGNORE_RAYCAST_LAYER) || other.CompareTag("Tree") || other.CompareTag("Rock"))
             colliderList.Add(other);
     }
-
+   
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer != layerGround && other.gameObject.layer != IGNORE_RAYCAST_LAYER)
+        if ((other.gameObject.layer != layerGround && other.gameObject.layer != IGNORE_RAYCAST_LAYER) || other.CompareTag("Tree") || other.CompareTag("Rock"))
             colliderList.Remove(other);
     }
 

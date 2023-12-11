@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b20a25cf12d4af4a96679655dad849b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerGround: 9
+  layerGround: 0
   green: {fileID: 2100000, guid: 8971fbd194cda82429b80b9de14da648, type: 2}
   red: {fileID: 2100000, guid: 9897fe926abe173458d6c92bfb157900, type: 2}
 --- !u!54 &-7266406510193721239

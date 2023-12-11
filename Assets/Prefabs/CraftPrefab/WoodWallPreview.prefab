@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1368180022008775831}
   - component: {fileID: 1368180022008775828}
   - component: {fileID: 1368180022008775829}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wood (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 1368180022883967064}
   - component: {fileID: -1745122829659106125}
   - component: {fileID: -6380821911847897388}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WoodWallPreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -177,7 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b20a25cf12d4af4a96679655dad849b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerGround: 9
+  layerGround: 0
   green: {fileID: 2100000, guid: 8971fbd194cda82429b80b9de14da648, type: 2}
   red: {fileID: 2100000, guid: 9897fe926abe173458d6c92bfb157900, type: 2}
 --- !u!1 &1368180022969749668
@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 1368180022969749664}
   - component: {fileID: 1368180022969749665}
   - component: {fileID: 1368180022969749670}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wood (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 1368180022972558223}
   - component: {fileID: 1368180022972558220}
   - component: {fileID: 1368180022972558221}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,7 +388,7 @@ GameObject:
   - component: {fileID: 1368180023007248158}
   - component: {fileID: 1368180023007248159}
   - component: {fileID: 1368180023007248156}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wood (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

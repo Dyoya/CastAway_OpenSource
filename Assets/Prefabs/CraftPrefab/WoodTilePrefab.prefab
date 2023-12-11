@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 2133320340789867171}
   - component: {fileID: 2133320340789867168}
   - component: {fileID: 2133320340789867169}
-  m_Layer: 9
+  - component: {fileID: 2321940498733810844}
+  m_Layer: 0
   m_Name: Wood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,6 +99,19 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!65 &2321940498733810844
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133320340789867183}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2.0000005, z: 1.0000005}
+  m_Center: {x: 0, y: 0, z: 0.000015169382}
 --- !u!1 &2133320340826245512
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,7 +124,8 @@ GameObject:
   - component: {fileID: 2133320340826245516}
   - component: {fileID: 2133320340826245517}
   - component: {fileID: 2133320340826245514}
-  m_Layer: 9
+  - component: {fileID: 2335588807703571049}
+  m_Layer: 0
   m_Name: Wood (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,6 +211,19 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!65 &2335588807703571049
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133320340826245512}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2.0000005, z: 1.0000005}
+  m_Center: {x: 0, y: 0, z: 0.000015169382}
 --- !u!1 &2133320340889429566
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,7 +236,8 @@ GameObject:
   - component: {fileID: 2133320340889429554}
   - component: {fileID: 2133320340889429555}
   - component: {fileID: 2133320340889429552}
-  m_Layer: 9
+  - component: {fileID: 96979657768932719}
+  m_Layer: 0
   m_Name: Wood (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294,6 +323,19 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!65 &96979657768932719
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133320340889429566}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2.0000005, z: 1.0000005}
+  m_Center: {x: 0, y: 0, z: 0.000015169382}
 --- !u!1 &2133320341282191733
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,7 +347,7 @@ GameObject:
   - component: {fileID: 2133320341282191735}
   - component: {fileID: 2133320341282191732}
   - component: {fileID: 7028500465133398980}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: WoodTilePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -372,7 +414,8 @@ GameObject:
   - component: {fileID: 2133320342023380411}
   - component: {fileID: 2133320342023380408}
   - component: {fileID: 2133320342023380409}
-  m_Layer: 9
+  - component: {fileID: 5667797960587093097}
+  m_Layer: 0
   m_Name: Wood (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -458,3 +501,16 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!65 &5667797960587093097
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133320342023380423}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2.0000005, z: 1.0000005}
+  m_Center: {x: 0, y: 0, z: 0.000015169382}

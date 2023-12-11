@@ -161,8 +161,8 @@ public class CraftManual : MonoBehaviour
                 go_Preview.transform.position = _location;
                 go_Preview.SetActive(true);
 
-                Debug.Log(_location);
-                Debug.Log(go_Preview.transform.position);
+                //Debug.Log(_location);
+                //Debug.Log(go_Preview.transform.position);
             }
             else
             {

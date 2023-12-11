@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2133320340789867171}
   - component: {fileID: 2133320340789867168}
   - component: {fileID: 2133320340789867169}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 2133320340826245516}
   - component: {fileID: 2133320340826245517}
   - component: {fileID: 2133320340826245514}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wood (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 2133320340889429554}
   - component: {fileID: 2133320340889429555}
   - component: {fileID: 2133320340889429552}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wood (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306,7 +306,7 @@ GameObject:
   - component: {fileID: 2133320341282191732}
   - component: {fileID: 7028500465133398980}
   - component: {fileID: -6405935626167628179}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WoodTilePreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,7 +357,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -373,7 +373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b20a25cf12d4af4a96679655dad849b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerGround: 9
+  layerGround: 0
   green: {fileID: 2100000, guid: 8971fbd194cda82429b80b9de14da648, type: 2}
   red: {fileID: 2100000, guid: 9897fe926abe173458d6c92bfb157900, type: 2}
 --- !u!1 &2133320342023380423
@@ -388,7 +388,7 @@ GameObject:
   - component: {fileID: 2133320342023380411}
   - component: {fileID: 2133320342023380408}
   - component: {fileID: 2133320342023380409}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Wood (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
