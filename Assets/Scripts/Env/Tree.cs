@@ -41,8 +41,7 @@ public class Tree : MonoBehaviour
         HP--;
         if (HP <= 0)
         {
-            Destruction();
-            gameObject.GetComponent<ObtainableObject>().ChangeDestroyed();
+            Destruction();         
         }
     }
 
@@ -51,8 +50,12 @@ public class Tree : MonoBehaviour
         audioSource.clip = effect_sound2;
         audioSource.Play();
 
+        gameObject.GetComponent<ObtainableObject>().ChangeDestroyed();
+
         box.enabled = false;
         Destroy(go_tree);
+
+        
 
         for (int i = 0; i < 3; i++)
         {

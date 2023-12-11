@@ -21,7 +21,7 @@ public class MapObjectData : MonoBehaviour
 
     public void DestroyMapItem(int i)
     {
-        Destroy(items[i]);
+        Destroy(items[i].gameObject);
     }
 
     public void DestroyObtainableObject(int i, bool destroy)

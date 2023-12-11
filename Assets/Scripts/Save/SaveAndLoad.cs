@@ -171,6 +171,8 @@ public class SaveAndLoad : MonoBehaviour
         saveData.invenItemName.Clear();
         saveData.invenItemNumber.Clear();
 
+        Debug.Log("보스 세이브");
+
         slot[] slots = theInven.getSlots();
 
         for (int i = 0; i < slots.Length; i++)
@@ -184,6 +186,13 @@ public class SaveAndLoad : MonoBehaviour
                     saveData.Equipment = slots[i].item.itemName;
             }
         }
+
+        string json = JsonUtility.ToJson(saveData);
+
+        File.WriteAllText(SAVE_DATA_DIRECTORY + SAVE_FILENAME, json);
+
+        Debug.Log("저장 완료");
+        Debug.Log(json);
     }
 
     public void BossLoadData()
@@ -204,11 +213,11 @@ public class SaveAndLoad : MonoBehaviour
         for (int i = 0; i < saveData.invenItemName.Count; i++)
         {
             theInven.LoadToInven(saveData.invenArrayNumber[i], saveData.invenItemName[i], saveData.invenItemNumber[i]);
+            Debug.Log(saveData.invenItemName[i]);
         }
 
         if (saveData.Equipment != null)
         {
-            Debug.Log(SceneManager.GetActiveScene().name);
             ThirdPersonController TPC = thePlayer.GetComponent<ThirdPersonController>();
             switch (saveData.Equipment)
             {
@@ -313,8 +322,7 @@ public class SaveAndLoad : MonoBehaviour
                         newMapObject.name = loadedObject.name;
                         theMapObject.AddItemObjects(newMapObject);
                         loadedObject = null;
-                        index++;
-                        
+                        index++;                       
                     }
                     else
                     {
