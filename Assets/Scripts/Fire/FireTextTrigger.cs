@@ -7,22 +7,23 @@ using UnityEngine;
 public class FireTextTrigger : MonoBehaviour
 {
     GameObject _player;
-    [SerializeField] GameObject FireGameUI;
     [SerializeField] GameObject textUI;
     [SerializeField] TextMeshProUGUI text;
+    GameObject FireGameUI;
     FireGame _fg;
 
     void Start()
     {
         _player = GameObject.Find("Player");
-        _fg = GetComponent<FireGame>();
+        FireGameUI = GameObject.Find("UI").transform.Find("FireGameUI").gameObject;
+        _fg = FireGameUI.GetComponent<FireGame>();
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
             textUI.SetActive(true);
-            text.text = "E : 불 피우기";
+            text.text = "E : 불 피우기 (나뭇가지 1개)";
         }
     }
 
@@ -35,12 +36,14 @@ public class FireTextTrigger : MonoBehaviour
             // 불 피우기
             if (Input.GetKeyDown(KeyCode.E))
             {
-                // 나뭇가지 소모
+                // 나뭇가지 1개 소모
+
+                _fg.FireWood = transform.parent.gameObject.transform.Find("FireDamageTrigger").gameObject;
 
                 textUI.SetActive(false);
                 GameManager.isPause = true;
                 _player.GetComponent<ThirdPersonController>().enabled = false;
-                _fg.StartGame(FireGameUI);
+                _fg.StartGame();
             }
         }
     }

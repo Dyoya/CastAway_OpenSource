@@ -10,12 +10,16 @@ using Unity.VisualScripting;
 public class FireGame : MonoBehaviour
 {
     GameObject _player;
-    GameObject FireGameUI;
+    [SerializeField] GameObject FireGameUI;
     
     [SerializeField] float goalTime = 10f;
-    [SerializeField] GameObject FireTrigger;
+    
     [SerializeField] Slider slider;
     [SerializeField] TextMeshProUGUI TimeText;
+
+    [SerializeField] GameObject FireDamageTrigger;
+
+    public GameObject FireWood = null;
 
     float currentTime;
     bool isGame;
@@ -28,6 +32,7 @@ public class FireGame : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(FireWood);
         if(isGame)
         {
             currentTime -= Time.deltaTime;
@@ -37,7 +42,8 @@ public class FireGame : MonoBehaviour
             if (slider.value >= 0.95) 
             {
                 StopGame();
-                FireTrigger.GetComponent<Fire>().FireOn();
+                FireWood.GetComponent<Fire>().FireOn();
+                FireWood = null;
             }
 
             // 게임 실패
@@ -66,19 +72,18 @@ public class FireGame : MonoBehaviour
         slider.value += 0.05f;
     }
 
-    public void StartGame(GameObject FireGameUI)
+    public void StartGame()
     {
         initSetting();
-        this.FireGameUI = FireGameUI;
         isGame = true;
-        this.FireGameUI.SetActive(true);
+        FireGameUI.SetActive(true);
     }
     public void StopGame()
     {
         isGame = false;
         if(FireGameUI != null)
         {
-            this.FireGameUI.SetActive(false);
+            FireGameUI.SetActive(false);
         }
         GameManager.isPause = false;
         _player.GetComponent<ThirdPersonController>().enabled = true;

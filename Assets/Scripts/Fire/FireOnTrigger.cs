@@ -31,8 +31,8 @@ public class FireOnTrigger : MonoBehaviour
             if(!isCooked)
             {
                 textUI.SetActive(true);
-                text.text = "C : 요리 / E : 불씨 키우기" + "(left : " + Mathf.FloorToInt(_fireScripts.currentDurationTime).ToString() + "s)";
-                text.fontSize = 14;
+                text.text = "C : 요리 / E : 불씨 키우기(나뭇가지 1개)" + "[left : " + Mathf.FloorToInt(_fireScripts.currentDurationTime).ToString() + "s]";
+                text.fontSize = 12;
             }
         }
 
