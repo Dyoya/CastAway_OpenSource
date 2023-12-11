@@ -11,6 +11,7 @@ public class FireTextTrigger : MonoBehaviour
     [SerializeField] TextMeshProUGUI text;
     GameObject FireGameUI;
     FireGame _fg;
+    [SerializeField] InventoryUI inventory;
 
     void Start()
     {
@@ -37,7 +38,7 @@ public class FireTextTrigger : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 // 나뭇가지 1개 소모
-
+                inventory.ConsumeItem("나뭇가지", 1);
                 _fg.FireWood = transform.parent.gameObject.transform.Find("FireDamageTrigger").gameObject;
 
                 textUI.SetActive(false);

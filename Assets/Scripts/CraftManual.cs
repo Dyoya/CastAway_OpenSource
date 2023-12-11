@@ -1,8 +1,10 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [System.Serializable]
 public class Craft
@@ -46,6 +48,11 @@ public class CraftManual : MonoBehaviour
 
     MapObjectData theMapObject;
 
+    private List<string> setItemName = new List<string>();
+    private List<int> setItemCount = new List<int>();
+
+    public bool isbuilder = false;
+
     public void SlotClick(int _slotNumber)
     {
         Debug.Log(_slotNumber);
@@ -80,6 +87,9 @@ public class CraftManual : MonoBehaviour
                 string itemName = parts[0];
                 int itemCount = int.Parse(parts[1]);
 
+                setItemName.Add(itemName);
+                setItemCount.Add(itemCount);
+
                 // 딕셔너리에 재료 추가
                 materials[itemName] = itemCount;
             }
@@ -87,18 +97,15 @@ public class CraftManual : MonoBehaviour
             bool hasAllMaterials = true; // 모든 재료가 있어야됨
             foreach (KeyValuePair<string, int> material in materials)
             {
-                Debug.Log(material.Key);
-                Debug.Log(material.Value);
                 if (!inventory.SlotHasItem(material.Key, material.Value))
                 {
                     hasAllMaterials = false;
                     break;
                 }
             }
-
+            Debug.Log(hasAllMaterials);
             if (hasAllMaterials && _slotNumber <= 2)
             {
-                Debug.Log("빌드 실행");
                 go_Preview = Instantiate(craft_fire[_slotNumber].go_PreviewPrefab, tf_Player.position + tf_Player.forward, Quaternion.identity);
                 go_Prefab = craft_fire[_slotNumber].go_prefab;
                 isPreviewActivated = true;
@@ -109,6 +116,10 @@ public class CraftManual : MonoBehaviour
             }
             else if(hasAllMaterials && _slotNumber >= 3)
             {
+                for (int i = 0; i < setItemName.Count; i++)
+                {
+                    inventory.ConsumeItem(setItemName[i], setItemCount[i]);
+                }
                 GameObject itemPrefab = GetItemPrefabBasedOnSlotNumber(_slotNumber);
                 string itemName = GetItemNameBasedOnSlotNumber(_slotNumber);
                 thePlayer.createprefabs(itemPrefab, itemName);
@@ -137,18 +148,27 @@ public class CraftManual : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.B) && !isPreviewActivated)
         {
+            isbuilder = true;
             Window();
             GameManager.isPause = !GameManager.isPause;
         }
 
         if (isPreviewActivated)
+        {
             PreviewPositionUpdate();
+            GameManager.isPause = false;
+        }
 
         if (Input.GetButtonDown("Fire1"))
+        {
             Build();
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            isbuilder = false;
             Cancel();
+        }
     }
 
     private void PreviewPositionUpdate()
@@ -186,6 +206,12 @@ public class CraftManual : MonoBehaviour
             go_Prefab = null;
             theMapObject = FindObjectOfType<MapObjectData>();
             theMapObject.AddItemObjects(build);
+
+            // 아이템 소비후 건설하도록 수정
+            for (int i = 0; i < setItemName.Count; i++)
+            {
+                inventory.ConsumeItem(setItemName[i], setItemCount[i]);
+            }
         }
     }
     //Tab키 누르면 실행

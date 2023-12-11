@@ -55,8 +55,6 @@ public class Tree : MonoBehaviour
         box.enabled = false;
         Destroy(go_tree);
 
-        
-
         for (int i = 0; i < 3; i++)
         {
             thePlayer.createprefabs(ItemPrefab, "³ª¹µ°¡Áö");

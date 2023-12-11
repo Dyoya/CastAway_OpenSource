@@ -14,6 +14,8 @@ public class FireOnTrigger : MonoBehaviour
 
     [SerializeField] GameObject CookUI;
 
+    [SerializeField] InventoryUI inventory;
+
     bool isCooked = false;
     Fire _fireScripts;
     bool keyPressed = false;
@@ -45,7 +47,8 @@ public class FireOnTrigger : MonoBehaviour
             {
                 keyPressed = true;
 
-                // 나뭇가지 소모
+                // 나뭇가지 1개 소모
+                inventory.ConsumeItem("나뭇가지", 1);
                 Debug.Log("불씨 증가!");
 
                 _fireScripts.addDurationTime(addTime);

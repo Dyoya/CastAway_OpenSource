@@ -192,6 +192,9 @@ namespace StarterAssets
         //Zone 위치에 있는지 없는지
         private bool FishingZone = false;
 
+        //build 하고 있는지 안하고 있는지
+        [SerializeField] CraftManual craftManual;
+
         private void Awake()
         {
             // get a reference to our main camera
@@ -275,7 +278,6 @@ namespace StarterAssets
             }
             else if(hasPerfactFishing && FishingZone)
             {
-                Debug.Log(hasPerfactFishing);
                 for (int i = 0; i < objectToActivate.Length; i++)
                 {
                     if (objectToActivate[i].name == "완전한 낚시대")
@@ -525,7 +527,7 @@ namespace StarterAssets
         [SerializeField] GameObject AttackTriggerRange;
         private void Attack()
         {
-            if (_hasAnimator && Grounded && !isJump && !isAttack && _input.attack)
+            if (_hasAnimator && Grounded && !isJump && !isAttack && _input.attack && !craftManual.isbuilder)
             {
                 AttackTriggerRange.SetActive(true);
                 _controller.Move(Vector3.zero);
@@ -553,7 +555,7 @@ namespace StarterAssets
         //도끼 애니메이션 동작
         private void Axe()
         {
-            if (_hasAnimator && Grounded && !isJump && !isAxe && _input.attack)
+            if (_hasAnimator && Grounded && !isJump && !isAxe && _input.attack && !craftManual.isbuilder)
             {
                 _controller.Move(Vector3.zero);
                 _animator.SetTrigger(_animIDAxe);
@@ -579,7 +581,7 @@ namespace StarterAssets
         //공격함수 추가한 부분
         private void PickAxe()
         {
-            if (_hasAnimator && Grounded && !isJump && !isPickAxe && _input.attack)
+            if (_hasAnimator && Grounded && !isJump && !isPickAxe && _input.attack && !craftManual.isbuilder)
             {
                 _controller.Move(Vector3.zero);
                 _animator.SetTrigger(_animIDPickAxe);
