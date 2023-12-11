@@ -162,7 +162,7 @@ namespace StarterAssets
         [SerializeField] TimelineAsset[] ta;
         [SerializeField] GameObject Helicopter;
 
-        private int HandPosition;
+        private int HandPosition = 0;
 
         //공격을 할 때 사용할 변수
         public bool isPickAxe = false;
@@ -1024,6 +1024,7 @@ namespace StarterAssets
         }
         private InventoryUI theInven;
 
+        [SerializeField]
         private GameObject completePrefab;
 
         public void createprefabs(GameObject itemPrefabs, string name)

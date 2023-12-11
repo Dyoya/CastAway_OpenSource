@@ -96,6 +96,8 @@ public class InventoryUI : MonoBehaviour
             slots[i].SetSlotCount(-1);
             if (slots[i].itemCount <= 0)
                 slots[i].ClearSlot();
+            Debug.Log(_item.itemPrefab);
+            Debug.Log(name);
             thePlayer.createprefabs(_item.itemPrefab, name);
             return;
         }
