@@ -60,11 +60,17 @@ public class EndingTrigger : MonoBehaviour
         if (other.gameObject.tag == "Player" && (_currentRockNum < _totalRockNum))
         {
             textUI.SetActive(true);
+
+            // 돌 소모
+
             text.text = "E : 구조 요청 준비하기 (돌 1개)";
         }
         else if (other.gameObject.tag == "Player" && (_currentFireNum < _totalFireNum))
         {
             textUI.SetActive(true);
+
+            // 나뭇가지 소모
+
             text.text = "E : 구조 요청 준비하기 (나뭇가지 5개)";
         }
     }

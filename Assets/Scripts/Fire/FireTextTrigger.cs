@@ -35,6 +35,8 @@ public class FireTextTrigger : MonoBehaviour
             // 불 피우기
             if (Input.GetKeyDown(KeyCode.E))
             {
+                // 나뭇가지 소모
+
                 textUI.SetActive(false);
                 GameManager.isPause = true;
                 _player.GetComponent<ThirdPersonController>().enabled = false;
