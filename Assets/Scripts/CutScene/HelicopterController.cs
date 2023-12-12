@@ -35,7 +35,6 @@ public class HelicopterController : MonoBehaviour
         currentLocalPosition = transform.localPosition;
         transform.DOLocalMove(currentLocalPosition - new Vector3(0, 80, 0), 10f);
         yield return new WaitForSeconds(15f);
-        StartTalk(startDialogues);
     }
 
     public static void TMPDOText(TextMeshProUGUI text)
