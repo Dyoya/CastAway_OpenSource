@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;  // Image 클래스를 사용하기 위해 추가
-using static UnityEditor.Progress;
 
 
 public class InventoryUI : MonoBehaviour

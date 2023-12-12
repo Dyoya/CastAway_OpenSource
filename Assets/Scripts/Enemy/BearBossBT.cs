@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UIElements;
 using UnityEngine.XR;
-using static UnityEditor.PlayerSettings;
 
 //[RequireComponent(typeof(Animator))]
 public class BearBossBT : MonoBehaviour

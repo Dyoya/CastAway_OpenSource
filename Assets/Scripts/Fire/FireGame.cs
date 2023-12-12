@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using static UnityEditor.Experimental.GraphView.GraphView;
 using Unity.VisualScripting;
 
 public class FireGame : MonoBehaviour

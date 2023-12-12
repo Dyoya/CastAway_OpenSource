@@ -2,7 +2,6 @@ using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.GameCenter;
 
 public class CookController : MonoBehaviour
 {
