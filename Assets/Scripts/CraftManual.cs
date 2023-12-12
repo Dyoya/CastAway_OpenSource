@@ -213,10 +213,7 @@ public class CraftManual : MonoBehaviour
             theMapObject.AddItemObjects(build);
 
             // 아이템 소비후 건설하도록 수정
-            for (int i = 0; i < setItemName.Count; i++)
-            {
-                inventory.ConsumeItem(setItemName[i], setItemCount[i]);
-            }
+            inventory.ConsumeItem(setItemName[0], setItemCount[0]);
         }
     }
     //Tab키 누르면 실행
