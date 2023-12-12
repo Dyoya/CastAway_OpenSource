@@ -29,6 +29,7 @@ public class TitleMenuEvent : MonoBehaviour
     public void StartButtonClicked()
     {
         SceneManager.LoadScene("PlaneCrashCutScene");
+        gameObject.SetActive(false);
     }
     // 불러오기 버튼 이벤트 함수입니다.
     public void LoadButtonClicked()
