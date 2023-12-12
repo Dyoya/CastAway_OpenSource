@@ -6455,6 +6455,7 @@ MonoBehaviour:
   - {fileID: 1872752404}
   inventory: {fileID: 0}
   thePlayer: {fileID: 0}
+  isbuilder: 0
   prefab: []
 --- !u!4 &633086021 stripped
 Transform:
@@ -15239,6 +15240,7 @@ MonoBehaviour:
   hasString: 0
   hasFishing: 0
   hasPerfactFishing: 0
+  craftManual: {fileID: 626898265}
   AttackTriggerRange: {fileID: 1838566566}
   actionText: {fileID: 924040376}
   conversationText: {fileID: 340323260}
