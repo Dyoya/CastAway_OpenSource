@@ -10,6 +10,7 @@ using static Item;
 using Unity.VisualScripting;
 using System.Reflection;
 using UnityEngine.Animations;
+using UnityEngine.SceneManagement;
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
@@ -627,6 +628,7 @@ namespace StarterAssets
         {
             yield return new WaitForSeconds(3F);
             Destroy(gameObject);
+            SceneManager.LoadScene("TitleMenu");
         }
 
         public void GetItem()
