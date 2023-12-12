@@ -81,7 +81,8 @@ public class EndingTrigger : MonoBehaviour
                 if (_currentRockNum < _totalRockNum)
                 {
                     // 돌 소모
-                    inventory.ConsumeItem(rockPrefab[_currentRockNum].name, 1);
+                    inventory.ConsumeItem("돌맹이", 1);
+
                     rockPrefab[_currentRockNum].SetActive(true);
                     _currentRockNum++;
                     //Debug.Log(_currentRockNum);
@@ -91,7 +92,8 @@ public class EndingTrigger : MonoBehaviour
                     if (_currentFireNum < _totalFireNum)
                     {
                         // 나무 소모
-                        inventory.ConsumeItem(firePrefab[_currentFireNum].name, 1);
+                        inventory.ConsumeItem("나뭇가지", 5);
+
                         firePrefab[_currentFireNum].SetActive(true);
                         _currentFireNum++;
                         //Debug.Log(_currentFireNum);

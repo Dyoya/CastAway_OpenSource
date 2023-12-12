@@ -421,14 +421,13 @@ public class EnemyBT : MonoBehaviour
 
     protected void DestroyObject()
     {
-        Debug.Log("ÆÄ±«");
-        _enemyManager.BearDie();
-        Destroy(gameObject);
-
         for (int i = 0; i < 3; i++)
         {
             _tpc.createprefabs(ItemPrefab, "°í±â");
         }
+        Debug.Log("ÆÄ±«");
+        _enemyManager.BearDie();
+        Destroy(gameObject);
     }
     #endregion
 

@@ -1,3 +1,4 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -9,6 +10,8 @@ using UnityEngine.UIElements;
 public class EscapeEnemyBT : MonoBehaviour
 {
     Transform _playerTransform;
+    GameObject player;
+    ThirdPersonController _tpc;
 
     [Header("HP")]
     [SerializeField] int currentHp;
@@ -73,6 +76,9 @@ public class EscapeEnemyBT : MonoBehaviour
     {
         currentHp = maxhp;
         _agent.updateRotation = false;
+
+        player = GameObject.Find("Player");
+        _tpc = player.GetComponent<ThirdPersonController>();
 
         _enemyManager = GameObject.Find("EnemyManager").GetComponent<EnemyManager>();
     }
@@ -291,12 +297,18 @@ public class EscapeEnemyBT : MonoBehaviour
         return INode.ENodeState.ENS_Success;
     }
 
+    [SerializeField] GameObject ItemPrefab; // æ∆¿Ã≈€ «¡∏Æ∆’
     protected void DestroyObject()
     {
+        _enemyManager.RabbitDie();
+
+        for (int i = 0; i < 2; i++)
+        {
+            _tpc.createprefabs(ItemPrefab, "∞Ì±‚");
+        }
+
         Debug.Log("∆ƒ±´");
         Destroy(gameObject);
-
-        _enemyManager.RabbitDie();
     }
     #endregion
 

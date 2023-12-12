@@ -690,6 +690,8 @@ MonoBehaviour:
   attackCooldown: 3
   asDamagedSound: {fileID: 0}
   temporaryDamage: 0
+  ItemPrefab: {fileID: 8202614754564459210, guid: 10ab30527b9bc8a4995e798ac0706a37,
+    type: 3}
 --- !u!195 &6887273215630906518
 NavMeshAgent:
   m_ObjectHideFlags: 0
