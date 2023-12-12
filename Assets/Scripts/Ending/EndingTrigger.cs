@@ -38,7 +38,7 @@ public class EndingTrigger : MonoBehaviour
         // 엔딩 조건 확인
         foreach (GameObject fire in firePrefab)
         {
-            if (fire.transform.Find("FireDamageTrigger").GetComponent<Fire>().currentDurationTime > 0)
+            if (fire.transform.Find("Fire").gameObject.transform.Find("FireDamageTrigger").GetComponent<Fire>().currentDurationTime > 0)
             {
                 activeFire++;
             }
