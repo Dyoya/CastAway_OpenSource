@@ -303,7 +303,6 @@ public class SaveAndLoad : MonoBehaviour
                 {
                     if (saveData.mapObjectName != null || saveData.mapObjectName[index] != "")
                     {
-                        yield return new WaitForSeconds(0.3f);
                         loadedObject = prefabList.Find(prefab => prefab.name == saveData.mapObjectName[index]);
 
                         Debug.Log("saveObject Name " + saveData.mapObjectName[index]);
