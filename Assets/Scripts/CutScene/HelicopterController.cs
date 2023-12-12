@@ -35,6 +35,7 @@ public class HelicopterController : MonoBehaviour
         currentLocalPosition = transform.localPosition;
         transform.DOLocalMove(currentLocalPosition - new Vector3(0, 80, 0), 10f);
         yield return new WaitForSeconds(15f);
+        SceneManager.LoadScene("TitleMenu");
     }
 
     public static void TMPDOText(TextMeshProUGUI text)
@@ -79,7 +80,6 @@ public class HelicopterController : MonoBehaviour
     public void EndTalk()
     {
         talkNum = 0;
-        Debug.Log("대사 끝");
-        SceneManager.LoadScene("TitleMenu");
+        Debug.Log("대사 끝");     
     }
 }
