@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -160,9 +161,6 @@ public class SaveAndLoad : MonoBehaviour
         string json = JsonUtility.ToJson(saveData);
 
         File.WriteAllText(SAVE_DATA_DIRECTORY + SAVE_FILENAME, json);
-
-        Debug.Log("저장 완료");
-        Debug.Log(json);
     }
 
     public void BossSaveData()
@@ -275,6 +273,60 @@ public class SaveAndLoad : MonoBehaviour
             thePlayer.transform.position = saveData.playerPos;
             thePlayer.transform.eulerAngles = saveData.playerRot;
 
+            GameObject loadedObject = null;
+
+            int index = 0;
+
+            yield return new WaitForSeconds(0.1f);
+
+            Debug.Log("프리팹 리스트 개수 " + prefabList.Count);
+            for (int i = 0; i < prefabList.Count; i++)
+            {
+                Debug.Log("프리팹 리스트 " + i + prefabList[i].name);
+            }
+
+            while (index < saveData.mapObjectName.Count)
+            {
+                if (index < initNum)
+                {
+                    if (saveData.mapObjectName == null || saveData.mapObjectName[index] == "")
+                    {
+                        theMapObject.DestroyMapItem(index);
+                        index++;
+                    }
+                    else
+                    {
+                        index++;
+                    }
+                }
+                else
+                {
+                    if (saveData.mapObjectName != null || saveData.mapObjectName[index] != "")
+                    {
+                        yield return new WaitForSeconds(0.3f);
+                        loadedObject = prefabList.Find(prefab => prefab.name == saveData.mapObjectName[index]);
+
+                        Debug.Log("saveObject Name " + saveData.mapObjectName[index]);
+                        Debug.Log("loadedObject Name " + loadedObject);
+                        GameObject newMapObject = Instantiate(loadedObject, saveData.mapObjectPositions[index], Quaternion.Euler(saveData.mapObjectRotations[index]));
+                        newMapObject.name = loadedObject.name;
+                        theMapObject.AddItemObjects(newMapObject);
+                        Debug.Log("불 시간" + saveData.currentFire[index]);
+                        if (newMapObject.name == "FireWood")
+                        {
+                            newMapObject.transform.Find("Fire").Find("FireDamageTrigger").GetComponent<Fire>().addDurationTime(saveData.currentFire[index]);
+                            newMapObject.transform.Find("Fire").Find("FireDamageTrigger").GetComponent<Fire>().FireOn();
+                        }
+                        loadedObject = null;
+                        index++;
+                    }
+                    else
+                    {
+                        index++;
+                    }
+                }
+            }
+
             // 1번 2번 인벤토리 로드
             for (int i = 0; i < saveData.invenItemName.Count; i++)
             {
@@ -302,53 +354,7 @@ public class SaveAndLoad : MonoBehaviour
                     default:
                         break;
                 }
-            }
-            GameObject loadedObject = null;
-
-            int index = 0;
-
-            yield return new WaitForSeconds(0.1f);
-            while (index < saveData.mapObjectName.Count)
-            {
-                if (index < initNum)
-                {
-                    if (saveData.mapObjectName == null || saveData.mapObjectName[index] == "") 
-                    {
-                        theMapObject.DestroyMapItem(index);
-                        index++;
-                    }
-                    else
-                    {
-                        index++;
-                    }                
-                }
-                else
-                {
-                    if (saveData.mapObjectName != null || saveData.mapObjectName[index] != "")
-                    {
-                        yield return new WaitForSeconds(0.3f);
-                        loadedObject = prefabList.Find(prefab => prefab.name == saveData.mapObjectName[index]);
-
-                        Debug.Log("saveObject Name " + saveData.mapObjectName[index]);
-                        Debug.Log("loadedObject Name " + loadedObject);
-                        GameObject newMapObject = Instantiate(loadedObject, saveData.mapObjectPositions[index], Quaternion.Euler(saveData.mapObjectRotations[index]));
-                        newMapObject.name = loadedObject.name;
-                        theMapObject.AddItemObjects(newMapObject);
-                        Debug.Log("불 시간" + saveData.currentFire[index]);
-                        if (newMapObject.name == "FireWood")
-                        {
-                            newMapObject.transform.Find("Fire").Find("FireDamageTrigger").GetComponent<Fire>().addDurationTime(saveData.currentFire[index]);
-                            newMapObject.transform.Find("Fire").Find("FireDamageTrigger").GetComponent<Fire>().FireOn();
-                        }
-                        loadedObject = null;
-                        index++;                       
-                    }
-                    else
-                    {
-                        index++;
-                    }            
-                }                            
-            }         
+            }        
         }
         yield return null;
     }
