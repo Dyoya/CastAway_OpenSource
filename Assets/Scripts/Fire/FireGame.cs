@@ -32,7 +32,7 @@ public class FireGame : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(FireWood);
+        //Debug.Log(FireWood);
         if(isGame)
         {
             currentTime -= Time.deltaTime;
