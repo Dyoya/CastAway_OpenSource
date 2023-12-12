@@ -37,14 +37,17 @@ public class FireTextTrigger : MonoBehaviour
             // 불 피우기
             if (Input.GetKeyDown(KeyCode.E))
             {
-                // 나뭇가지 1개 소모
-                inventory.ConsumeItem("나뭇가지", 1);
-                _fg.FireWood = transform.parent.gameObject.transform.Find("FireDamageTrigger").gameObject;
+                if (inventory.SlotHasItem("나뭇가지", 1))
+                {
+                    // 나뭇가지 1개 소모
+                    inventory.ConsumeItem("나뭇가지", 1);
+                    _fg.FireWood = transform.parent.gameObject.transform.Find("FireDamageTrigger").gameObject;
 
-                textUI.SetActive(false);
-                GameManager.isPause = true;
-                _player.GetComponent<ThirdPersonController>().enabled = false;
-                _fg.StartGame();
+                    textUI.SetActive(false);
+                    GameManager.isPause = true;
+                    _player.GetComponent<ThirdPersonController>().enabled = false;
+                    _fg.StartGame();
+                }
             }
         }
     }

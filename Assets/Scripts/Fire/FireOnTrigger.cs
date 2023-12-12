@@ -47,12 +47,15 @@ public class FireOnTrigger : MonoBehaviour
             {
                 keyPressed = true;
 
-                // 나뭇가지 1개 소모
-                inventory.ConsumeItem("나뭇가지", 1);
-                Debug.Log("불씨 증가!");
+                if (inventory.SlotHasItem("나뭇가지", 1))
+                {
+                    // 나뭇가지 1개 소모
+                    inventory.ConsumeItem("나뭇가지", 1);
+                    Debug.Log("불씨 증가!");
 
-                _fireScripts.addDurationTime(addTime);
-
+                    _fireScripts.addDurationTime(addTime);
+                }
+                
                 StartCoroutine(Delay(0.3f));
             }
             // 요리
