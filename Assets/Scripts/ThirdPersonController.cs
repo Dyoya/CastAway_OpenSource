@@ -971,11 +971,6 @@ namespace StarterAssets
                                     dialogueQueue.Enqueue("여기에 왠 " + itemName + "가 있지...? 바다에서 떠밀려 왔나... 잘찾아보면 다른 것도 있을거 같애!! 찾아보자!");
                                     StartCoroutine(DialogueUIAppear());
                                 }
-                                if (hasString && hasFishing)
-                                {
-                                    dialogueQueue.Enqueue("낚시대가 있으니까 물고기를 잡을 수 있겠다 강이나 해변으로 가보자!! ");
-                                    StartCoroutine(DialogueUIAppear());
-                                }
                             }
                             if (isAcquired == 1)
                             {
@@ -997,12 +992,6 @@ namespace StarterAssets
         // 플레이어 아이템을 확인하고 아이템을 생성하는 함수
         private void CheckInventoryForItems(GameObject item)
         {
-            if (hasString && hasString)
-            {
-                StartCoroutine(WaitAndCreateCompleteFishingRod("낚시대와 낚시줄이 있으니까 완전한 낚시대를 만들 수 있겠는 걸?"));
-                StartCoroutine(UIDisAppear());
-            }
-
             if (item.name == "도끼")
             {
                 hasAxe = true;
@@ -1100,21 +1089,6 @@ namespace StarterAssets
 
                 ItemInfoDisappear();
             }
-        }
-
-        private IEnumerator UIDisAppear()
-        {
-            yield return new WaitForSeconds(6);
-
-            ItemInfoDisappear();
-        }
-
-        private IEnumerator WaitAndCreateCompleteFishingRod(string ItemName)
-        {
-            yield return new WaitForSeconds(4);
-            
-            conversationImage.gameObject.SetActive(true);
-            conversationText.text = ItemName;
         }
     }
 }
