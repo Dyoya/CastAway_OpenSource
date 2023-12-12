@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class EndingTrigger : MonoBehaviour
@@ -48,7 +49,7 @@ public class EndingTrigger : MonoBehaviour
             _currentTime += Time.deltaTime;
             if(_currentTime > _endingDelayTime)
             {
-                // 엔딩, 게임 종료
+                SceneManager.LoadScene("EscapeCutScene");
 
                 Debug.Log("엔딩");
             }

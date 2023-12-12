@@ -50,7 +50,7 @@ public class PlaneCrash: MonoBehaviour
         bird2.SetActive(true);
         transform.DOMove(new Vector3(-690, 307, -100), 6.5f).SetSpeedBased();
 
-        transform.DOShakeRotation(6.5f, new Vector3(0, 0, 5), 10, 10, true);
+        transform.DOShakeRotation(6.5f, new Vector3(0, 0, 5), 20, 10, true);
         yield return new WaitForSeconds(6.5f); 
 
         if (effectPrefab1 != null)
