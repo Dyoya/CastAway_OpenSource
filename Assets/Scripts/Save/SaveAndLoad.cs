@@ -28,7 +28,7 @@ public class SaveData
     public List<int> invenItemNumber = new List<int>();
 
     // 맵 아이템 배치 저장 리스트
-    public List<string> MapObjectName = new List<string>();
+    public List<string> mapObjectName = new List<string>();
     public List<Vector3> mapObjectPositions = new List<Vector3>();
     public List<Vector3> mapObjectRotations = new List<Vector3>();
 
@@ -37,6 +37,8 @@ public class SaveData
     public int currentRockNum;
     public int currentFireNum;
     public string currentTime;
+
+    public List<float> currentFire = new List<float>();
 }
 
 public class SaveAndLoad : MonoBehaviour
@@ -57,6 +59,7 @@ public class SaveAndLoad : MonoBehaviour
     private HungryBar theHungryBar;
     private EndingTrigger theEndingTrigger;
     private LightController theLightController;
+    private Fire theFire;
 
     void Start()
     {
@@ -78,6 +81,7 @@ public class SaveAndLoad : MonoBehaviour
         theHungryBar = FindObjectOfType<HungryBar>();
         theEndingTrigger = FindObjectOfType<EndingTrigger>();
         theLightController = FindObjectOfType<LightController>();
+        theFire = FindObjectOfType<Fire>();
 
         saveData.playerPos = thePlayer.transform.position;
         saveData.playerRot = thePlayer.transform.eulerAngles;
@@ -94,11 +98,11 @@ public class SaveAndLoad : MonoBehaviour
         saveData.invenItemName.Clear();
         saveData.invenItemNumber.Clear();
         saveData.Equipment = null;
-        saveData.MapObjectName.Clear();
+        saveData.mapObjectName.Clear();
         saveData.mapObjectPositions.Clear();
         saveData.mapObjectRotations.Clear();
         saveData.DestroyedObject.Clear();
-
+        saveData.currentFire.Clear();
 
         slot[] slots = theInven.getSlots();
 
@@ -136,15 +140,20 @@ public class SaveAndLoad : MonoBehaviour
         {
             if (itemObjects[i] != null)
             {
-                saveData.MapObjectName.Add(itemObjects[i].name);
+                saveData.mapObjectName.Add(itemObjects[i].name);
                 saveData.mapObjectPositions.Add(itemObjects[i].transform.position);
                 saveData.mapObjectRotations.Add(itemObjects[i].transform.eulerAngles);
+                if (itemObjects[i].name == "FireWood")
+                    saveData.currentFire.Add(itemObjects[i].transform.Find("Fire").Find("FireDamageTrigger").GetComponent<Fire>().currentDurationTime);
+                else
+                    saveData.currentFire.Add(0);
             }
             else
             {
-                saveData.MapObjectName.Add(null);
+                saveData.mapObjectName.Add(null);
                 saveData.mapObjectPositions.Add(new Vector3(0, 0, 0));
                 saveData.mapObjectRotations.Add(new Vector3(0, 0, 0));
+                saveData.currentFire.Add(0);
             }
         }
 
@@ -238,7 +247,7 @@ public class SaveAndLoad : MonoBehaviour
         StartCoroutine(LoadDataCoroutine());
     }
     IEnumerator LoadDataCoroutine()
-    {
+    {     
         if (File.Exists(SAVE_DATA_DIRECTORY + SAVE_FILENAME))
         {
             string loadJson = File.ReadAllText(SAVE_DATA_DIRECTORY + SAVE_FILENAME);
@@ -298,11 +307,12 @@ public class SaveAndLoad : MonoBehaviour
 
             int index = 0;
 
-            while (index < saveData.MapObjectName.Count)
+            yield return new WaitForSeconds(0.1f);
+            while (index < saveData.mapObjectName.Count)
             {
                 if (index < initNum)
                 {
-                    if (saveData.MapObjectName == null || saveData.MapObjectName[index] == "") 
+                    if (saveData.mapObjectName == null || saveData.mapObjectName[index] == "") 
                     {
                         theMapObject.DestroyMapItem(index);
                         index++;
@@ -314,13 +324,22 @@ public class SaveAndLoad : MonoBehaviour
                 }
                 else
                 {
-                    if (saveData.MapObjectName != null || saveData.MapObjectName[index] != "")
+                    if (saveData.mapObjectName != null || saveData.mapObjectName[index] != "")
                     {
-                        loadedObject = prefabList.Find(prefab => prefab.name == saveData.MapObjectName[index]);
+                        yield return new WaitForSeconds(0.3f);
+                        loadedObject = prefabList.Find(prefab => prefab.name == saveData.mapObjectName[index]);
+
+                        Debug.Log("saveObject Name " + saveData.mapObjectName[index]);
                         Debug.Log("loadedObject Name " + loadedObject);
                         GameObject newMapObject = Instantiate(loadedObject, saveData.mapObjectPositions[index], Quaternion.Euler(saveData.mapObjectRotations[index]));
                         newMapObject.name = loadedObject.name;
                         theMapObject.AddItemObjects(newMapObject);
+                        Debug.Log("불 시간" + saveData.currentFire[index]);
+                        if (newMapObject.name == "FireWood")
+                        {
+                            newMapObject.transform.Find("Fire").Find("FireDamageTrigger").GetComponent<Fire>().addDurationTime(saveData.currentFire[index]);
+                            newMapObject.transform.Find("Fire").Find("FireDamageTrigger").GetComponent<Fire>().FireOn();
+                        }
                         loadedObject = null;
                         index++;                       
                     }

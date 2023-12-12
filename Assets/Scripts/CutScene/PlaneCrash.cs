@@ -5,6 +5,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine. UI;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 public class PlaneCrash: MonoBehaviour
 {
@@ -67,6 +68,9 @@ public class PlaneCrash: MonoBehaviour
         Vector3 direction = (vec - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);
         transform.DORotateQuaternion(lookRotation, 2.0f);
+
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadSceneAsync("Test_DH2");
     }
 
     public static void TMPDOText(TextMeshProUGUI text)

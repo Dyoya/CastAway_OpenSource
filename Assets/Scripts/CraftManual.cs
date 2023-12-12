@@ -199,6 +199,7 @@ public class CraftManual : MonoBehaviour
         if (isPreviewActivated && go_Preview.GetComponent<PreviewObject>().isBuildable())
         {
             GameObject build = Instantiate(go_Prefab, hitInfo.point, Quaternion.identity);
+            build.name = go_Prefab.name;
             Destroy(go_Preview);
             isActivated = false;
             isPreviewActivated = false;

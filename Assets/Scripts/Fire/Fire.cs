@@ -13,7 +13,7 @@ public class Fire : MonoBehaviour
     float _currentDamageTime;
 
     [SerializeField] private float durationTime = 120f;
-    public float currentDurationTime;
+    public float currentDurationTime = 0;
 
     [SerializeField]
     private ParticleSystem _ps;
@@ -63,6 +63,7 @@ public class Fire : MonoBehaviour
     }
     public void addDurationTime(float time)
     {
+        Debug.Log(time + " 시간 충전");
         currentDurationTime += time;
     }
 
@@ -83,7 +84,9 @@ public class Fire : MonoBehaviour
         FireOnTrigger.SetActive(true);
         FireOffTrigger.SetActive(false);
 
-        currentDurationTime = durationTime;
+        Debug.Log("불 적용된 시간" + currentDurationTime);
+        if (currentDurationTime == 0)
+            currentDurationTime = durationTime;
 
         StartCoroutine(SetFire(true));
     }
