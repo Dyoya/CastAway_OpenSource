@@ -198,7 +198,11 @@ public class CraftManual : MonoBehaviour
     {
         if (isPreviewActivated && go_Preview.GetComponent<PreviewObject>().isBuildable())
         {
-            GameObject build = Instantiate(go_Prefab, hitInfo.point, Quaternion.identity);
+            // 미리 보기 프리팹의 회전 정보를 얻어옴
+            Quaternion previewRotation = go_Preview.transform.rotation;
+
+            // 프리팹을 미리 보기 프리팹의 위치와 회전 정보로 생성
+            GameObject build = Instantiate(go_Prefab, hitInfo.point, previewRotation);
             build.name = go_Prefab.name;
             Destroy(go_Preview);
             isActivated = false;

@@ -15,11 +15,25 @@ public class PreviewObject : MonoBehaviour
     [SerializeField]
     private Material red;
 
+    // 회전 속도
+    [SerializeField]
+    private float rotationSpeed = 200.0f;
+
 
     void Update()
     {
+        HandleRotation();
         ChangeColor();
     }
+
+    private void HandleRotation()
+    {
+        float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
+
+        // 마우스 휠을 돌릴 때 Y축을 기준으로 회전
+        transform.Rotate(Vector3.up, rotationSpeed * scrollWheel * 50.0f);
+    }
+
 
     private void ChangeColor()
     {
